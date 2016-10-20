@@ -9,7 +9,7 @@ import com.izv.dam.newquip.pojo.Nota;
 
 public class GestionNota extends Gestion<Nota>{
 
-    public GestionNota(Context c) {
+    public GestionNota(Context c){
         super(c);
     }
 

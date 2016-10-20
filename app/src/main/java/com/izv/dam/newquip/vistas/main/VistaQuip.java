@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,8 +24,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
 
     private AdaptadorNota adaptador;
     private PresentadorQuip presentador;
-
-
+    private  RecyclerView rv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,26 +32,25 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
 
         presentador = new PresentadorQuip(this);
 
-        ListView lv = (ListView) findViewById(R.id.lvListaNotas);
-        adaptador = new AdaptadorNota(this, null);
-        lv.setAdapter(adaptador);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        rv = (RecyclerView) findViewById(R.id.lvListaNotas);
+        rv.setHasFixedSize(false); // true, la lista es estatica, false, los datos de la lista pueden variar.
+        rv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)); // forma en que se visualizan los elementos, en este caso en vertical.
+        adaptador = new AdaptadorNota();
+        adaptador.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                presentador.onEditNota(i);
+            public void onClick(View v) {
+                presentador.onEditNota(rv.getChildAdapterPosition(v));
             }
         });
-
-        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        adaptador.setLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public boolean onLongClick(View v) {
                 Toast.makeText(VistaQuip.this, "delete", Toast.LENGTH_SHORT).show();
-                presentador.onShowBorrarNota(i);
+                presentador.onShowBorrarNota(rv.getChildAdapterPosition(v));
                 return true;
             }
         });
-
+        rv.setAdapter(adaptador);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAdd);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,8 +72,6 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         super.onResume();
     }
 
-
-
     @Override
     public void mostrarAgregarNota() {
         Toast.makeText(VistaQuip.this, "add", Toast.LENGTH_SHORT).show();
@@ -83,7 +81,8 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
 
     @Override
     public void mostrarDatos(Cursor c) {
-        adaptador.changeCursor(c);
+        adaptador.setCursor(c);
+       // System.out.println(adaptador.getItemCount());
     }
 
     @Override
@@ -100,7 +99,6 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     public void mostrarConfirmarBorrarNota(Nota n) {
         DialogoBorrar fragmentBorrar = DialogoBorrar.newInstance(n);
         fragmentBorrar.show(getSupportFragmentManager(), "Dialogo borrar");
-
     }
 
 

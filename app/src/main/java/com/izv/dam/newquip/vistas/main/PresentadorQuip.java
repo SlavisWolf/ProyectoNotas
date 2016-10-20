@@ -67,5 +67,4 @@ public class PresentadorQuip implements ContratoMain.InterfacePresentador{
         Nota n = this.modelo.getNota(position);
         this.onEditNota(n);
     }
-
 }

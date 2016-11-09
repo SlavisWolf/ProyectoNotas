@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_lienzo_nuevo"
+        android:title="menu_lienzo_nuevo"
+        android:icon="@mipmap/ic_vaciar_dibujo"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_lienzo_grosor"
+        android:title="menu_lienzo_grosor"
+        android:icon="@mipmap/ic_cambiar_grosor"
+        app:showAsAction="always">
+
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/menu_lienzo_grande"
+                    android:title="@string/grosorGrande"
+                    app:showAsAction="always"
+                    />
+                <item
+                    android:id="@+id/menu_lienzo_mediano"
+                    android:title="@string/grosorMediano"
+                    app:showAsAction="always"
+                    />
+                <item
+                    android:id="@+id/menu_lienzo_pequeno"
+                    android:title="@string/grosorPequeno"
+                    app:showAsAction="always"
+                    />
+
+            </group>
+
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/menu_lienzo_goma"
+        android:icon="@mipmap/ic_goma"
+        app:showAsAction="always"
+        android:title="goma"/>
+    <item
+        android:id="@+id/menu_lienzo_guardar"
+        android:icon="@mipmap/ic_guardar"
+        app:showAsAction="always"
+        android:title="GUARDAR" />
+</menu>

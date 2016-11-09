@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/recordatorio"
+        android:title="recordatorio"
+        android:icon="@mipmap/ic_recordatorio"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/adjuntar"
+        android:title="adjuntar"
+        android:icon="@mipmap/ic_adjuntar"
+        app:showAsAction="always">
+        <menu>
+            <group android:id="@+id/grupo1">
+
+                <item android:id="@+id/camara"
+                    android:title="@string/menuCamara"
+                    android:icon="@mipmap/ic_camara"/>
+                <item android:id="@+id/galeria"
+                    android:title="@string/menuGaleria"
+                    android:icon="@mipmap/ic_galeria"/>
+                <item android:id="@+id/audio"
+                    android:title="@string/menuMicrofono"
+                    android:icon="@mipmap/ic_microfono"/>
+
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/menu_nota_editar"
+        android:title="editar"
+        android:icon="@mipmap/ic_editar"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/menu_nota_guardar"
+        android:title="guardar"
+        android:icon="@mipmap/ic_guardar"
+        app:showAsAction="always"
+        />
+
+    <item android:id="@+id/menu_nota_ajustes"
+        android:title="ajustes">
+                <item android:id="@+id/menu_nota_imprimir"
+                    android:title="@string/menuImprimir"/>
+                <item android:id="@+id/menu_nota_dibujar"
+                    android:title="@string/menuDibujar"/>
+    </item>
+</menu>

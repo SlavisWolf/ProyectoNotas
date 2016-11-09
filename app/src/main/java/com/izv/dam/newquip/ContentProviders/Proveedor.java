@@ -11,7 +11,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.izv.dam.newquip.contrato.ContratoBaseDatos;
+import com.izv.dam.newquip.gestion.GestionItemNotaLista;
 import com.izv.dam.newquip.gestion.GestionNota;
+
 
 /**
  * Created by alumno on 18/10/2016.
@@ -19,28 +21,42 @@ import com.izv.dam.newquip.gestion.GestionNota;
 
 public class Proveedor extends ContentProvider {
 
-    public static final String AUTHORITY ="com.izv.dam.bd";
-    public static final String URI_NOTA ="content://"+Proveedor.AUTHORITY+"/"+ContratoBaseDatos.TablaNota.TABLA; // el content se refiere a que el elemento es un content provider, el 2º // apartado es el id, se llama authority(contenedores.ejemplos)
-    public static final Uri CONTENT_URI_NOTA = Uri.parse(Proveedor.URI_NOTA);
+
 
     private GestionNota gestionNota;
+    //private GestionNotaLista gestionNotaLista;
+    private GestionItemNotaLista gestionItemNotaLista;
 
 
     //UriMatcher
     private static final int NOTA = 1;
     private static final int NOTA_ID = 2;
+
+    /*private static final int NOTA_LISTA = 3;
+    private static final int NOTA_LISTA_ID = 4;*/
+
+    private static final int ITEM_NOTA_LISTA = 3;
+    private static final int ITEM_NOTA_LISTA_ID = 4;
+    private static final int ITEM_NOTA_LISTA_NOTA_ID = 5;
     private static final UriMatcher uriMatcher;
 
     //Inicializamos el UriMatcher
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(Proveedor.AUTHORITY, ContratoBaseDatos.TablaNota.TABLA, Proveedor.NOTA );
-        uriMatcher.addURI(Proveedor.AUTHORITY, ContratoBaseDatos.TablaNota.TABLA+"/#", Proveedor.NOTA_ID);
+        uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaNota.TABLA, Proveedor.NOTA );
+        uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaNota.TABLA+"/#", Proveedor.NOTA_ID);
+        /*uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaNotaLista.TABLA, Proveedor.NOTA_LISTA );
+        uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaNotaLista.TABLA+"/#", Proveedor.NOTA_LISTA_ID);*/
+        uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaItemNotaLista.TABLA, Proveedor.ITEM_NOTA_LISTA );
+        uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaItemNotaLista.TABLA+"/#", Proveedor.ITEM_NOTA_LISTA_ID);
+        uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaItemNotaLista.TABLA+"/"+ContratoBaseDatos.TablaNota.TABLA+"/#", Proveedor.ITEM_NOTA_LISTA_NOTA_ID);
     }
 
     @Override
     public boolean onCreate() {
         gestionNota = new GestionNota(getContext());
+        //gestionNotaLista = new GestionNotaLista(getContext());
+        gestionItemNotaLista = new GestionItemNotaLista(getContext());
         return true;
     }
 
@@ -55,7 +71,26 @@ public class Proveedor extends ContentProvider {
                 where = "_id=" + uri.getLastPathSegment();
             }
             case NOTA : {
-                Cursor c =gestionNota.getCursor(ContratoBaseDatos.TablaNota.TABLA, projection, where, selectionArgs, null, null, sortOrder);
+                Cursor c =gestionNota.getCursor(projection, where, selectionArgs, null, null, sortOrder);
+                return c;
+            }
+            /*case NOTA_LISTA_ID : {
+                where = "_id=" + uri.getLastPathSegment();
+            }
+            case NOTA_LISTA : {
+                Cursor c =gestionNotaLista.getCursor(projection, where, selectionArgs, null, null, sortOrder);
+                return c;
+            }*/
+            case ITEM_NOTA_LISTA_ID : {
+                where = "_id=" + uri.getLastPathSegment();
+                Cursor c =gestionItemNotaLista.getCursor(projection, where, selectionArgs, null, null, sortOrder);
+                return c;
+            }
+            case ITEM_NOTA_LISTA_NOTA_ID : {
+                where = ContratoBaseDatos.TablaItemNotaLista.ID_NOTA_LISTA+"=" + uri.getLastPathSegment();
+            }
+            case ITEM_NOTA_LISTA : {
+                Cursor c =gestionItemNotaLista.getCursor(projection, where, selectionArgs, null, null, sortOrder);
                 return c;
             }
             default: {
@@ -75,6 +110,14 @@ public class Proveedor extends ContentProvider {
                 return "vnd.android.cursor.dir/com.izv.dam.nota";
             case Proveedor.NOTA_ID:
                 return "vnd.android.cursor.item/com.izv.dam.nota";
+            /*case Proveedor.NOTA_LISTA:
+                return "vnd.android.cursor.item/com.izv.dam.nota_lista";
+            case Proveedor.NOTA_LISTA_ID:
+                return "vnd.android.cursor.item/com.izv.dam.nota_lista";*/
+            case Proveedor.ITEM_NOTA_LISTA:
+                return "vnd.android.cursor.item/com.izv.dam.item_nota_lista";
+            case Proveedor.ITEM_NOTA_LISTA_ID:
+                return "vnd.android.cursor.item/com.izv.dam.item_nota_lista";
             default:
                 return null;
         }
@@ -87,7 +130,22 @@ public class Proveedor extends ContentProvider {
         switch( uriMatcher.match(uri) ) {
             case NOTA : {
                 regId = gestionNota.insert(values);
-                Uri newUri = ContentUris.withAppendedId(CONTENT_URI_NOTA, regId);
+                Uri newUri = ContentUris.withAppendedId(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, regId);
+                Log.v("NUEVA URI",newUri.toString());
+                //getContext().getContentResolver().notifyChange(uri,null);
+                return newUri;
+            }
+
+            /*case NOTA_LISTA : {
+                regId = gestionNotaLista.insert(values);
+                Uri newUri = ContentUris.withAppendedId(ContratoBaseDatos.TablaNotaLista.CONTENT_URI_NOTA_LISTA, regId);
+                Log.v("NUEVA URI",newUri.toString());
+               //getContext().getContentResolver().notifyChange(uri,null);
+                return newUri;
+            }*/
+            case ITEM_NOTA_LISTA : {
+                regId = gestionItemNotaLista.insert(values);
+                Uri newUri = ContentUris.withAppendedId(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, regId);
                 Log.v("NUEVA URI",newUri.toString());
                 return newUri;
             }
@@ -108,6 +166,23 @@ public class Proveedor extends ContentProvider {
             }
             case NOTA : {
                 cont = gestionNota.delete(where,selectionArgs);
+                //notificarCambio(uri,cont);
+                return cont;
+            }
+           /* case NOTA_LISTA_ID : {
+                where = "_id=" + uri.getLastPathSegment();
+            }
+            case NOTA_LISTA : {
+                cont = gestionNotaLista.delete(where,selectionArgs);
+                //notificarCambio(uri,cont);
+                return cont;
+            }*/
+
+            case ITEM_NOTA_LISTA_ID : {
+                where = "_id=" + uri.getLastPathSegment();
+            }
+            case ITEM_NOTA_LISTA : {
+                cont = gestionItemNotaLista.delete(where,selectionArgs);
                 return cont;
             }
             default: {
@@ -127,11 +202,35 @@ public class Proveedor extends ContentProvider {
             }
             case NOTA : {
                 cont = gestionNota.update(values,where,selectionArgs);
+                //notificarCambio(uri,cont);
                 return cont;
-        }
+            }
+
+            /*case NOTA_LISTA_ID : {
+                where = "_id=" + uri.getLastPathSegment();
+            }
+            case NOTA_LISTA : {
+                cont = gestionNotaLista.update(values,where,selectionArgs);
+                //notificarCambio(uri,cont);
+                return cont;
+            }*/
+
+            case ITEM_NOTA_LISTA_ID : {
+                where = "_id=" + uri.getLastPathSegment();
+            }
+            case ITEM_NOTA_LISTA : {
+                cont = gestionItemNotaLista.update(values,where,selectionArgs);
+                return cont;
+            }
             default: {
                 return 0;
             }
         }
+    }
+
+    private void notificarCambio(Uri uri,int cont){ // al final se hace en el adaptador.
+            if (cont>0) {
+                getContext().getContentResolver().notifyChange(uri,null);
+            }
     }
 }

@@ -27,6 +27,8 @@ public interface ContratoMain {
 
         void onAddNota();
 
+        void onAddNotaLista();
+
         void onDeleteNota(int position);
 
         void onDeleteNota(Nota n);
@@ -46,6 +48,8 @@ public interface ContratoMain {
     interface InterfaceVista {
 
         void mostrarAgregarNota();
+
+        void mostrarAgregarNotaLista();
 
         void mostrarDatos(Cursor c);
 

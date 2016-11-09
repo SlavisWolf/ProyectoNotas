@@ -8,5 +8,65 @@
     <string name="etiqueta_dialogo_borrar">Eliminar: </string>
     // nota
     <string name="nota">Nota</string>
-    <string name="titulo">Titulo</string>
+    <string name="titulo">Título</string>
+
+    <!-- MENU DE BOTONES -->
+    <string name="anadirNota">Crear nota</string>
+    <string name="anadirNotaLista">Crear lista</string>
+    <string name="anadirNotaImagen">Crear nota con una imagen.</string>
+    <string name="anadirNotaDibujo">Crear nota con un dibujo.</string>
+    <!-- FIN MENU DE BOTONES -->
+
+    <!-- MENU NOTA LISTA -->
+    <string name="borrarItems">Borrar lista</string>
+    <string name="marcarCheckBox">Marcar/Desmarcar casillas</string>
+    <string name="vaciarElementos">Vaciar lista</string>
+    <string name="invertirElementos">Invertir casillas</string>
+
+    <!-- MENU NOTA NORMAL -->
+
+    <string name="menuCamara">Camara</string>
+    <string name="menuGaleria">Galería</string>
+    <string name="menuMicrofono">Microfono</string>
+    <string name="menuImprimir">Imprimir nota en PDF</string>
+    <string name="menuDibujar">Crear dibujo</string>
+
+
+    <!-- Dialogo Borrar General-->
+
+    <string name="textoDialogoGeneral">¿Estás seguro de que deseas borrar</string>
+
+    <string name="tituloDialogoImagen">Imagen</string>
+    <string name="textoDialogoImagen">esta imagen?</string>
+
+    <!-- LIENZO -->
+    <string name="grosorGrande">Grande</string>
+    <string name="grosorMediano">Mediano</string>
+    <string name="grosorPequeno">Pequeño</string>
+    <string name="abrirLienzo">Abriendo editor: Lienzo</string>
+    <string name="tituloNuevoDibujo">Nuevo Dibujo</string>
+    <string name="textoDialogoNuevoDibujo">¿Comenzar un nuevo dibujo(perderás el dibujo actual)?</string>
+    <string name="seleccionGrosorGrande">Ha seleccionado el tamaño: grande</string>
+    <string name="seleccionGrosorMediano">Ha seleccionado el tamaño: mediano</string>
+    <string name="seleccionGrosorpequeno">Ha seleccionado el tamaño: pequeño</string>
+    <string name="tituloGuardarDibujo">Guardar Dibujo.</string>
+    <string name="textoDialogoGuardarDibujo">¿Quieres guardar este dibujo en la galería?</string>
+    <string name="dibujoGuardadoCorrectamente">Dibujo guardado correctamente.</string>
+
+    <!-- PERMISOS -->
+
+    <string name="permisoConcedido">3.1 Permiso Concedido</string>
+    <string name="permisoNoConcedido">3.2 Permiso No Concedido</string>
+
+     <!-- otros -->
+    <string name="guardarNotaPart1">Su nota </string>
+    <string name="guardarNotaPart2"> ha sido guardada.</string>
+    <string name="errorTituloNoEscrito">No has introducido título</string>
+    <string name="editarNota">Abriendo nota para editarla.</string>
+    <string name="nuevaNota">Creando nueva nota.</string>
+    <string name="nuevaNotaImagen">Buscando imagen para crear nota.</string>
+    <string name="editarNotaLista">Abriendo lista para editarla.</string>
+    <string name="nuevaNotaLista">Creando nueva lista.</string>
+    <string name="nuevaNotaDibujo">Abiendo lienzo para nueva nota.</string>
+    <string name="imagenNoGuardada">La imagen no ha pidido guardarse</string>
 </resources>

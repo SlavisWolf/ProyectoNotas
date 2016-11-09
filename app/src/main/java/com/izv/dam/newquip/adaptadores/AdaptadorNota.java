@@ -6,34 +6,36 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.izv.dam.newquip.R;
 import com.izv.dam.newquip.pojo.Nota;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 
 public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolder> implements View.OnClickListener,View.OnLongClickListener{
 
 
-    private Cursor cursor; //aqui meteremos todos los items que usara recycler view, en este ejemplo son Strings, pero en el proyecto seran notas
-    //private List<Nota> lista;
+    private Cursor cursor;
     private View.OnClickListener clickListener;
     private View.OnLongClickListener longClickListener;
+
+
 
     public AdaptadorNota(Cursor cursor) {
         this.cursor = cursor;
     }
 
-    /*public AdaptadorNota (List<Nota> list){
-        this.lista=lista;
-    }*/
 
     public AdaptadorNota(){
         this(null);
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -50,16 +52,40 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
         return false;
     }
 
-    public class ViewHolder extends  RecyclerView.ViewHolder {
+    public class ViewHolder extends  RecyclerView.ViewHolder { //USADO PARA LAS NOTAS NORMALES
         private TextView tvTituloNota;
+        private TextView tvRecordatorio;
+        private ImageView ivTipoNota;
+        private ImageView ivRecordatorio;
         public ViewHolder(View itemView) { // aqui irian todos los elementos del layout
             super(itemView);
             tvTituloNota = (TextView) itemView.findViewById(R.id.tvTituloNota);
+            tvRecordatorio = (TextView) itemView.findViewById(R.id.tvFechaRecordatorioNota);
+            ivTipoNota = (ImageView) itemView.findViewById(R.id.imagenTipoNota);
+            ivRecordatorio = (ImageView) itemView.findViewById(R.id.imagenRecordatorio);
         }
         public TextView getTextView(){
             return tvTituloNota;
         }
+
+        public TextView getTvRecordatorio() {
+            return tvRecordatorio;
+        }
+
+        public ImageView getIvTipoNota() {
+            return ivTipoNota;
+        }
+
+        public TextView getTvTituloNota() {
+            return tvTituloNota;
+        }
+
+        public ImageView getIvRecordatorio() {
+            return ivRecordatorio;
+        }
     }
+
+
 
     public void setOnClickListener(View.OnClickListener listener) {
         this.clickListener = listener;
@@ -71,17 +97,13 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
 
     public void setCursor(Cursor cursor) {
         this.cursor = cursor;
-        /*lista = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            lista.add(Nota.getNota(cursor));
-        }*/
         notifyDataSetChanged();
     }
 
     @Override
     public AdaptadorNota.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) { // esto es el layout por asi decirlo de cada item
         LayoutInflater inflador = LayoutInflater.from(parent.getContext());// el contexto se puede pasar tambien por el constructor.
-        View vista = inflador.inflate(R.layout.item,parent,false); // el ultimo parametro no estoy seguro de como funciona, en false evita duplicados, pero hay que invergarlo mas
+        View vista = inflador.inflate(R.layout.item,parent,false); // el ultimo parametro no estoy seguro de como funciona, en false evita duplicados, pero hay que investigarlo mas
         vista.setOnClickListener(this);
         vista.setOnLongClickListener(this);
         return new ViewHolder(vista);// devolvemos un objeto de nuestra clase ViewHolder con la vista que acabamos de inflar.
@@ -90,14 +112,32 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
     @Override
     public void onBindViewHolder(AdaptadorNota.ViewHolder holder, int position) { // aqui se le asignan los valores a  los elementos de los item , en este caso solo es 1cur;
         if (cursor.moveToPosition(position)) {
-            String titulo = Nota.getNota(cursor).getTitulo();
-            holder.getTextView().setText(titulo);
-            Log.v("LOG","HA ENTRADO "+titulo);
+            Nota nota = Nota.getNota(cursor);
+            holder.getTextView().setText(nota.getTitulo());
+            Log.v("TIPO",nota.getTipo()+"");
+            switch (nota.getTipo()) { //AQUI CAMBIAREMOS LA IMAGEN QUE SE MUESTRA PARA QUE EL USUARIO SEPA A 1ª VISTA QUE TIPO DE NOTA ES.
+                case Nota.TIPO_DEFECTO: {
+                    holder.getIvTipoNota().setImageResource(R.drawable.ic_tipo_defecto48px);
+                    break;
+                }
+                case Nota.TIPO_IMAGEN: {
+                    holder.getIvTipoNota().setImageResource(R.drawable.ic_tipo_imagen48px);
+                    break;
+                }
+                case Nota.TIPO_DIBUJO: {
+                    holder.getIvTipoNota().setImageResource(R.drawable.ic_tipo_dibujo48px);
+                    break;
+                }
+                case Nota.TIPO_AUDIO: {
+                    break;
+                }
+                case Nota.TIPO_LISTA: {
+                    holder.getIvTipoNota().setImageResource(R.drawable.ic_tipo_lista48px);
+                    break;
+                }
+            }
+            //ESPACIO PARA RECORDATORIO, IMPLEMENTAR MÁS ADELANTE
         }
-       /* String titulo = lista.get(position).getTitulo();
-        holder.getTextView().setText(titulo);
-        Log.v("LOG","HA ENTRADO "+titulo);*/
-
     }
 
     @Override
@@ -106,10 +146,14 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
             return 0;
         }
         return cursor.getCount();
-        /*if (lista==null){
-            return 0 ;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (cursor.moveToPosition(position)) {
+            return Nota.getNota(cursor).getTipo(); //devolvemos el tipo que tiene guardado la nota.
         }
-        return  lista.size();*/
+        return -1;
     }
 }
 

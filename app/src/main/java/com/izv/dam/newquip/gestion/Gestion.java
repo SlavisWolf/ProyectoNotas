@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.izv.dam.newquip.basedatos.Ayudante;
 
@@ -23,6 +24,7 @@ public abstract class Gestion<T> {
         } else {
             this.openRead();
         }
+        bd.setForeignKeyConstraintsEnabled(true);//LINEA AÑADIDA, POR LOS NUEVOS ITEMS, QUE APUNTAN A LA ID DE LAS NOTAS COMO CLAVE FORANEA
     }
 
     public Ayudante getAyudante() {

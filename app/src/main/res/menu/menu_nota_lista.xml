@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <!--Es necesario importar el 2º espacio de nombres para ponerle a los items el app:showAsAaction -->
+
+    <item android:id="@+id/menu_nota_lista_editar"
+        android:title="menu_nota_lista_editar"
+        android:icon="@mipmap/ic_editar"
+        app:showAsAction="always"
+        />
+
+    <item android:id="@+id/menu_nota_lista_guardar"
+        android:title="menu_nota_lista_guardar"
+        android:icon="@mipmap/ic_guardar"
+        app:showAsAction="always"
+        />
+
+    <group>
+        <item
+            android:title="@string/borrarItems"
+            android:id="@+id/menu_nota_lista_borrar_items"/>
+        <item
+            android:title="@string/vaciarElementos"
+            android:id="@+id/menu_nota_lista_vaciar_items"/>
+        <item
+            android:title="@string/marcarCheckBox"
+            android:id="@+id/menu_nota_lista_marcar_items"/>
+        <item
+            android:title="@string/invertirElementos"
+            android:id="@+id/menu_nota_lista_invertir_items"/>
+    </group>
+
+</menu>

@@ -2,5 +2,8 @@
 <resources>
     <color name="colorPrimary">#202020</color>
     <color name="colorPrimaryDark">#000</color>
-    <color name="colorAccent">#448AFF</color>
+    <color name="colorAccent">#7C4DFF</color>
+
+    <color name="colorButtonPressed">#9C27B0</color>
+    <color name="fondo">#FFFFFF</color>
 </resources>

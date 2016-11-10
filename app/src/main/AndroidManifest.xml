@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.izv.dam.newquip">
+
+    <!-- PERMISOS -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <!-- -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -8,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <provider android:name=".ContentProviders.Proveedor"
-            android:authorities="com.izv.dam.bd"/>
+            android:authorities="com.izv.dam.bd"
+            android:enabled="true" />
 
         <activity android:name=".vistas.main.VistaQuip">
             <intent-filter>
@@ -16,10 +25,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".vistas.notas.VistaNota">
+        <activity android:name=".vistas.notas.VistaNota"
+                    android:label="home"
+                    android:parentActivityName=".vistas.main.VistaQuip">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".vistas.main.VistaQuip" />
         </activity>
+        <activity android:name=".vistas.notas_lista.VistaNotaLista"
+                    android:label="home"
+                    android:parentActivityName=".vistas.main.VistaQuip">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".vistas.main.VistaQuip" />
+        </activity>
+
+        <activity android:name=".vistas.VistaLienzo"/>
     </application>
 </manifest>

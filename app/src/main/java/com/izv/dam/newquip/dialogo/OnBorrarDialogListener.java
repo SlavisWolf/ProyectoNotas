@@ -10,3 +10,6 @@ public interface OnBorrarDialogListener {
     void onBorrarPossitiveButtonClick(Nota n);
     void onBorrarNegativeButtonClick();
 }
+
+
+

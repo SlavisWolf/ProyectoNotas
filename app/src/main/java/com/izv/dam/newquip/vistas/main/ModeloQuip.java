@@ -30,7 +30,12 @@ public class ModeloQuip implements ContratoMain.InterfaceModelo {
 
     @Override
     public long deleteNota(Nota n) {
-        Uri uri = ContentUris.withAppendedId(Proveedor.CONTENT_URI_NOTA,n.getId());
+        Uri uri = ContentUris.withAppendedId(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getId());
+        if (n.getTipo()==Nota.TIPO_LISTA) { //BORRA TAMBIEN LOS ITEMS
+            String where= ContratoBaseDatos.TablaItemNotaLista.ID_NOTA_LISTA+"=?";
+            String[] argumentos = new String[]{String.valueOf(n.getId())};
+            cr.delete(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA,where,argumentos);
+        }
         return cr.delete(uri,"",null);
     }
 
@@ -50,7 +55,7 @@ public class ModeloQuip implements ContratoMain.InterfaceModelo {
 
     @Override
     public void loadData(OnDataLoadListener listener) {
-        cursor = cr.query(Proveedor.CONTENT_URI_NOTA,ContratoBaseDatos.TablaNota.PROJECTION_ALL,null,null,ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
+        cursor = cr.query(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,ContratoBaseDatos.TablaNota.PROJECTION_ALL,null,null,ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
        // Log.v("MSG",Proveedor.CONTENT_URI_NOTA.toString());
         listener.setCursor(cursor);
     }

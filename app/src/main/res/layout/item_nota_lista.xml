@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:paddingBottom="4dp"
+    android:layout_height="wrap_content"
+    >
+
+    <CheckBox
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_nota_lista_marcado"
+
+        android:layout_weight="0.1" />
+
+    <!-- android:button="drawable/checkbox_selector_no_disabled"-->
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/primary_text_light_nodisable"
+        android:inputType="text"
+        android:text=""
+        android:ems="10"
+        android:id="@+id/item_nota_lista_texto"
+        android:layout_weight="1.5" />
+
+    <ImageButton
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_action_borrar_item"
+        android:layout_marginTop="3.5dp"
+        android:id="@+id/item_nota_lista_boton_borrar_item"
+        android:background="@android:drawable/screen_background_light_transparent"
+        android:layout_width="wrap_content"
+        android:backgroundTint="@android:drawable/screen_background_light_transparent" />
+</LinearLayout>

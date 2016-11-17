@@ -3,6 +3,7 @@ package com.izv.dam.newquip.contrato;
 import android.database.Cursor;
 
 import com.izv.dam.newquip.pojo.Nota;
+import com.izv.dam.newquip.vistas.main.VistaQuip;
 
 public interface ContratoMain {
 
@@ -10,17 +11,20 @@ public interface ContratoMain {
 
         void close();
 
-        long deleteNota(int position);
+        void deleteNota(int position); //devolvia long
 
-        long deleteNota(Nota n);
+        void deleteNota(Nota n); //devolvia long
 
         Nota getNota(int position);
 
-        void loadData(OnDataLoadListener listener);
+        void setCursor(Cursor c);
+
+
+        /*void loadData(OnDataLoadListener listener);
 
         interface OnDataLoadListener {
             public void setCursor(Cursor c);
-        }
+        }*/
     }
 
     interface InterfacePresentador {
@@ -43,6 +47,8 @@ public interface ContratoMain {
 
         void onShowBorrarNota(int position);
 
+        void cargarCursorModelo(Cursor c);
+
     }
 
     interface InterfaceVista {
@@ -56,6 +62,8 @@ public interface ContratoMain {
         void mostrarEditarNota(Nota n);
 
         void mostrarConfirmarBorrarNota(Nota n);
+
+        void reiniciarDatos();
 
     }
 

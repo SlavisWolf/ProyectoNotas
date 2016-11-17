@@ -132,7 +132,7 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
                 et.requestFocus();
                 focusUltimo=false;
             }
-            Log.v("ITEM",item.toString());
+            //Log.v("ITEM",item.toString());
 
     }
 

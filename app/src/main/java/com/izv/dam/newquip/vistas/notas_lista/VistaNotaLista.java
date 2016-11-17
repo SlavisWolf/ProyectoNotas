@@ -2,11 +2,15 @@ package com.izv.dam.newquip.vistas.notas_lista;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,15 +19,18 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.izv.dam.newquip.R;
 import com.izv.dam.newquip.adaptadores.AdaptadorItemNotaLista;
 import com.izv.dam.newquip.adaptadores.AdaptadorNota;
+import com.izv.dam.newquip.contrato.ContratoBaseDatos;
 import com.izv.dam.newquip.contrato.ContratoNotaLista;
 import com.izv.dam.newquip.pojo.ItemNotaLista;
 import com.izv.dam.newquip.pojo.Nota;
+import com.izv.dam.newquip.util.PreferenciasCompartidas;
 import com.izv.dam.newquip.util.UtilArray;
 import com.izv.dam.newquip.util.UtilFecha;
 import com.izv.dam.newquip.vistas.main.VistaQuip;
@@ -38,7 +45,7 @@ import java.util.List;
 
 
 
-public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLista.InterfaceVista{
+public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLista.InterfaceVista, LoaderManager.LoaderCallbacks<Cursor>{
 
     private EditText titulo;
     private RecyclerView items;
@@ -48,12 +55,16 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
     private TextInputLayout til_titulo;
     private boolean marcarDesmarcar;
 
+    boolean  listaGuardada; //variable usada para evitar duplicados
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nota_lista);
 
         marcarDesmarcar=true;
+        listaGuardada = false;
+        PreferenciasCompartidas prefs = new PreferenciasCompartidas(this);
         til_titulo = (TextInputLayout) findViewById(R.id.nota_lista_til_titulo);
         titulo = (EditText) findViewById(R.id.nota_lista_titulo);
         items = (RecyclerView) findViewById(R.id.nota_lista_items);
@@ -89,11 +100,15 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
             Bundle b = getIntent().getExtras();
             if(b != null ) {
                 nota = b.getParcelable("nota");
+                enabled=prefs.isPrefsEditable();
             }
             else {
+                //this.window
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 enabled=true;
             }
-            cargarItems(presentador.getItems(nota.getId()));
+            getSupportLoaderManager().initLoader(0,null,this);
+            //cargarItems(presentador.getItems(nota.getId()));
         }
         cambiarEditable(enabled);
         titulo.setText(nota.getTitulo());
@@ -124,6 +139,9 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
         ((AdaptadorItemNotaLista)items.getAdapter()).setLista(l);
     }
 
+
+
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -139,6 +157,19 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
 
     @Override
     protected void onPause() {
+        PreferenciasCompartidas prefs = new PreferenciasCompartidas(this);
+        if (prefs.isPrefsGuardar()&& !listaGuardada) {
+            String textoTitulo = titulo.getText().toString().trim();
+            if (textoTitulo.isEmpty()) { //comprobar que el titulo esta vacio
+                if (!prefs.isPrefsTitulo()) { // si el titulo esta vacio, hay que comprobar que el usuario admite titulos vacios.
+                    guardarLista(textoTitulo);
+                }
+            }
+            else {
+                guardarLista(textoTitulo);
+            }
+        }
+        listaGuardada=false;
         presentador.onPause();
         super.onPause();
     }
@@ -165,24 +196,16 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
 
             case R.id.menu_nota_lista_guardar: {
 
+                PreferenciasCompartidas prefs = new PreferenciasCompartidas(this);
                 String textoTitulo = titulo.getText().toString().trim();
-                if (textoTitulo.isEmpty()) {
+                if (textoTitulo.isEmpty() && prefs.isPrefsTitulo()) {
                     til_titulo.setError(getResources().getString(R.string.errorTituloNoEscrito));
                 }
                 else {
-                    AdaptadorItemNotaLista adapter = (AdaptadorItemNotaLista) items.getAdapter();
-                    nota.setTitulo(textoTitulo);
-                    long id =presentador.onSaveNota(nota, adapter.getLista(), adapter.getBorrados());
-                    if (nota.getId()==0) {
-                        nota.setId(id);
-                    }
-                    Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.guardarNotaPart1)+" "+nota.getTitulo()+" "+getResources().getString(R.string.guardarNotaPart2),
-                            Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(VistaNotaLista.this, VistaQuip.class);
-                    startActivity(intent);
-                    //cambiarEditable(false);
+                    guardarLista(textoTitulo);
+                    listaGuardada=true;
+                    finish();
                 }
                 return true;
             }
@@ -239,5 +262,60 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
         else
             anadirItem.setVisibility(View.GONE);
         titulo.setEnabled(editable);
+    }
+
+
+    //LOAD MANAGER
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) { // HACE LA CONSULTA CON LOS DATOS,el ID ES EL ID A USAR DEL MANAGER
+        String uri = ContratoBaseDatos.TablaItemNotaLista.URI_ITEM_NOTA_LISTA+"/"+ContratoBaseDatos.TablaNota.TABLA+"/"+String.valueOf(nota.getId());//URI PARA BUSCAR LOS ELEMENTOS DE UNA LISTA
+        return new CursorLoader(this, Uri.parse(uri), ContratoBaseDatos.TablaItemNotaLista.PROJECTION_ALL, null, null, ContratoBaseDatos.TablaItemNotaLista.SORT_ORDER_DEFAULT);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) { //ASIGNA EL CURSOR A EL ADAPTADOR
+        cargarItems(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) { // ELIMINA LA REFERENCIA DE DATOS Y DEVUELVE EL ADAPTADOR A SU ESTADO INICIAL
+        cargarItems((new ArrayList<ItemNotaLista>()));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            getLoaderManager().destroyLoader(0);
+            AdaptadorItemNotaLista adaptador = (AdaptadorItemNotaLista) items.getAdapter();
+            if (adaptador != null) {
+                adaptador.setLista(new ArrayList<ItemNotaLista>());
+                adaptador = null;
+            }
+        } catch (Throwable localThrowable) {
+            // Proyectar la excepción
+            localThrowable.printStackTrace();
+        }
+    }
+    //FIN LOAD MANAGER
+
+    private void guardarLista(String titulo) {
+
+
+            AdaptadorItemNotaLista adapter = (AdaptadorItemNotaLista) items.getAdapter();
+            nota.setTitulo(titulo);
+            List<ItemNotaLista> lista = adapter.getLista();
+
+            if (!(titulo.isEmpty() || titulo==null)||!lista.isEmpty()) {
+                presentador.onSaveNota(nota, lista, adapter.getBorrados());
+              /*  if (nota.getId()==0) {
+                    nota.setId(id);
+                }*/
+                Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.guardarListaPart1)+" "+nota.getTitulo()+" "+getResources().getString(R.string.guardarNotaPart2),
+                        Toast.LENGTH_SHORT).show();
+            }
+            //cambiarEditable(false);
+
     }
 }

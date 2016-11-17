@@ -6,21 +6,6 @@
     android:layout_height="match_parent">
 
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/calendario"
-        >
-
-        <CalendarView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/calendario1"
-            android:visibility="invisible"/>
-
-    </LinearLayout>
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -49,7 +34,8 @@
                     android:id="@+id/etTitulo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hintTitulo"
+                    android:textColor="@android:color/primary_text_light_nodisable"
+                    android:hint="@string/hintTituloNota"
                     android:inputType="text"
                     android:background="@android:color/transparent"
                 />
@@ -74,6 +60,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textMultiLine"
+                            android:textColor="@android:color/primary_text_light_nodisable"
                             android:ems="10"
                             android:id="@+id/etNota"
                             android:background="@android:color/transparent"

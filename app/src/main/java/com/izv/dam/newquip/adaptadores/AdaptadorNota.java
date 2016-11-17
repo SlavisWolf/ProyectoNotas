@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.izv.dam.newquip.R;
 import com.izv.dam.newquip.pojo.Nota;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.IllegalFormatCodePointException;
 import java.util.List;
@@ -24,15 +26,19 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
     private View.OnClickListener clickListener;
     private View.OnLongClickListener longClickListener;
 
+    private String textoNotasVacias;
+    private String textoListasVacias;
 
 
-    public AdaptadorNota(Cursor cursor) {
+    public AdaptadorNota(Cursor cursor,String textoNotasVacias,String textoListasVacias) {
         this.cursor = cursor;
+        this.textoNotasVacias=textoNotasVacias;
+        this.textoListasVacias=textoListasVacias;
     }
 
 
-    public AdaptadorNota(){
-        this(null);
+    public AdaptadorNota(String textoNotasVacias,String textoListasVacias){
+        this(null,textoNotasVacias,textoListasVacias);
     }
 
 
@@ -113,7 +119,25 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
     public void onBindViewHolder(AdaptadorNota.ViewHolder holder, int position) { // aqui se le asignan los valores a  los elementos de los item , en este caso solo es 1cur;
         if (cursor.moveToPosition(position)) {
             Nota nota = Nota.getNota(cursor);
-            holder.getTextView().setText(nota.getTitulo());
+            TextView tv = holder.getTextView();
+            //TEXTVIEW
+            if  (nota.getTitulo()!=null && !nota.getTitulo().isEmpty()) {
+                    tv.setText(nota.getTitulo());
+            }
+            else {
+                if (nota.getNota()!=null && !nota.getNota().isEmpty()) {
+                        tv.setText(nota.getNota());
+                }
+                else {
+                    if (nota.getTipo()==Nota.TIPO_LISTA) {
+                        tv.setText(textoListasVacias);
+                    }
+                    else {
+                        tv.setText(textoNotasVacias);
+                    }
+                }
+            }
+
             Log.v("TIPO",nota.getTipo()+"");
             switch (nota.getTipo()) { //AQUI CAMBIAREMOS LA IMAGEN QUE SE MUESTRA PARA QUE EL USUARIO SEPA A 1ª VISTA QUE TIPO DE NOTA ES.
                 case Nota.TIPO_DEFECTO: {

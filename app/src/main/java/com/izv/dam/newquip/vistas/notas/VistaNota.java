@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import com.izv.dam.newquip.dialogo.OnBorrarGeneralDialogListener;
 import com.izv.dam.newquip.pojo.Nota;
 import com.izv.dam.newquip.util.DirectoriosArchivosQuip;
 import com.izv.dam.newquip.util.Permisos;
+import com.izv.dam.newquip.util.PreferenciasCompartidas;
 import com.izv.dam.newquip.vistas.VistaLienzo;
 import com.izv.dam.newquip.vistas.main.VistaQuip;
 
@@ -49,9 +51,12 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
     private PresentadorNota presentador;
 
    // private String nombreImagen;
-    private ArrayList<String> fotosBorradas;
+   // private ArrayList<String> fotosBorradas;
+
+    boolean notaGuardada; // esta variable se usara para que no se hagan seguidos el metodo de guardar del boton, y el de guardar automaticamente en el onPause
     private String rutaImage;
 
+    private VistaQuip menuPrincipal;
 
     public static boolean permisos = false;
 
@@ -60,6 +65,10 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nota);
 
+
+        notaGuardada = false;
+
+        PreferenciasCompartidas prefs = new PreferenciasCompartidas(this);
         presentador = new PresentadorNota(this);
         imagen = (ImageView) findViewById(R.id.imageView);
         imagen.setOnLongClickListener(new View.OnLongClickListener() {
@@ -76,15 +85,24 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
 
         if (savedInstanceState != null) {
             nota = savedInstanceState.getParcelable("nota");
-            cambiarEnabled(savedInstanceState.getBoolean("enabled"));
-            fotosBorradas= savedInstanceState.getStringArrayList("fotos_borradas");
+            cambiarEditable(savedInstanceState.getBoolean("enabled"));
+            //fotosBorradas= savedInstanceState.getStringArrayList("fotos_borradas");
         } else {
             Bundle b = getIntent().getExtras();
             if (b != null) {
                 nota = b.getParcelable("nota");
-                cambiarEnabled(false);
+                if (nota.getId()==0)  //PARA LAS NOTAS CREADAS DESDE LOS BOTONES CON UNA IMAGEN
+                    cambiarEditable(true);
+                else {
+                    prefs = new PreferenciasCompartidas(this); //solo para notas que no son nuevas;
+                    cambiarEditable(prefs.isPrefsEditable());
+                }
+
             }
-            fotosBorradas = new ArrayList<>();
+            else {
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            }
+            //fotosBorradas = new ArrayList<>();
         }
 
         editTextTitulo.addTextChangedListener(new TextWatcher() {
@@ -129,7 +147,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
             */
         }
         else if(id == R.id.menu_nota_editar) {
-            cambiarEnabled(!editTextTitulo.isEnabled());
+            cambiarEditable(!editTextTitulo.isEnabled());
         }
         else if(id == R.id.galeria) {
 
@@ -143,17 +161,17 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
         }
         else if(id == R.id.menu_nota_guardar){
             String textoTitulo = editTextTitulo.getText().toString().trim();
-            if (textoTitulo.isEmpty()) {
+            PreferenciasCompartidas prefs  = new PreferenciasCompartidas(this);
+            if (textoTitulo.isEmpty() && prefs.isPrefsTitulo()) {
                     til_titulo.setError(getResources().getString(R.string.errorTituloNoEscrito));
             }
             else {
                 saveNota();
-                Toast.makeText(getApplicationContext(),
-                        getResources().getString(R.string.guardarNotaPart1) +" "+ editTextTitulo.getText().toString() + " "+getResources().getString(R.string.guardarNotaPart2),
-                        Toast.LENGTH_SHORT).show();
+                notaGuardada=true; // despues se saldra, con esto evitamos que duplique
+                finish();
                 //cambiarEnabled(false);
-                Intent intent = new Intent(VistaNota.this, VistaQuip.class);
-                startActivity(intent);
+               /* Intent intent = new Intent(VistaNota.this, VistaQuip.class);
+                startActivity(intent);*/
             }
 
         }
@@ -161,9 +179,9 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
 
             if (Permisos.solicitarPermisos(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},this)) {
 
-                if (imagen.getVisibility()==View.VISIBLE) {
+                /*if (imagen.getVisibility()==View.VISIBLE) {
                     fotosBorradas.add(rutaImage); //ESTO BORRA LA IMAGEN QUE HAY AHORA MISMO(SI LA HAY)
-                }
+                }*/
 
                 Long timestamp = System.currentTimeMillis() / 1000;
                 DirectoriosArchivosQuip.comprobarDirectorioImagenes();
@@ -214,9 +232,9 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
             case Permisos.GALERIA:
                 if(resultCode == RESULT_OK) {
 
-                        if (imagen.getVisibility()==View.VISIBLE) {
+                        /*if (imagen.getVisibility()==View.VISIBLE) {
                             fotosBorradas.add(rutaImage); //ESTO BORRA LA IMAGEN QUE HAY AHORA MISMO(SI LA HAY)
-                        }
+                        }*/
                         String rutaAbsoluta = DirectoriosArchivosQuip.getRutaImagen(data.getData(),this);
                         String nombreImagen = rutaAbsoluta.substring(rutaAbsoluta.lastIndexOf("/") + 1, rutaAbsoluta.length());
                         rutaImage = Environment.getExternalStorageDirectory() + File.separator + DirectoriosArchivosQuip.IMAGE_DIRECTORY + File.separator + nombreImagen;
@@ -246,16 +264,28 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
                     imagen .setImageBitmap(bmp);
                     nota.setTipo(Nota.TIPO_IMAGEN);
                 }
-                else {
+               /* else {
                     fotosBorradas.remove(fotosBorradas.size()-1); //esto hace que sino  seleccionamos nada, quite de fotos borradas la ultima imagen.
-                }
+                }*/
                 break;
         }
     }
 
     @Override
     protected void onPause() {
-        //saveNota();
+        PreferenciasCompartidas prefs = new PreferenciasCompartidas(this);
+        if (prefs.isPrefsGuardar() && !notaGuardada) {
+            String textoTitulo = editTextTitulo.getText().toString().trim();
+            if (textoTitulo.isEmpty()) { //comprobar que el titulo esta vacio
+                if (!prefs.isPrefsTitulo()) { // si el titulo esta vacio, hay que comprobar que el usuario admite titulos vacios.
+                    saveNota();
+                }
+            }
+            else {
+                saveNota();
+            }
+        }
+        notaGuardada=false;
         presentador.onPause();
         super.onPause();
     }
@@ -272,7 +302,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
         guardarDatosEnNota();
         outState.putParcelable("nota", nota);
         outState.putBoolean("enabled",editTextTitulo.isEnabled());
-        outState.putStringArrayList("fotos_borradas",fotosBorradas);
+        //outState.putStringArrayList("fotos_borradas",fotosBorradas);
     }
 
     @Override
@@ -289,18 +319,24 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
 
     private void saveNota() {
         guardarDatosEnNota();
-        for (String ruta:fotosBorradas) {
+        /*for (String ruta:fotosBorradas) {
             Log.v("FICHEROS",ruta);
             DirectoriosArchivosQuip.borrarArchivo(ruta);
+        }*/
+        //fotosBorradas = new ArrayList<>(); //SE REINICIA
+        if (!nota.comprobarNotaVacia()) {
+             presentador.onSaveNota(nota);
+            /*if (r > 0 & nota.getId() == 0) {
+                nota.setId(r);
+            }*/
+            Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.guardarNotaPart1) +" "+ editTextTitulo.getText().toString() + " "+getResources().getString(R.string.guardarNotaPart2),
+                    Toast.LENGTH_SHORT).show();
         }
-        fotosBorradas = new ArrayList<>(); //SE REINICIA
-        long r = presentador.onSaveNota(nota);
-        if (r > 0 & nota.getId() == 0) {
-            nota.setId(r);
-        }
+
     }
 
-    private void cambiarEnabled(boolean enabled) {
+    private void cambiarEditable(boolean enabled) {
         editTextTitulo.setEnabled(enabled);
         editTextNota.setEnabled(enabled);
         imagen.setLongClickable(enabled);
@@ -310,7 +346,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
     public void onBorrarPossitiveButtonClick() {
         imagen.setImageResource(0);
         nota.setTipo(Nota.TIPO_DEFECTO);
-        fotosBorradas.add(rutaImage);
+        //fotosBorradas.add(rutaImage);
         rutaImage = null;
         imagen.setVisibility(View.GONE);
     }
@@ -319,8 +355,8 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
     public void onBorrarNegativeButtonClick() {}
 
     private void guardarDatosEnNota() {
-        nota.setTitulo(editTextTitulo.getText().toString());
-        nota.setNota(editTextNota.getText().toString());
+        nota.setTitulo(editTextTitulo.getText().toString().trim());
+        nota.setNota(editTextNota.getText().toString().trim());
         nota.setImagen(rutaImage);
     }
 

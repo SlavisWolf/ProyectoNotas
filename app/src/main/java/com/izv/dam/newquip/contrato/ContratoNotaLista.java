@@ -18,11 +18,11 @@ public interface ContratoNotaLista {
         void close();
 
 
-        Cursor getItems(long id);
+      //  Cursor getItems(long id);
 
-        int updateNota(Nota n , List<ItemNotaLista> lista, List<ItemNotaLista> borrados);
+        void updateNota(Nota n , List<ItemNotaLista> lista, List<ItemNotaLista> borrados);
 
-        long insertNota(Nota n ,List<ItemNotaLista> lista);
+        void insertNota(Nota n ,List<ItemNotaLista> lista);
     }
 
     interface InterfacePresentador {
@@ -31,9 +31,9 @@ public interface ContratoNotaLista {
 
         void onResume();
 
-        Cursor getItems(Long id);
+        //Cursor getItems(Long id);
 
-        long onSaveNota(Nota n ,List<ItemNotaLista> lista , List<ItemNotaLista> borrados);
+        void onSaveNota(Nota n ,List<ItemNotaLista> lista , List<ItemNotaLista> borrados); //long
 
     }
 

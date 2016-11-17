@@ -178,4 +178,18 @@ public class Nota implements Parcelable {
         dest.writeString(audio);
         dest.writeInt(tipo);
     }
+
+    public boolean comprobarNotaVacia() {
+        if ((titulo==null || titulo.isEmpty()) && (nota==null || nota.isEmpty()) && (imagen==null || imagen.isEmpty()) && (audio==null || audio.isEmpty())) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean comprobarNotaVaciaParaPDF() {
+        if ((titulo==null || titulo.isEmpty()) && (nota==null || nota.isEmpty()) && (imagen==null || imagen.isEmpty())) {
+            return true;
+        }
+        return false;
+    }
 }

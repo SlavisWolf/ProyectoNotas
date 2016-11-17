@@ -26,20 +26,29 @@
             </intent-filter>
         </activity>
         <activity android:name=".vistas.notas.VistaNota"
-                    android:label="home"
+                    android:label="@string/Nota"
+                    android:windowSoftInputMode="adjustResize|stateHidden"
                     android:parentActivityName=".vistas.main.VistaQuip">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".vistas.main.VistaQuip" />
         </activity>
         <activity android:name=".vistas.notas_lista.VistaNotaLista"
-                    android:label="home"
+                    android:windowSoftInputMode="adjustResize|stateHidden"
+                    android:label="@string/Lista"
                     android:parentActivityName=".vistas.main.VistaQuip">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".vistas.main.VistaQuip" />
         </activity>
 
-        <activity android:name=".vistas.VistaLienzo"/>
+        <activity android:name=".vistas.VistaLienzo"
+            android:label="@string/lienzoLabel"
+            android:parentActivityName=".vistas.main.VistaQuip">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".vistas.main.VistaQuip" />
+        </activity>
     </application>
 </manifest>

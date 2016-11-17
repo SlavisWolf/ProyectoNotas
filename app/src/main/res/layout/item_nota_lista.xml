@@ -11,10 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/item_nota_lista_marcado"
-
+        android:button="@drawable/checkbox_selector_no_disabled"
         android:layout_weight="0.1" />
 
-    <!-- android:button="drawable/checkbox_selector_no_disabled"-->
+    <!-- android:button="@drawable/checkbox_selector_no_disabled"-->
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

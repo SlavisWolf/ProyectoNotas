@@ -7,10 +7,18 @@
     <string name="mensaje_confirm_borrar">¿Seguro que quieres borrar esta nota?</string>
     <string name="etiqueta_dialogo_borrar">Eliminar: </string>
     // nota
-    <string name="nota">Nota</string>
+    <string name="Nota">Nota</string>
+    <string name="Lista">Lista</string>
     <string name="titulo">Título</string>
-    <string name="hintTitulo">Título Nota</string>
+    <string name="hintTituloNota">Título Nota</string>
+    <string name="hintTituloNotaObligatorio">* Título Nota</string>
+    <string name="hintTituloLista">Título Lista</string>
+    <string name="hintTituloListaObligatorio">* Título Lista</string>
     <string name="hintRecordar">¿Qué desea recordar?</string>
+    <string name="textoCerrar">Cerrar</string>
+
+    <string name="notaVacia">Nota sin texto</string>
+    <string name="listaVacia">Lista sin texto</string>
 
     <!-- MENU DE BOTONES -->
     <string name="anadirNota">Crear nota</string>
@@ -24,6 +32,7 @@
     <string name="marcarCheckBox">Marcar/Desmarcar casillas</string>
     <string name="vaciarElementos">Vaciar lista</string>
     <string name="invertirElementos">Invertir casillas</string>
+    <string name="menuImprimirLista">Imprimir lista en PDF</string>
 
     <!-- MENU NOTA NORMAL -->
 
@@ -33,6 +42,16 @@
     <string name="menuImprimir">Imprimir nota en PDF</string>
     <string name="menuDibujar">Crear dibujo</string>
 
+    <!-- MENU QUIP -->
+    <string name="configuracionNotas">Configurar opciones de nota.</string>
+
+
+    <!--Dialogo Preferencias Nota -->
+    <string name="menuQuipGuardarAutomatico">Guardar notas automáticamente.</string>
+    <string name="menuQuipTituloObligatorio">Título obligatorio.</string>
+    <string name="menuQuipNotaEditable">Habilitar edición de nota.</string>
+    <string name="dialogoPreferenciasNotaTitulo">Configuración Nota</string>
+
 
     <!-- Dialogo Borrar General-->
 
@@ -41,7 +60,9 @@
     <string name="tituloDialogoImagen">Imagen</string>
     <string name="textoDialogoImagen">esta imagen?</string>
 
+
     <!-- LIENZO -->
+    <string name="lienzoLabel">Lienzo</string>
     <string name="grosorGrande">Grande</string>
     <string name="grosorMediano">Mediano</string>
     <string name="grosorPequeno">Pequeño</string>
@@ -60,8 +81,12 @@
     <string name="permisoConcedido">3.1 Permiso Concedido</string>
     <string name="permisoNoConcedido">3.2 Permiso No Concedido</string>
 
+
+
+
      <!-- otros -->
     <string name="guardarNotaPart1">Su nota </string>
+    <string name="guardarListaPart1">Su lista </string>
     <string name="guardarNotaPart2"> ha sido guardada.</string>
     <string name="errorTituloNoEscrito">No has introducido título</string>
     <string name="editarNota">Abriendo nota para editarla.</string>
@@ -69,6 +94,8 @@
     <string name="nuevaNotaImagen">Buscando imagen para crear nota.</string>
     <string name="editarNotaLista">Abriendo lista para editarla.</string>
     <string name="nuevaNotaLista">Creando nueva lista.</string>
-    <string name="nuevaNotaDibujo">Abiendo lienzo para nueva nota.</string>
-    <string name="imagenNoGuardada">La imagen no ha pidido guardarse</string>
+    <string name="nuevaNotaDibujo">Abiendo Lienzo para nueva nota.</string>
+    <string name="imagenNoGuardada">La imagen no ha podido guardarse</string>
+
+
 </resources>

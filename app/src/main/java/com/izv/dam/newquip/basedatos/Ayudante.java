@@ -59,6 +59,14 @@ public class Ayudante extends SQLiteOpenHelper {
         Log.v("TABLA 3",sql);
         db.execSQL(sql);
 
+        sql= "create trigger if not exists tr_borrado_items before delete on "+ContratoBaseDatos.TablaNota.TABLA+
+                " for each row"+
+                " when old."+ContratoBaseDatos.TablaNota.TIPO+"=5"+
+                " BEGIN delete from "+ContratoBaseDatos.TablaItemNotaLista.TABLA+ " " +
+                "where "+ContratoBaseDatos.TablaItemNotaLista.ID_NOTA_LISTA+"=old."+ContratoBaseDatos.TablaNota._ID+
+                "; END;";
+        Log.v("TRIGGER",sql);
+        db.execSQL(sql);
         db.execSQL("PRAGMA foreign_kets=ON");
     }
 

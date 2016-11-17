@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <item android:title="@string/configuracionNotas"
+        android:id="@+id/menu_quip_configuracion"/>
+   <!-- <group android:checkableBehavior="all">
+        <item
+            android:id="@+id/menu_quip_guardar"
+            android:title="@string/menuQuipGuardarAutomatico"/>
+        <item
+            android:id="@+id/menu_quip_titulo"
+            android:title="@string/menuQuipTituloObligatorio"/>
+        <item
+            android:id="@+id/menu_quip_editar"
+            android:title="@string/menuQuipNotaEditable"/>
+    </group> -->
+</menu>

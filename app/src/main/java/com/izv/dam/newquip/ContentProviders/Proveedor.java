@@ -1,5 +1,6 @@
 package com.izv.dam.newquip.ContentProviders;
 
+import android.content.AsyncQueryHandler;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -19,6 +20,8 @@ import com.izv.dam.newquip.gestion.GestionNota;
  * Created by alumno on 18/10/2016.
  */
 
+
+//AsyncQueryHandler http://codetheory.in/using-asyncqueryhandler-to-access-content-providers-asynchronously-in-android/
 public class Proveedor extends ContentProvider {
 
 
@@ -37,7 +40,7 @@ public class Proveedor extends ContentProvider {
 
     private static final int ITEM_NOTA_LISTA = 3;
     private static final int ITEM_NOTA_LISTA_ID = 4;
-    private static final int ITEM_NOTA_LISTA_NOTA_ID = 5;
+    private static final int ITEM_NOTA_LISTA_NOTA_ID = 5; //BUSCAR TODOS LOS ELEMENTOS DE UNA NOTA CONCRETA.
     private static final UriMatcher uriMatcher;
 
     //Inicializamos el UriMatcher
@@ -177,6 +180,12 @@ public class Proveedor extends ContentProvider {
                 //notificarCambio(uri,cont);
                 return cont;
             }*/
+
+            case ITEM_NOTA_LISTA_NOTA_ID : { //BORRA TODOS
+                where = ContratoBaseDatos.TablaItemNotaLista.ID_NOTA_LISTA+"=" + uri.getLastPathSegment();
+                cont = gestionItemNotaLista.delete(where,selectionArgs);
+                return cont;
+            }
 
             case ITEM_NOTA_LISTA_ID : {
                 where = "_id=" + uri.getLastPathSegment();

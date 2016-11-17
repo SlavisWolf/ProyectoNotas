@@ -10,7 +10,7 @@ public interface ContratoNota {
 
         Nota getNota(long id);
 
-        long saveNota(Nota n);
+        void saveNota(Nota n); //long
 
     }
 
@@ -20,14 +20,13 @@ public interface ContratoNota {
 
         void onResume();
 
-        long onSaveNota(Nota n);
+        void onSaveNota(Nota n);
 
     }
 
     interface InterfaceVista {
 
         void mostrarNota(Nota n);
-
     }
 
 }

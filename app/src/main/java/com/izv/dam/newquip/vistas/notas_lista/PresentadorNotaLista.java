@@ -31,25 +31,24 @@ public class PresentadorNotaLista implements ContratoNotaLista.InterfacePresenta
 
     @Override
     public void onResume() {
-
     }
 
-    @Override
+   /* @Override
     public Cursor getItems(Long id) {
         return  modelo.getItems(id);
-    }
+    }*/
 
     @Override
-    public long onSaveNota(Nota n, List<ItemNotaLista> lista, List<ItemNotaLista> borrados) {
+    public void onSaveNota(Nota n, List<ItemNotaLista> lista, List<ItemNotaLista> borrados) {
 
-        if (!n.getTitulo().isEmpty() || !lista.isEmpty()) {
+            Log.v("ID NOTA",n.getId()+"");
+
             if (n.getId()==0) { // no hay ids a 0 en la base de datos, asi que si la id es 0 es porque se ha creado nueva.
-                return  modelo.insertNota(n,lista);
+                  modelo.insertNota(n,lista);
             }
             else {
-                return modelo.updateNota(n,lista,borrados); // aunque devuelve un entero, lo castea automaticamente a entero.
+                 modelo.updateNota(n,lista,borrados); // aunque devuelve un entero, lo castea automaticamente a entero.
             }
-        }
-        return -1; //NO SE GUARDA
+        //return -1; //NO SE GUARDA
     }
 }

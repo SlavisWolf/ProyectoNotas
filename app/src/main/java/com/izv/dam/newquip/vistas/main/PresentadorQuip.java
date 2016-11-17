@@ -10,17 +10,17 @@ public class PresentadorQuip implements ContratoMain.InterfacePresentador{
 
     private ContratoMain.InterfaceModelo modelo;
     private ContratoMain.InterfaceVista vista;
-    private ContratoMain.InterfaceModelo.OnDataLoadListener oyente;
+   // private ContratoMain.InterfaceModelo.OnDataLoadListener oyente;
 
     public PresentadorQuip(ContratoMain.InterfaceVista vista) {
         this.vista = vista;
         this.modelo = new ModeloQuip((Context)vista);
-        oyente = new ContratoMain.InterfaceModelo.OnDataLoadListener() {
+        /*oyente = new ContratoMain.InterfaceModelo.OnDataLoadListener() {
             @Override
             public void setCursor(Cursor c) {
                 PresentadorQuip.this.vista.mostrarDatos(c);
             }
-        };
+        };*/
     }
 
     @Override
@@ -37,7 +37,7 @@ public class PresentadorQuip implements ContratoMain.InterfacePresentador{
     @Override
     public void onDeleteNota(Nota n) {
         this.modelo.deleteNota(n);
-        this.modelo.loadData(oyente);
+        //this.modelo.loadData(oyente);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class PresentadorQuip implements ContratoMain.InterfacePresentador{
 
     @Override
     public void onResume() {
-        this.modelo.loadData(oyente);
+        //this.modelo.loadData(oyente);
     }
 
 
@@ -65,12 +65,16 @@ public class PresentadorQuip implements ContratoMain.InterfacePresentador{
     @Override
     public void onDeleteNota(int position) {
         this.modelo.deleteNota(position);
-        this.modelo.loadData(oyente);
+        //this.modelo.loadData(oyente);
     }
 
     @Override
     public void onEditNota(int position) {
         Nota n = this.modelo.getNota(position);
         this.onEditNota(n);
+    }
+
+    public void cargarCursorModelo(Cursor c){
+        modelo.setCursor(c);
     }
 }

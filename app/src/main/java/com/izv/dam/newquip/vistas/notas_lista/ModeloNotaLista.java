@@ -5,8 +5,10 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
+import com.izv.dam.newquip.ContentProviders.ProveedorAsincrono;
 import com.izv.dam.newquip.contrato.ContratoBaseDatos;
 import com.izv.dam.newquip.contrato.ContratoNotaLista;
 import com.izv.dam.newquip.pojo.ItemNotaLista;
@@ -21,9 +23,11 @@ import java.util.List;
 public class ModeloNotaLista implements ContratoNotaLista.InterfaceModelo {
 
     ContentResolver cr;
+    ProveedorAsincrono pa;
 
     public ModeloNotaLista(Context c) {
         cr= c.getContentResolver();
+        pa = new ProveedorAsincrono(c.getContentResolver());
     }
 
 
@@ -31,26 +35,35 @@ public class ModeloNotaLista implements ContratoNotaLista.InterfaceModelo {
     public void close() {
     }
 
-    @Override
+    /*@Override
     public Cursor getItems(long id) {
         String uri = ContratoBaseDatos.TablaItemNotaLista.URI_ITEM_NOTA_LISTA+"/"+ContratoBaseDatos.TablaNota.TABLA+"/"+String.valueOf(id);
         //Log.v("URI",uri.toString());
         return cr.query(Uri.parse(uri),ContratoBaseDatos.TablaItemNotaLista.PROJECTION_ALL,"",null,ContratoBaseDatos.TablaItemNotaLista.SORT_ORDER_DEFAULT);
-    }
+    }*/
 
     @Override
-    public int updateNota(Nota n, List<ItemNotaLista> lista, List<ItemNotaLista> borrados) {
+    public void updateNota(Nota n, List<ItemNotaLista> lista, List<ItemNotaLista> borrados) {
         Uri uriNota = ContentUris.withAppendedId(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getId());
-        int num = cr.update(uriNota,n.getContentValues(),"",null);
+
+       /* Bundle b = new Bundle(); // le pasaremos el id, y las listas.
+        b.putLong("idLista",n.getId());
+        b.putParcelableArray("lista",lista.toArray(new ItemNotaLista[lista.size()]));
+        b.putParcelableArray("borrados",borrados.toArray(new ItemNotaLista[borrados.size()]));*/
+        pa.startUpdate(ProveedorAsincrono.TOKEN_CAMBIO_ESTANDAR,null,uriNota,n.getContentValues(),"",null); // solo notificará este metodo los item de abajo no lo haran
+
+        //int num = cr.update(uriNota,n.getContentValues(),"",null);
         long idNota = n.getId();
         if (!lista.isEmpty()) {
             for (ItemNotaLista item : lista) {
                 if (item.getId() == 0) {
                     item.setId_NotaLista(idNota);
-                    cr.insert(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, item.getContentValues());
+                    pa.startInsert(0,null,ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, item.getContentValues());
+                    //cr.insert(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, item.getContentValues());
                 } else {
                     Uri uriItem = ContentUris.withAppendedId(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, item.getId());
-                    cr.update(uriItem, item.getContentValues(), "", null);
+                    pa.startUpdate(0,null,uriItem, item.getContentValues(), "", null);
+                    //cr.update(uriItem, item.getContentValues(), "", null);
                 }
             }
         }
@@ -58,25 +71,31 @@ public class ModeloNotaLista implements ContratoNotaLista.InterfaceModelo {
            for (ItemNotaLista item : borrados) {
                if (item.getId()!=0){ // en la base de datos no hay ids que sean 0 , por tanto este elemento lo hemos borrado en la edición, pero nunca lo habiamos llegado a guardar en la base de datos.
                    Uri uriItem = ContentUris.withAppendedId(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA,item.getId());
-                   cr.delete(uriItem,"",null);
+                   pa.startDelete(0,null,uriItem,"",null);
+                   //cr.delete(uriItem,"",null);
                }
            }
        }
-        return num ; //devuelve el num de notas actualizadas, no deberia cambiar de 1 xD
+        //return num ; //devuelve el num de notas actualizadas, no deberia cambiar de 1 xD*/
     }
 
     @Override
-    public long insertNota(Nota n, List<ItemNotaLista> lista) {
-        Uri uriNewNota=cr.insert(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getContentValues()); //INSERTAMOS LA NOTA
-        long idNota= Long.parseLong(uriNewNota.getLastPathSegment());// la id te la da la base de datos la primera vez que insertamos la nota
+    public void insertNota(Nota n, List<ItemNotaLista> lista) {
 
-        if (!lista.isEmpty()) {
+        pa.startInsert(ProveedorAsincrono.TOKEN_INSERT_LISTA,lista,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getContentValues()); // le pasamos la lista para que el proveedor se encargue de añadir los items
+
+
+
+        //Uri uriNewNota=cr.insert(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getContentValues()); //INSERTAMOS LA NOTA
+       // long idNota= Long.parseLong(uriNewNota.getLastPathSegment());// la id te la da la base de datos la primera vez que insertamos la nota
+
+        /*if (!lista.isEmpty()) {
             for (ItemNotaLista item : lista) {
                 item.setId_NotaLista(idNota); // tenemos que saber a que nota pertenece el elemento, aqui es donde se referencia.
                 cr.insert(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, item.getContentValues());
             }
-        }
-        return idNota; // DEVUELVE EL ID DE  LA NOTA SOLO
+        }*/
+        //return idNota; // DEVUELVE EL ID DE  LA NOTA SOLO
     }
 
 

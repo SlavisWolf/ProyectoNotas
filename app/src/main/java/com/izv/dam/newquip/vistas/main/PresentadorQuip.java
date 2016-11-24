@@ -55,6 +55,9 @@ public class PresentadorQuip implements ContratoMain.InterfacePresentador{
     }
 
 
+    public  void borrarConjunto (String where, boolean listas) {
+        this.modelo.borrarConjunto(where,listas);
+    }
 
     @Override
     public void onShowBorrarNota(int position) {

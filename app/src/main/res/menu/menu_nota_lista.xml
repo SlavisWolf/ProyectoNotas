@@ -30,6 +30,11 @@
         <item
             android:title="@string/invertirElementos"
             android:id="@+id/menu_nota_lista_invertir_items"/>
+
+        <item
+            android:title="@string/menuImprimirLista"
+            android:id="@+id/menu_nota_lista_imprimir_pdf"
+            />
     </group>
 
 </menu>

@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompatSideChannelService;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,6 +29,8 @@ public class DirectoriosArchivosQuip {
     public static String  AUDIO_DIRECTORY = MEDIA_DIRECTORY+File.separator+"audios";
     public static String  PDF_DIRECTORY = MEDIA_DIRECTORY+File.separator+"pdfs";
 
+    //public static String ALMACENAMIENTO_INTERNO =Context."/data/data/com.example.dam.proyectonotas/files/quipinterno";
+
     public static  void comprobarDirectorioImagenes() {
         File dir1 = new File(Environment.getExternalStorageDirectory() + File.separator+IMAGE_DIRECTORY);
 
@@ -38,6 +41,13 @@ public class DirectoriosArchivosQuip {
 
     public static void comprobarDirectorioAudio() {
         File dir1 = new File(Environment.getExternalStorageDirectory() + File.separator+AUDIO_DIRECTORY);
+        if (!dir1.exists()) {
+            dir1.mkdirs();
+        }
+    }
+
+    public static void comprobarDirectorioPDF() {
+        File dir1 = new File(Environment.getExternalStorageDirectory() + File.separator+PDF_DIRECTORY);
         if (!dir1.exists()) {
             dir1.mkdirs();
         }
@@ -56,13 +66,15 @@ public class DirectoriosArchivosQuip {
         try {
             comprobarDirectorioImagenes();
             File file_imagen = new File(ruta);
+
             file_imagen.createNewFile();
 
             FileOutputStream file = new FileOutputStream(ruta);
+
             bmp.compress(Bitmap.CompressFormat.PNG, 0, file);
-            MediaScannerConnection.scanFile(c,
-                    new String[]{file_imagen.toString()},
-                    null,
+            /*ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 0, bytes);*/
+            MediaScannerConnection.scanFile(c,new String[]{file_imagen.toString()},null,
                     new MediaScannerConnection.OnScanCompletedListener() {
                         public void onScanCompleted(String path, Uri uri) {
                         }
@@ -72,6 +84,8 @@ public class DirectoriosArchivosQuip {
             e.printStackTrace();
         }
     }
+
+
     
     public  static void  borrarArchivo(String ruta) {
         File f = new File(ruta);
@@ -81,5 +95,26 @@ public class DirectoriosArchivosQuip {
         else {
             Log.v("FALLOOOO","FALOOO");
         }
+    }
+
+    public static String crearImagenAlmacenamientoInterno(Context c,Bitmap bmp,String nombreArchivo){ // devuelve la ruta
+        FileOutputStream file_imagen = null;
+        try {
+            file_imagen = c.openFileOutput(nombreArchivo,c.MODE_PRIVATE);
+
+            bmp.compress(Bitmap.CompressFormat.PNG, 0, file_imagen);
+            MediaScannerConnection.scanFile(c,
+                    new String[]{file_imagen.toString()},
+                    null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        public void onScanCompleted(String path, Uri uri) {
+                        }
+                    });
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return c.getFilesDir()+"/"+nombreArchivo;
     }
 }

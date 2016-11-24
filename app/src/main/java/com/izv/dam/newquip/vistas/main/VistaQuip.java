@@ -1,22 +1,23 @@
 package com.izv.dam.newquip.vistas.main;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 
 
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,41 +30,47 @@ import com.izv.dam.newquip.adaptadores.AdaptadorNota;
 import com.izv.dam.newquip.contrato.ContratoBaseDatos;
 import com.izv.dam.newquip.contrato.ContratoMain;
 import com.izv.dam.newquip.dialogo.DialogoPreferenciasNota;
-import com.izv.dam.newquip.dialogo.OnBorrarDialogListener;
+import com.izv.dam.newquip.dialogo.interfaces.OnBorrarDialogListener;
 import com.izv.dam.newquip.pojo.Nota;
 import com.izv.dam.newquip.dialogo.DialogoBorrar;
 import com.izv.dam.newquip.util.DirectoriosArchivosQuip;
 import com.izv.dam.newquip.util.Permisos;
-import com.izv.dam.newquip.util.PreferenciasCompartidas;
+import com.izv.dam.newquip.util.UtilFecha;
+import com.izv.dam.newquip.vistas.Usuarios.VistaDatosUsuario;
 import com.izv.dam.newquip.vistas.VistaLienzo;
 import com.izv.dam.newquip.vistas.notas.VistaNota;
 import com.izv.dam.newquip.vistas.notas_lista.VistaNotaLista;
 
 import java.io.File;
 
-public class VistaQuip extends AppCompatActivity implements ContratoMain.InterfaceVista , OnBorrarDialogListener,LoaderManager.LoaderCallbacks<Cursor> {
+public class VistaQuip extends AppCompatActivity implements ContratoMain.InterfaceVista , OnBorrarDialogListener,LoaderManager.LoaderCallbacks<Cursor> { //PREGUNTAR A CARMELO EL ERROR DEL ID 0 EN EL LOADER
 
-    //private AdaptadorNota adaptador;
     private PresentadorQuip presentador;
     private  RecyclerView rv;
-    private FloatingActionsMenu fam;
-
+    private DrawerLayout drawerLayout;
     public static  ContratoMain.InterfaceVista REFERENCIA_MENU_PRINCIPAL; // ESTA INTERFAZ SE USARA PARA QUE EL PROVEEDOR ASINCRONO PUEDA ACTUALIZAR LOS DATOS CUANDO TERMINE SU TRABAJO
-    //private PreferenciasCompartidas prefs;
 
-    /*//MENUS ITEM
+    public static  final int ID_CURSOR_TODO=1; // este es público porque lo vamos a llamar desde el Proveedor Asincrono.
+    private static  final int ID_CURSOR_NOTA=2;
+    private static  final int ID_CURSOR_LISTA=3;
+    private  static  final int ID_CURSOR_MULTIMEDIA=4;
 
-    MenuItem menuGuardar;
-    MenuItem menuTitulo;
-    MenuItem menuEditar;*/
+    public  static  int ID_CURSOR_ACTUAL;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quip);
+        setContentView(R.layout.navigation_quip);
+
+
+
+
 
         presentador = new PresentadorQuip(this);
+
+        crearNavigationView(); // AÑADIDO PARA EL NAVIGATION DRAWER
         rv = (RecyclerView) findViewById(R.id.lvListaNotas);
         rv.setHasFixedSize(false); // true, la lista es estatica, false, los datos de la lista pueden variar.
         rv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)); // forma en que se visualizan los elementos, en este caso en vertical.
@@ -85,13 +92,13 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         rv.setAdapter(adaptador);
 
         //MENU DE FLOAT BUTTONS
-        fam = (FloatingActionsMenu) findViewById(R.id.vista_principal_menuFloat);
+        FloatingActionsMenu fam = (FloatingActionsMenu) findViewById(R.id.vista_principal_menuFloat);
         FloatingActionButton anadirNota = (FloatingActionButton) findViewById(R.id.vista_principal_anadir_nota_normal);
         anadirNota.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 presentador.onAddNota();
-               // fam.toggle();
+                // fam.toggle();
             }
         });
 
@@ -110,7 +117,8 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                 if  (Permisos.solicitarPermisos(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},VistaQuip.this)) { //AÑADIDA SOLICITUD DE PERMISOS, PORQUE AHORA CREA UN ARCHIVO NUEVO.
                     Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");//para que busque cualquier tipo de imagen
-                    startActivityForResult(intent.createChooser(intent, "Selecciona app de imagen"), Permisos.GALERIA);
+                    startActivityForResult(intent.createChooser(intent,getString(R.string.appImagen) ), Permisos.GALERIA);
+                    Toast.makeText(VistaQuip.this,R.string.nuevaNotaImagen, Toast.LENGTH_SHORT).show();
                 }
                 else
                     Permisos.solicitarPermisos(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},VistaQuip.this);
@@ -132,8 +140,17 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         menuTitulo=(MenuItem) findViewById(R.id.menu_quip_titulo);
         menuEditar=(MenuItem) findViewById(R.id.menu_quip_editar);*/
 
+
+        if (savedInstanceState!=null) {
+            System.out.println(savedInstanceState.getInt("cursor_actual"));
+            VistaQuip.ID_CURSOR_ACTUAL = savedInstanceState.getInt("cursor_actual"); // coge del bundle el cursor actual, sino existe le asocia el de todos.
+        }
+        else {
+            VistaQuip.ID_CURSOR_ACTUAL = ID_CURSOR_TODO;
+        }
+
         //MENU DEL TOOL
-        getSupportLoaderManager().initLoader(0,null,this); // LO 1º ES ID DEL MANAGER, , LO 2º SON LOS ARGUMENTOS Y LO 3º NOSE
+        getSupportLoaderManager().initLoader(VistaQuip.ID_CURSOR_ACTUAL,null,this); // LO 1º ES ID DEL MANAGER, , LO 2º SON LOS ARGUMENTOS.
 
     }
 
@@ -169,7 +186,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     @Override
     public void mostrarDatos(Cursor c) {
         ((AdaptadorNota)rv.getAdapter()).setCursor(c);
-       // System.out.println(adaptador.getItemCount());
+        // System.out.println(adaptador.getItemCount());
     }
 
     @Override
@@ -216,20 +233,32 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
             case Permisos.GALERIA:
                 if(resultCode == RESULT_OK) {
 
-                    String rutaAbsoluta = DirectoriosArchivosQuip.getRutaImagen(data.getData(), this);
-                    String nombreImagen = rutaAbsoluta.substring(rutaAbsoluta.lastIndexOf("/") + 1, rutaAbsoluta.length());
-                    String rutaNuevaImagen = Environment.getExternalStorageDirectory() + File.separator + DirectoriosArchivosQuip.IMAGE_DIRECTORY + File.separator + nombreImagen;
+                    new AsyncTask<Object,Void, String>() { //añadido en 2º plano.
 
-                    DirectoriosArchivosQuip.crearImagen(rutaNuevaImagen, BitmapFactory.decodeFile(rutaAbsoluta), this); // le pasas una ruta,una imagen, y te crea un nuevo archivo en esa ruta con esa imagen
+                        @Override
+                        protected String doInBackground(Object... params) {
 
-                    Nota nota = new Nota(Nota.TIPO_IMAGEN);
-                    nota.setImagen(rutaNuevaImagen);
-                    Intent i = new Intent(this,VistaNota.class);
-                    Bundle b = new Bundle();
-                    b.putParcelable("nota", nota);
-                    i.putExtras(b);
-                    Toast.makeText(VistaQuip.this,R.string.nuevaNotaImagen, Toast.LENGTH_SHORT).show();
-                    startActivity(i);
+                            Intent data = (Intent) params[0];
+                            String rutaAbsoluta = DirectoriosArchivosQuip.getRutaImagen(data.getData(), VistaQuip.this);
+                            String nombreImagen = UtilFecha.fechaActual()+rutaAbsoluta.substring(rutaAbsoluta.lastIndexOf("/") + 1, rutaAbsoluta.length());
+                            String rutaNuevaImagen = Environment.getExternalStorageDirectory() + File.separator + DirectoriosArchivosQuip.IMAGE_DIRECTORY + File.separator + nombreImagen;
+
+                            DirectoriosArchivosQuip.crearImagen(rutaNuevaImagen, BitmapFactory.decodeFile(rutaAbsoluta), VistaQuip.this); // le pasas una ruta,una imagen, y te crea un nuevo archivo en esa ruta con esa imagen
+                            return rutaNuevaImagen;
+                        }
+
+                        @Override
+                        protected void onPostExecute(String s) {
+                            Nota nota = new Nota(Nota.TIPO_IMAGEN);
+                            nota.setImagen(s);
+                            Intent i = new Intent(VistaQuip.this,VistaNota.class);
+                            Bundle b = new Bundle();
+                            b.putParcelable("nota", nota);
+                            i.putExtras(b);
+
+                            startActivity(i);
+                        }
+                    }.execute(data);
                 }
                 break;
         }
@@ -239,7 +268,31 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     //LOAD MANAGER
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) { // HACE LA CONSULTA CON LOS DATOS,el ID ES EL ID A USAR DEL MANAGER
-        return new CursorLoader(this,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, null, null, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
+
+        System.out.println(id+"ID DEL LOADER");
+        switch (id) {
+            case VistaQuip.ID_CURSOR_TODO : {
+                return new CursorLoader(this,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, null, null, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
+            }
+            case ID_CURSOR_NOTA: {
+                String where = ContratoBaseDatos.TablaNota.TIPO+"<>?";
+                String[] valores = new String[]{String.valueOf(Nota.TIPO_LISTA)};
+                return new CursorLoader(this,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, where, valores, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
+            }
+            case ID_CURSOR_LISTA: {
+                String where = ContratoBaseDatos.TablaNota.TIPO+"=?";
+                String[] valores = new String[]{String.valueOf(Nota.TIPO_LISTA)};
+                return new CursorLoader(this,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, where, valores, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
+            }
+            case ID_CURSOR_MULTIMEDIA : {
+                String where =ContratoBaseDatos.TablaNota.IMAGEN+" is not null or "+ContratoBaseDatos.TablaNota.AUDIO+" is not null";
+                return new CursorLoader(this,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, where, null, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
+            }
+            default: {
+                return  new CursorLoader(this,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, null, null, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
+            }
+        }
+
     }
 
     @Override
@@ -295,24 +348,84 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
 
         PreferenciasCompartidas prefs = new PreferenciasCompartidas(this);*/
 
+
+
         switch (item.getItemId()) {
             case R.id.menu_quip_configuracion : {
                 DialogoPreferenciasNota dialogo = DialogoPreferenciasNota.newInstance();
                 dialogo.show(getSupportFragmentManager(), "Dialogo Preferencias");
                 return true;
             }
+            case R.id.menu_quip_borrar_notas_no_titulo : {
+                String where ="length(titulo)=0 and length(nota)=0";
+                presentador.borrarConjunto(where,false);
+                return true;
+            }
+            case R.id.menu_quip_borrar_listas_no_titulo : {
+                String where ="length(titulo)=0";
+                presentador.borrarConjunto(where,true);
+                return true;
+            }
+            default:
+                return false;
         }
-        return false;
     }
 
 
     @Override
-    public  void reiniciarDatos(){ //USADO PARA LAS CONSULTAS A LA BASE DE DATOS EN 2º PLANO
-        getSupportLoaderManager().restartLoader(0,null,this);
+    public  void reiniciarDatos(int id){ //USADO PARA LAS CONSULTAS A LA BASE DE DATOS EN 2º PLANO
+        getSupportLoaderManager().restartLoader(id,null,this);
     }
     @Override
     protected void onStart() {
         VistaQuip.REFERENCIA_MENU_PRINCIPAL=this;
         super.onStart();
+    }
+
+    private  void crearNavigationView(){
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                drawerLayout.closeDrawers();
+                switch (item.getItemId()) {
+                    case R.id.nav_todas_notas: {
+                        ID_CURSOR_ACTUAL=ID_CURSOR_TODO;
+                        reiniciarDatos(ID_CURSOR_TODO);
+                        return true;
+                    }
+                    case R.id.nav_solo_notas_normales: {
+                        ID_CURSOR_ACTUAL=ID_CURSOR_NOTA;
+                        reiniciarDatos(ID_CURSOR_NOTA);
+                        return true;
+                    }
+                    case R.id.nav_solo_notas_multimedia: {
+                        ID_CURSOR_ACTUAL = ID_CURSOR_MULTIMEDIA;
+                        reiniciarDatos(ID_CURSOR_MULTIMEDIA);
+                        return true;
+                    }
+                    case R.id.nav_solo_listas: {
+                        ID_CURSOR_ACTUAL = ID_CURSOR_LISTA;
+                        reiniciarDatos(ID_CURSOR_LISTA);
+                        return true;
+                    }
+                    case R.id.nav_view_datos_usuario : {
+                        Intent i = new Intent(VistaQuip.this, VistaDatosUsuario.class);
+                        startActivity(i);
+                        return true;
+                    }
+                    default:
+                        return false;
+                }
+            }
+        });
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) { //cursor actual.
+        super.onSaveInstanceState(outState);
+        outState.putInt("cursor_actual",VistaQuip.ID_CURSOR_ACTUAL);
     }
 }

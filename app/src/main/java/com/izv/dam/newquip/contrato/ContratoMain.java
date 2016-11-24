@@ -19,6 +19,7 @@ public interface ContratoMain {
 
         void setCursor(Cursor c);
 
+        void borrarConjunto(String where,boolean listas);
 
         /*void loadData(OnDataLoadListener listener);
 
@@ -63,7 +64,7 @@ public interface ContratoMain {
 
         void mostrarConfirmarBorrarNota(Nota n);
 
-        void reiniciarDatos();
+        void reiniciarDatos(int id);
 
     }
 

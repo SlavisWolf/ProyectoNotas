@@ -13,7 +13,9 @@ import com.izv.dam.newquip.contrato.ContratoBaseDatos;
 import com.izv.dam.newquip.contrato.ContratoNotaLista;
 import com.izv.dam.newquip.pojo.ItemNotaLista;
 import com.izv.dam.newquip.pojo.Nota;
+import com.izv.dam.newquip.util.UtilArray;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +45,7 @@ public class ModeloNotaLista implements ContratoNotaLista.InterfaceModelo {
     }*/
 
     @Override
-    public void updateNota(Nota n, List<ItemNotaLista> lista, List<ItemNotaLista> borrados) {
+    public void updateNota(Nota n, ArrayList<ItemNotaLista> lista, ArrayList<ItemNotaLista> borrados) {
         Uri uriNota = ContentUris.withAppendedId(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getId());
 
        /* Bundle b = new Bundle(); // le pasaremos el id, y las listas.
@@ -58,7 +60,7 @@ public class ModeloNotaLista implements ContratoNotaLista.InterfaceModelo {
             for (ItemNotaLista item : lista) {
                 if (item.getId() == 0) {
                     item.setId_NotaLista(idNota);
-                    pa.startInsert(0,null,ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, item.getContentValues());
+                    pa.startInsert(ProveedorAsincrono.TOKEN_INSERT_ITEM,item,ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, item.getContentValues());
                     //cr.insert(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, item.getContentValues());
                 } else {
                     Uri uriItem = ContentUris.withAppendedId(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, item.getId());
@@ -75,14 +77,19 @@ public class ModeloNotaLista implements ContratoNotaLista.InterfaceModelo {
                    //cr.delete(uriItem,"",null);
                }
            }
+           borrados.clear(); //BORRA LOS ELEMENTOS
        }
         //return num ; //devuelve el num de notas actualizadas, no deberia cambiar de 1 xD*/
     }
 
     @Override
-    public void insertNota(Nota n, List<ItemNotaLista> lista) {
+    public void insertNota(Nota n, ArrayList<ItemNotaLista> lista) {
 
-        pa.startInsert(ProveedorAsincrono.TOKEN_INSERT_LISTA,lista,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getContentValues()); // le pasamos la lista para que el proveedor se encargue de añadir los items
+        Bundle b= new Bundle();
+        b.putParcelable("nota",n);
+        b.putParcelableArrayList("array", lista);
+
+        pa.startInsert(ProveedorAsincrono.TOKEN_INSERT_LISTA,b,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getContentValues()); // le pasamos la lista para que el proveedor se encargue de añadir los items
 
 
 

@@ -53,6 +53,86 @@ public class PreferenciasCompartidas {
     }
 
     public boolean[] getPreferenciasNota(){
-       return new boolean[]{isPrefsTitulo(),isPrefsGuardar(),isPrefsEditable()};
+        return new boolean[]{isPrefsTitulo(),isPrefsGuardar(),isPrefsEditable()};
+    }
+
+    public  void setPrefsNombreUsuario (String valor) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("nombre",valor);
+        editor.commit();
+    }
+    public  String getPrefsNombreUsuario () {
+        return prefs.getString("nombre",null);
+    }
+    public  void setPrefsApellidosUsuario (String valor) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("apellidos",valor);
+        editor.commit();
+    }
+    public  String getPrefsApellidosUsuario () {
+        return prefs.getString("apellidos",null);
+    }
+
+    public  void setPrefsCiudadUsuario (String valor) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("ciudad",valor);
+        editor.commit();
+    }
+    public  String getPrefsCiudadUsuario () {
+        return prefs.getString("ciudad",null);
+    }
+
+    public  void setPrefsCPUsuario (String valor) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("cp",valor);
+        editor.commit();
+    }
+    public  String getPrefsCPUsuario () {
+        return prefs.getString("cp",null);
+    }
+
+    public  void setPrefsNacimientoUsuario (String valor) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("nacimiento",valor);
+        editor.commit();
+    }
+    public  String getPrefsNacimientoUsuario () {
+        return prefs.getString("nacimiento",null);
+    }
+
+    public  void setPrefsEstadoCivilUsuario (int valor) { //posición del elemento de la lista.
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("estado_civil",valor);
+        editor.commit();
+    }
+    public  int getPrefsEstadoCivilUsuario () {
+        return prefs.getInt("estado_civil",0);
+    }
+
+    public  void setPrefsTelefonoUsuario (String valor) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("telefono",valor);
+        editor.commit();
+    }
+    public  String getPrefsTelefonoUsuario () {
+        return prefs.getString("telefono",null);
+    }
+
+    public  void setPrefsCorreoUsuario (String valor) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("correo",valor);
+        editor.commit();
+    }
+    public  String getPrefsCorreoUsuario () {
+        return prefs.getString("correo",null);
+    }
+
+    public  void setPrefsAvatarUsuario (String valor) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("avatar",valor);
+        editor.commit();
+    }
+    public  String getPrefsAvatarUsuario () {
+        return prefs.getString("avatar",null);
     }
 }

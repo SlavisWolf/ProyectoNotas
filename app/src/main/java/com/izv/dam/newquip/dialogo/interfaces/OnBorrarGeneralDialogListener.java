@@ -1,4 +1,4 @@
-package com.izv.dam.newquip.dialogo;
+package com.izv.dam.newquip.dialogo.interfaces;
 
 /**
  * Created by anton on 07/11/2016.

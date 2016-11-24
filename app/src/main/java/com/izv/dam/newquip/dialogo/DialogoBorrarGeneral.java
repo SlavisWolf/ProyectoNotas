@@ -3,13 +3,13 @@ package com.izv.dam.newquip.dialogo;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import com.izv.dam.newquip.R;
+import com.izv.dam.newquip.dialogo.interfaces.OnBorrarGeneralDialogListener;
 
 /**
  * Created by anton on 07/11/2016.
@@ -19,8 +19,7 @@ public class DialogoBorrarGeneral extends DialogFragment {
 
    private String texto;
    private String titulo;
-   private Bitmap imagen;
-   private  OnBorrarGeneralDialogListener listener;
+   private OnBorrarGeneralDialogListener listener;
    public DialogoBorrarGeneral() {
 
    }

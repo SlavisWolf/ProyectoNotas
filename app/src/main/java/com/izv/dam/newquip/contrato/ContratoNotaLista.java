@@ -5,6 +5,7 @@ import android.database.Cursor;
 import com.izv.dam.newquip.pojo.ItemNotaLista;
 import com.izv.dam.newquip.pojo.Nota;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,9 +21,9 @@ public interface ContratoNotaLista {
 
       //  Cursor getItems(long id);
 
-        void updateNota(Nota n , List<ItemNotaLista> lista, List<ItemNotaLista> borrados);
+        void updateNota(Nota n , ArrayList<ItemNotaLista> lista, ArrayList<ItemNotaLista> borrados);
 
-        void insertNota(Nota n ,List<ItemNotaLista> lista);
+        void insertNota(Nota n ,ArrayList<ItemNotaLista> lista);
     }
 
     interface InterfacePresentador {
@@ -33,13 +34,13 @@ public interface ContratoNotaLista {
 
         //Cursor getItems(Long id);
 
-        void onSaveNota(Nota n ,List<ItemNotaLista> lista , List<ItemNotaLista> borrados); //long
+        void onSaveNota(Nota n , ArrayList<ItemNotaLista> lista , ArrayList<ItemNotaLista> borrados); //long
 
     }
 
      interface InterfaceVista {
          void cargarItems(Cursor c);
-         void cargarItems(List<ItemNotaLista> l);
+         void cargarItems(ArrayList<ItemNotaLista> l);
     }
 
 }

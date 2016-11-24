@@ -2,12 +2,16 @@ package com.izv.dam.newquip.pojo;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+import android.graphics.BitmapRegionDecoder;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.android.databinding.library.baseAdapters.BR;
 import com.izv.dam.newquip.contrato.ContratoBaseDatos;
 
-public class Nota implements Parcelable {
+public class Nota  extends BaseObservable implements Parcelable {
 
     //TIPOS DE NOTAS
 
@@ -26,8 +30,8 @@ public class Nota implements Parcelable {
 
 
     public Nota() {
-        this(0, null, null,null,null,1);
-    }
+        this(0, "", "",null,null,1);
+    } // he puesto el texto y la descripción vacios para evitar conflictos con los metodos .trim
 
     public Nota(long id, String titulo, String nota, String imagen, String audio,int tipo) {
         this.id = id;
@@ -39,7 +43,7 @@ public class Nota implements Parcelable {
     }
 
     public  Nota (int tipo) {
-        this(0, null, null,null,null,tipo);
+        this(0, "", "",null,null,tipo);
     }
 
     protected Nota(Parcel in) {
@@ -99,13 +103,14 @@ public class Nota implements Parcelable {
         this.nota = nota;
     }
 
-
+    @Bindable
     public String getImagen() {
         return imagen;
     }
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+        notifyPropertyChanged(BR.imagen);
     }
 
     public String getAudio() {

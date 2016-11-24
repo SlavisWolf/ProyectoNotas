@@ -5,22 +5,12 @@ package com.izv.dam.newquip.vistas;
  */
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,17 +19,20 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.izv.dam.newquip.R;
-
+import com.izv.dam.newquip.dialogo.DialogoBorrarGeneral;
+import com.izv.dam.newquip.dialogo.DialogoGuardarGeneral;
+import com.izv.dam.newquip.dialogo.interfaces.OnBorrarGeneralDialogListener;
+import com.izv.dam.newquip.dialogo.interfaces.OnGuardarGeneralDialogListener;
 import com.izv.dam.newquip.pojo.Lienzo;
 import com.izv.dam.newquip.pojo.Nota;
 import com.izv.dam.newquip.util.DirectoriosArchivosQuip;
 import com.izv.dam.newquip.util.Permisos;
+import com.izv.dam.newquip.util.UtilFecha;
 import com.izv.dam.newquip.vistas.notas.VistaNota;
 
 import java.io.File;
-import java.util.UUID;
 
-public class VistaLienzo extends AppCompatActivity implements View.OnClickListener {
+public class VistaLienzo extends AppCompatActivity implements View.OnClickListener,OnGuardarGeneralDialogListener,OnBorrarGeneralDialogListener {
 
 
     Nota nota;
@@ -119,22 +112,8 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_lienzo_nuevo:
-                AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
-                newDialog.setTitle(R.string.tituloNuevoDibujo);
-                newDialog.setMessage(R.string.textoDialogoNuevoDibujo);
-                newDialog.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        lienzo.NuevoDibujo();
-                        dialog.dismiss();
-                    }
-                });
-                newDialog.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                newDialog.show();
+                DialogoBorrarGeneral fragmentBorrar = DialogoBorrarGeneral.newInstance(getString(R.string.tituloDialogoBorrarDibujo),getString(R.string.textoDialogoBorrarDibujo));
+                fragmentBorrar.show(getSupportFragmentManager(), "Dialogo borrar");
                 return true;
 
 
@@ -157,66 +136,16 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
                 return true;
             case android.R.id.home: {
                 finish();
-            }
-
-
                 return true;
-
-            case R.id.menu_lienzo_guardar:
-
+            }
+            case R.id.menu_lienzo_guardar: {
 
                 if (Permisos.solicitarPermisos(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, this)) {
-                    AlertDialog.Builder salvarDibujo = new AlertDialog.Builder(this);
-                    salvarDibujo.setTitle(R.string.tituloGuardarDibujo);
-                    salvarDibujo.setMessage(R.string.textoDialogoGuardarDibujo);
-                    salvarDibujo.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-
-                            lienzo.setDrawingCacheEnabled(true);
-
-                            String imgSaved = MediaStore.Images.Media.insertImage(
-                                    getContentResolver(), lienzo.getDrawingCache(),
-                                    UUID.randomUUID().toString() + ".png", "drawing");
-
-                            if (imgSaved != null) {
-
-                                DirectoriosArchivosQuip.comprobarDirectorioImagenes();
-                                Long timestamp = System.currentTimeMillis() / 1000;
-                                String rutaAbsolutaImagen = DirectoriosArchivosQuip.getRutaImagen(Uri.parse(imgSaved),VistaLienzo.this);
-                                Log.v("VARIABLES RARAS",rutaAbsolutaImagen);
-                                String nombreImagen = timestamp+rutaAbsolutaImagen.substring(rutaAbsolutaImagen.lastIndexOf("/") + 1, rutaAbsolutaImagen.length());
-                                rutaImage = Environment.getExternalStorageDirectory() + File.separator + DirectoriosArchivosQuip.IMAGE_DIRECTORY + File.separator + nombreImagen;
-
-                                DirectoriosArchivosQuip.crearImagen(rutaImage, BitmapFactory.decodeFile(rutaAbsolutaImagen),VistaLienzo.this);
-                                DirectoriosArchivosQuip.borrarArchivo(rutaAbsolutaImagen);
-                                Toast.makeText(getApplicationContext(), R.string.dibujoGuardadoCorrectamente, Toast.LENGTH_SHORT).show();
-
-                                nota.setTipo(Nota.TIPO_DIBUJO);
-                                nota.setImagen(rutaImage);
-                                Intent i = new Intent(VistaLienzo.this, VistaNota.class);
-                                Bundle b = new Bundle();
-                                b.putParcelable("nota", nota);
-                                i.putExtras(b);
-                                startActivity(i);
-                            } else {
-                                Toast.makeText(getApplicationContext(), R.string.imagenNoGuardada, Toast.LENGTH_SHORT).show();
-                            }
-                            lienzo.destroyDrawingCache();
-
-
-                        }
-
-                    });
-                    salvarDibujo.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    salvarDibujo.show();
-                }
-
+                    DialogoGuardarGeneral fragmentGuardar = DialogoGuardarGeneral.newInstance(getString(R.string.labelDibujo), getString(R.string.mensaje_confirm_guardar_lienzo));
+                    fragmentGuardar.show(getSupportFragmentManager(),"Dialogo guardar");
+                 }
                 return true;
+            }
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -285,6 +214,66 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
     }
 
 
+    @Override
+    public void onGuardarPossitiveButtonClick() { //Guardar el dibujo como un archivo png
+
+        lienzo.setDrawingCacheEnabled(true);
+
+       /*String imgSaved = MediaStore.Images.Media.insertImage(
+                getContentResolver(), lienzo.getDrawingCache(),
+                UUID.randomUUID().toString() + ".png", "drawing");*/
+        Bitmap dibujoLienzo = lienzo.getDrawingCache();
+        if (dibujoLienzo != null) { //OPTIMIZADO
+            /*new AsyncTask<Bitmap,Void,Intent>() {
+                @Override
+                protected Intent doInBackground(Bitmap... params) {*/
+                    DirectoriosArchivosQuip.comprobarDirectorioImagenes();
+                    String nombreImagen = UtilFecha.fechaActual()+"dibujoQuip.png";
+                    rutaImage = Environment.getExternalStorageDirectory() + File.separator + DirectoriosArchivosQuip.IMAGE_DIRECTORY + File.separator + nombreImagen;
+
+                    DirectoriosArchivosQuip.crearImagen(rutaImage,dibujoLienzo,VistaLienzo.this);
+
+                    nota.setTipo(Nota.TIPO_DIBUJO);
+                    nota.setImagen(rutaImage);
+                    Intent i = new Intent(VistaLienzo.this, VistaNota.class);
+                    Bundle b = new Bundle();
+                    b.putParcelable("nota", nota);
+                    i.putExtras(b);
+                    Toast.makeText(getApplicationContext(), R.string.dibujoGuardadoCorrectamente, Toast.LENGTH_SHORT).show();
+                    startActivity(i);
+                    finish();
+                   // return i;
+                //}
+
+              /*  @Override
+                protected void onPostExecute(Intent intent) {
+                    Toast.makeText(getApplicationContext(), R.string.dibujoGuardadoCorrectamente, Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
+                    finish();
+                }*/
+          //  }.execute(dibujoLienzo);
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.imagenNoGuardada, Toast.LENGTH_SHORT).show();
+        }
+        lienzo.destroyDrawingCache();
+
+
+    }
+
+    @Override
+    public void onGuardarNegativeButtonClick() {
+
+    }
+
+    @Override
+    public void onBorrarPossitiveButtonClick() { // Crear un nuevo dibujo en blanco.
+        lienzo.NuevoDibujo();
+    }
+
+    @Override
+    public void onBorrarNegativeButtonClick() {
+
+    }
 }
 
 

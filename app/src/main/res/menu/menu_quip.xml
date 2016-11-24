@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
+    <item android:title="@string/borrarNotasSinTitulo"
+        android:id="@+id/menu_quip_borrar_notas_no_titulo"/>
+    <item android:title="@string/borrarListasSinTitulo"
+        android:id="@+id/menu_quip_borrar_listas_no_titulo"
+        />
 
     <item android:title="@string/configuracionNotas"
         android:id="@+id/menu_quip_configuracion"/>

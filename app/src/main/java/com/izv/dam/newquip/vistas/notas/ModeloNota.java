@@ -54,7 +54,7 @@ public class ModeloNota implements ContratoNota.InterfaceModelo { // modificado 
             return 0;
         }
         return gn.insert(n);*/
-        pa.startInsert(ProveedorAsincrono.TOKEN_CAMBIO_ESTANDAR,null,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getContentValues());
+        pa.startInsert(ProveedorAsincrono.TOKEN_INSERCION_NOTA,n,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getContentValues());
     }
 
     private void updateNota(Nota n) {

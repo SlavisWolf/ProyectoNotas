@@ -1,4 +1,4 @@
-package com.izv.dam.newquip.dialogo;
+package com.izv.dam.newquip.dialogo.interfaces;
 
 import com.izv.dam.newquip.pojo.Nota;
 

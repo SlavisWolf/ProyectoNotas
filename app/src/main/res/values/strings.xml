@@ -6,6 +6,10 @@
     // Strings dialogo borrar
     <string name="mensaje_confirm_borrar">¿Seguro que quieres borrar esta nota?</string>
     <string name="etiqueta_dialogo_borrar">Eliminar: </string>
+
+    // Strings dialogo guardar
+    <string name="mensaje_confirm_guardar_lienzo">¿Estás seguro de que deseas guardar el dibujo?</string>
+    <string name="etiqueta_dialogo_guardar">Guardar: </string>
     // nota
     <string name="Nota">Nota</string>
     <string name="Lista">Lista</string>
@@ -18,7 +22,7 @@
     <string name="textoCerrar">Cerrar</string>
 
     <string name="notaVacia">Nota sin texto</string>
-    <string name="listaVacia">Lista sin texto</string>
+    <string name="listaVacia">Lista sin título</string>
 
     <!-- MENU DE BOTONES -->
     <string name="anadirNota">Crear nota</string>
@@ -44,6 +48,8 @@
 
     <!-- MENU QUIP -->
     <string name="configuracionNotas">Configurar opciones de nota.</string>
+    <string name="borrarNotasSinTitulo">Borrar notas sin texto.</string>
+    <string name="borrarListasSinTitulo">Borrar listas sin título.</string>
 
 
     <!--Dialogo Preferencias Nota -->
@@ -60,6 +66,9 @@
     <string name="tituloDialogoImagen">Imagen</string>
     <string name="textoDialogoImagen">esta imagen?</string>
 
+    <string name="tituloDialogoBorrarDibujo">Dibujo</string>
+    <string name="textoDialogoBorrarDibujo">este dibujo?(Se creara uno nuevo vacío)</string>
+
 
     <!-- LIENZO -->
     <string name="lienzoLabel">Lienzo</string>
@@ -75,13 +84,65 @@
     <string name="tituloGuardarDibujo">Guardar Dibujo.</string>
     <string name="textoDialogoGuardarDibujo">¿Quieres guardar este dibujo en la galería?</string>
     <string name="dibujoGuardadoCorrectamente">Dibujo guardado correctamente.</string>
+    <string name="labelDibujo">Dibujo</string>
 
     <!-- PERMISOS -->
 
     <string name="permisoConcedido">3.1 Permiso Concedido</string>
     <string name="permisoNoConcedido">3.2 Permiso No Concedido</string>
 
+    <!-- PDF -->
+    <string name="notaVaciaPdf">No se puede imprimir nota vacia.</string>
+    <string name="listaVaciaPdf">No se puede imprimir lista vacia.</string>
+    <string name="imprimirNota">Se esta imprimiendo la nota...</string>
+    <string name="imprimirLista">Se esta imprimiendo la lista...</string>
 
+    <!-- NAVIGATION DRAWER -->
+    <string name="navViewGrupoNotas">Tus notas</string>
+    <string name="navViewTodasNotas">Todas las notas</string>
+    <string name="navViewNotasNormales">Notas normales</string>
+    <string name="navViewNotasMultimedia">Notas multimedia</string>
+    <string name="navViewSoloListas">Listas</string>
+    <string name="navViewGrupoUsuario">Usuario</string>
+    <string name="navViewDatosUsuario">Datos personales</string>
+
+    <!-- Registro Usuario -->
+
+
+    <string name="textViewWelcome">¡Bienvenidos a Quip!</string>
+    <string name="textViewDameDatos">Esperamos profundamente que disfrute de nuestra aplicación, permítanos conocerle mejor :)</string>
+    <string name="registroHintNombre">* Nombre</string>
+    <string name="registroHintApellidos">Apellidos</string>
+    <string name="registroHintCiudad">Ciudad</string>
+    <string name="registroHintCP">Codigo Postal</string>
+    <string name="registroHintFechaNacimiento">F.Nacimiento</string>
+    <string name="registroHintCorreo">Correo Electrónico</string>
+    <string name="registroHintTelefono">Teléfono</string>
+    <string name="registroTituloEstadoCivil">Estado Civil</string>
+    <string name="botonRegistro">Enviar Datos</string>
+    <string name="errorNoNombre">Es necesario que nos facilites un nombre</string>
+
+    <string-array name="estadoCivilArray">
+        <item>Estado Civil</item>
+        <item>Soltero</item>
+        <item>Casado</item>
+        <item>Viudo</item>
+        <item>Pareja de hecho</item>
+    </string-array>
+
+    <!-- MODIFICAR DATOS USUARIO ,El resto los coge de registro-->
+
+    <string name="datosUsuarioTitulo">Tus Datos</string>
+    <string name="datosUsuarioBoton">Actualizar Datos</string>
+    <string name="datosUsuarioActualizados">Tus datos han sido actualizados correctamente</string>
+    <string name="datosUsuarioLabel">Perfil</string>
+
+    <!-- DIALOGO CAMBIAR DE AVATAR -->
+
+    <string name="dialogoCambiarAvatarTitulo">Cambiar Avatar</string>
+    <string name="dialogoCambiarAvatarTexto">¿Desea elegir un nuevo avatar de la galería?</string>
+    <string name="dialogoBorrarAvatar">Borrar Avatar</string>
+    <string name="dialogoNuevoAvatar">Abrir Galería</string>
 
 
      <!-- otros -->
@@ -96,6 +157,6 @@
     <string name="nuevaNotaLista">Creando nueva lista.</string>
     <string name="nuevaNotaDibujo">Abiendo Lienzo para nueva nota.</string>
     <string name="imagenNoGuardada">La imagen no ha podido guardarse</string>
-
+    <string name="appImagen">Selecciona una aplicación con la que coger la imagen.</string>
 
 </resources>

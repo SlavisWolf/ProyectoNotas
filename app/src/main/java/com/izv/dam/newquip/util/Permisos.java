@@ -36,11 +36,10 @@ public class Permisos {
     }*/
 
     public static boolean solicitarPermisos( String[] permisos,AppCompatActivity actividad){  //SI PASAMOS LA ACTIVIDAD, EL CODIGO FUNCIONARA TAMBIEN EN OTRAS CLASES
-        boolean isPer = false;
-        //Context c = actividad;
+        boolean isPer = true;
         for ( String permiso : permisos ) {
-            //isPer = ActivityCompat.checkSelfPermission((VistaNota)c, permiso) == PackageManager.PERMISSION_GRANTED;
-            isPer = ActivityCompat.checkSelfPermission(actividad, permiso) == PackageManager.PERMISSION_GRANTED;
+            if (ActivityCompat.checkSelfPermission(actividad, permiso) != PackageManager.PERMISSION_GRANTED)
+                isPer=false;
         }
         if (!isPer){
            solicitarPermisoHacerLlamada(permisos,actividad);
@@ -49,7 +48,6 @@ public class Permisos {
     }
 
     private static void solicitarPermisoHacerLlamada( String[] permisos, AppCompatActivity actividad) {
-        //Pedimos el permiso o los permisos con un cuadro de dialogo del sistema
         ActivityCompat.requestPermissions(actividad, permisos, SOLICITUD_PERMISO);
     }
 

@@ -19,12 +19,16 @@
             android:authorities="com.izv.dam.bd"
             android:enabled="true" />
 
-        <activity android:name=".vistas.main.VistaQuip">
+
+        <activity android:name=".vistas.Usuarios.VistaRegistro">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".vistas.main.VistaQuip"/>
+
         <activity android:name=".vistas.notas.VistaNota"
                     android:label="@string/Nota"
                     android:windowSoftInputMode="adjustResize|stateHidden"
@@ -44,6 +48,16 @@
 
         <activity android:name=".vistas.VistaLienzo"
             android:label="@string/lienzoLabel"
+            android:parentActivityName=".vistas.main.VistaQuip">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".vistas.main.VistaQuip" />
+        </activity>
+
+        <activity android:name=".vistas.Usuarios.VistaDatosUsuario"
+            android:label="@string/datosUsuarioLabel"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:parentActivityName=".vistas.main.VistaQuip">
 
             <meta-data

@@ -39,8 +39,8 @@ public class ItemNotaLista implements Parcelable {
                 '}';
     }
 
-    public ItemNotaLista(){
-        this(0,null,false,0);
+    public ItemNotaLista(){ //CAMBIADO, AHORA EL TEXTO DE LOS ITMES ES VACIO, NO NULL
+        this(0,"",false,0);
     }
 
     protected ItemNotaLista(Parcel in) { // escribirlos en el mismo orden en write to parcel
@@ -133,6 +133,14 @@ public class ItemNotaLista implements Parcelable {
 
     public static List<ItemNotaLista> CursorToListaItemNotaLista(Cursor c){
         List<ItemNotaLista>  lista = new ArrayList<ItemNotaLista>();
+        while(c.moveToNext()){
+            lista.add(ItemNotaLista.getItemNotaLista(c));
+        }
+        return lista;
+    }
+
+    public static ArrayList<ItemNotaLista> CursorToArrayListItemNotaLista(Cursor c){
+        ArrayList<ItemNotaLista>  lista = new ArrayList<ItemNotaLista>();
         while(c.moveToNext()){
             lista.add(ItemNotaLista.getItemNotaLista(c));
         }

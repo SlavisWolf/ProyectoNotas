@@ -1,6 +1,7 @@
 package com.izv.dam.newquip.adaptadores;
 
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.izv.dam.newquip.R;
+import com.izv.dam.newquip.databinding.ItemNotaListaBinding;
 import com.izv.dam.newquip.pojo.ItemNotaLista;
 
 import java.util.ArrayList;
@@ -22,14 +24,14 @@ import java.util.List;
  * Created by alumno on 25/10/2016.
  */
 
-public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNotaLista.ViewHolder> {
+public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNotaLista.BindingViewHolder> {
 
-    private List<ItemNotaLista> lista;
-    private List<ItemNotaLista> borrados;
+    private ArrayList<ItemNotaLista> lista;
+    private ArrayList<ItemNotaLista> borrados;
     private boolean viewsAreEnabled; //indica si los elementos se veran o no;
     private boolean focusUltimo;
 
-    public AdaptadorItemNotaLista(List<ItemNotaLista> lista){
+    public AdaptadorItemNotaLista(ArrayList<ItemNotaLista> lista){
         this.lista=lista;
         borrados = new ArrayList<>();
         focusUltimo=false;
@@ -39,97 +41,67 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
         this(new ArrayList<ItemNotaLista>());
     }
 
-    public class ViewHolder extends  RecyclerView.ViewHolder {
+    public class BindingViewHolder extends  RecyclerView.ViewHolder {
 
-        private CheckBox cb;
+        private ItemNotaListaBinding binding;
+        /*private CheckBox cb;
         private EditText et;
-        private ImageButton ib;
-        public ViewHolder(View itemView) {
+        private ImageButton ib;*/
+
+        public BindingViewHolder(View itemView) {
             super(itemView);
-            cb= (CheckBox)  itemView.findViewById(R.id.item_nota_lista_marcado);
+
+            binding =DataBindingUtil.bind(itemView);
+           /* cb= (CheckBox)  itemView.findViewById(R.id.item_nota_lista_marcado);
             et = (EditText) itemView.findViewById(R.id.item_nota_lista_texto);
-            ib = (ImageButton) itemView.findViewById(R.id.item_nota_lista_boton_borrar_item);
+            ib = (ImageButton) itemView.findViewById(R.id.item_nota_lista_boton_borrar_item);*/
 
 
             //EVENTOS
 
-            ib.setOnClickListener(new View.OnClickListener() {
+            binding.itemNotaListaBotonBorrarItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = ViewHolder.super.getAdapterPosition();
+                    int position = BindingViewHolder.super.getAdapterPosition();
                     borrarItem(position);
-                    notifyDataSetChanged();
+                    //notifyDataSetChanged(); REDUNDANTE
                 }
             });
             // EVENTOS PARA GUARDAR EN TIEMPO REAL LOS CAMBIOS QUE HACEMOS EN LOS ELEMENTOS DE LA LISTA.
 
 
 
-            cb.setOnClickListener(new View.OnClickListener() { // ES MEJOR AGREGAR AQUI LOS EVENTOS(los que afectan a elementos individuales, no a la lista entera), PARA QUE CUANDO HAGAS SCROLL NO TENGA QUE AÑADIR LOS LISTENER OTRA VEZ
+            binding.itemNotaListaMarcado.setOnClickListener(new View.OnClickListener() { // ES MEJOR AGREGAR AQUI LOS EVENTOS(los que afectan a elementos individuales, no a la lista entera), PARA QUE CUANDO HAGAS SCROLL NO TENGA QUE AÑADIR LOS LISTENER OTRA VEZ
                 @Override
                 public void onClick(View v) {
-                    int position = ViewHolder.super.getAdapterPosition();
+                    int position = BindingViewHolder.super.getAdapterPosition();
                     lista.get(position).setMarcado((((CheckBox)v).isChecked()));
-                }
-            });
-
-            et.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    int position = ViewHolder.super.getAdapterPosition();
-                    lista.get(position).setTexto(s.toString().trim());
                 }
             });
 
             // FIN EVENTOS
         }
 
-        public CheckBox getCb() {
-            return cb;
-        }
-
-        public EditText getEt() {
-            return et;
-        }
-
-        public ImageButton getIb() {
-            return ib;
+        public ItemNotaListaBinding getBinding() {
+            return binding;
         }
     }
 
     @Override
-    public AdaptadorItemNotaLista.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AdaptadorItemNotaLista.BindingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+       // ViewDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_nota_lista, parent, false);
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nota_lista,parent,false);
-        return new ViewHolder(v);
+        return new BindingViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(AdaptadorItemNotaLista.ViewHolder holder, final int position) {
+    public void onBindViewHolder(AdaptadorItemNotaLista.BindingViewHolder holder, final int position) {
             ItemNotaLista item = lista.get(position);
-            CheckBox cb = holder.getCb();
-            cb.setChecked(item.isMarcado());
-            cb.setEnabled(viewsAreEnabled);
-
-
-
-            if (viewsAreEnabled)
-                holder.getIb().setVisibility(View.VISIBLE);
-            else
-                holder.getIb().setVisibility(View.GONE);
-
-            EditText et = holder.getEt();
-            et.setText(item.getTexto());
-            et.setEnabled(viewsAreEnabled);
-
-
+            ItemNotaListaBinding binding = holder.getBinding();
+            binding.setItemLista(item);
+            binding.setEditable(viewsAreEnabled);
             if (position==(lista.size()-1)&&focusUltimo){
-                et.requestFocus();
+                binding.itemNotaListaTexto.requestFocus();
                 focusUltimo=false;
             }
             //Log.v("ITEM",item.toString());
@@ -145,7 +117,8 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
 
 
     public void borrarItem(int posicion){
-        borrados.add(lista.remove(posicion));
+        ItemNotaLista item = lista.remove(posicion);
+        borrarElementoTrim(item);
         notifyDataSetChanged();
     }
 
@@ -154,20 +127,20 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
         focusUltimo=true;
         notifyDataSetChanged();
     }
-    public void setLista(List<ItemNotaLista> lista){
+    public void setLista(ArrayList<ItemNotaLista> lista){
         this.lista=lista;
         notifyDataSetChanged();
     }
 
-    public List<ItemNotaLista> getLista() {
+    public ArrayList<ItemNotaLista> getLista() {
         return lista;
     }
 
-    public List<ItemNotaLista> getBorrados() {
+    public ArrayList<ItemNotaLista> getBorrados() {
         return borrados;
     }
 
-    public void setBorrados(List<ItemNotaLista> borrados) {
+    public void setBorrados(ArrayList<ItemNotaLista> borrados) {
         this.borrados = borrados;
     }
 
@@ -182,7 +155,7 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
 
     public  void borrarListaCompleta(){
         for (ItemNotaLista item : lista) {
-            borrados.add(item);
+            borrarElementoTrim(item);
             //lista.remove(item); NO HACER ASI, EXPLOTA XD
         }
         lista = new ArrayList<>();
@@ -224,6 +197,17 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
                 return false;
         }
         return true;
+    }
+
+
+    private void borrarElementoTrim(ItemNotaLista item) {
+        item.setTexto(item.getTexto().trim());
+        borrados.add(item);
+    }
+
+    public  void trimTextosLista(){
+        for (ItemNotaLista item : lista)
+                item.setTexto(item.getTexto().trim());
     }
 
 

@@ -8,6 +8,7 @@ import com.izv.dam.newquip.contrato.ContratoNotaLista;
 import com.izv.dam.newquip.pojo.ItemNotaLista;
 import com.izv.dam.newquip.pojo.Nota;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public class PresentadorNotaLista implements ContratoNotaLista.InterfacePresenta
     }*/
 
     @Override
-    public void onSaveNota(Nota n, List<ItemNotaLista> lista, List<ItemNotaLista> borrados) {
+    public void onSaveNota(Nota n, ArrayList<ItemNotaLista> lista, ArrayList<ItemNotaLista> borrados) {
 
             Log.v("ID NOTA",n.getId()+"");
 

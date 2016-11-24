@@ -1,51 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--DATA BINDING -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/nota_lista_til_titulo">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:id="@+id/nota_lista_titulo"
-            android:hint="@string/hintTituloLista"
-            android:textColor="@android:color/primary_text_light_nodisable"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:maxLines="1"
-            android:imeOptions="actionDone" />
-    </android.support.design.widget.TextInputLayout>
+    <data>
+        <variable
+            name="nota"
+            type="com.izv.dam.newquip.pojo.Nota"/>
+    </data>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <android.support.v7.widget.RecyclerView
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/nota_lista_til_titulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/nota_lista_titulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hintTituloLista"
+                android:text="@={nota.titulo}"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColor="@android:color/primary_text_light_nodisable" />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <!--el @={nota.titulo} es para que modifique tambien el valor de la nota con el del campo de texto (añade un textWatcher)-->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/nota_lista_items"
-            android:scrollbars="vertical"
-            android:layout_weight="2"/>
+            android:orientation="horizontal">
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            app:fabSize="auto"
-            android:layout_gravity="bottom"
-            app:srcCompat="@drawable/ic_action_anadir"
-            android:id="@+id/nota_lista_añadir_item"
-            android:layout_weight="0.5" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/nota_lista_items"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:scrollbars="vertical" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/nota_lista_anadir_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="0.5"
+                android:clickable="true"
+                app:fabSize="auto"
+                app:srcCompat="@drawable/ic_action_anadir" />
+        </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+</layout>

@@ -29,6 +29,16 @@ public class ModeloQuip implements ContratoMain.InterfaceModelo {
         //cr=c.getContentResolver();
     }
 
+    public  void  borrarConjunto(String where,boolean listas) {
+
+        if (listas)
+            where += " and "+ContratoBaseDatos.TablaNota.TIPO+"="+Nota.TIPO_LISTA;
+        else
+            where += " and "+ContratoBaseDatos.TablaNota.TIPO+"!="+Nota.TIPO_LISTA;
+
+        pa.startDelete(ProveedorAsincrono.TOKEN_CAMBIO_ESTANDAR,null,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,where,null);
+    }
+
     @Override
     public void close() {
 

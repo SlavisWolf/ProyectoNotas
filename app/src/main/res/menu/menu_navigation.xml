@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:title="@string/navViewGrupoUsuario">
+        <menu>
+            <item
+                android:id="@+id/nav_view_datos_usuario"
+                android:icon="@android:drawable/ic_menu_compass"
+                android:title="@string/navViewDatosUsuario" />
+        </menu>
+    </item>
+
+
+
+    <item android:title="@string/navViewGrupoNotas">
+        <menu>
+            <item
+                android:id="@+id/nav_todas_notas"
+                android:icon="@android:drawable/ic_menu_compass"
+                android:title="@string/navViewTodasNotas" />
+            <item
+                android:id="@+id/nav_solo_notas_normales"
+                android:icon="@android:drawable/ic_menu_compass"
+                android:title="@string/navViewNotasNormales" />
+
+            <item
+                android:id="@+id/nav_solo_notas_multimedia"
+                android:icon="@android:drawable/ic_menu_compass"
+                android:title="@string/navViewNotasMultimedia" />
+
+            <item
+                android:id="@+id/nav_solo_listas"
+                android:icon="@android:drawable/ic_menu_compass"
+                android:title="@string/navViewSoloListas" />
+        </menu>
+    </item>
+</menu>

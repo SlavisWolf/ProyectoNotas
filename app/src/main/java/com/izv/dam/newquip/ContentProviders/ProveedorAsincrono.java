@@ -8,8 +8,10 @@ import android.os.Bundle;
 
 import com.izv.dam.newquip.contrato.ContratoBaseDatos;
 import com.izv.dam.newquip.pojo.ItemNotaLista;
+import com.izv.dam.newquip.pojo.Nota;
 import com.izv.dam.newquip.vistas.main.VistaQuip;
 
+import java.util.ArrayList;
 import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
@@ -25,8 +27,11 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
 
     //TOKENS USADOS
 
+
     public  static final  int TOKEN_CAMBIO_ESTANDAR=40; //todos los cambios que tengna que notificar a quip de un cambio en la bd;
+    public  static  final int TOKEN_INSERCION_NOTA =60;
     public  static final  int TOKEN_INSERT_LISTA=50;
+    public static final int TOKEN_INSERT_ITEM =70;
     //public  static final  int TOKEN_UPDATE_LISTA=60; //borrar nota desde quip
 
     public ProveedorAsincrono(ContentResolver cr) {
@@ -37,7 +42,7 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
     protected void onDeleteComplete(int token, Object cookie, int result) {
 //        super.onDeleteComplete(token, cookie, result);
         if (token==TOKEN_CAMBIO_ESTANDAR) {
-            VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos();
+            VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_ACTUAL);
         }
     }
 
@@ -47,18 +52,33 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
 
 
         if (token==TOKEN_INSERT_LISTA) { // si insertamos una lista, hay que crear sus items.
-            VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(); //solo avisa del cambio la inserción de la nota, no los items.
+            Bundle b = (Bundle) cookie;
             long idNuevaLista=Long.parseLong(uri.getLastPathSegment());
-            List<ItemNotaLista> lista = (List<ItemNotaLista>) cookie;
+            Nota n = b.getParcelable("nota");
+            n.setId(idNuevaLista);
+            ArrayList<ItemNotaLista> lista = b.getParcelableArrayList("array");
+            VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_TODO); //solo avisa del cambio la inserción de la nota, no los items.
+
+
             if (!lista.isEmpty()) {
                 for (ItemNotaLista item : lista){
                     item.setId_NotaLista(idNuevaLista);
-                    startInsert(0,null, ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA,item.getContentValues());
+                    startInsert(TOKEN_INSERT_ITEM,item, ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA,item.getContentValues());
                 }
             }
         }
         else if (token==TOKEN_CAMBIO_ESTANDAR) {
-            VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos();
+            VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_TODO);
+        }
+        else if (token==TOKEN_INSERCION_NOTA){
+            long id =Long.parseLong(uri.getLastPathSegment());
+            ((Nota)cookie).setId(id);
+            VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_TODO);
+        }
+        else if(token==TOKEN_INSERT_ITEM) {
+                long id = Long.parseLong(uri.getLastPathSegment());
+                ItemNotaLista item = (ItemNotaLista) cookie;
+                item.setId(id);
         }
 
     }
@@ -94,7 +114,7 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
             }
         }*/
         if (token==TOKEN_CAMBIO_ESTANDAR) {
-            VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos();
+            VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_TODO);
         }
     }
 }

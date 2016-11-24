@@ -27,4 +27,10 @@ public class UtilFecha {
         return android.text.format.DateFormat.format(formatStr, date).toString();
     }
 
+    public  static  String fechaActual(){
+        SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyyMMddHHmmssSS");
+        Date myDate = new Date();
+        return timeStampFormat.format(myDate);
+    }
+
 }

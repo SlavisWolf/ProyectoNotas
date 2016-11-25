@@ -8,6 +8,10 @@ Proyecto de android sobre la creación y edición de distintos tipos de notas y 
 
 <p>Editor lienzo</p>
 
-
 <img width="50%"height="50%
 "src="https://github.com/proyecto1dam/ProyectoNotas/blob/master/Imagenes%20aplicaci%C3%B3n/editor%20Lienzo.jpeg"/>
+
+<p>Listas</p>
+
+<img width="50%"height="50%
+"src="https://github.com/proyecto1dam/ProyectoNotas/blob/master/Imagenes%20aplicaci%C3%B3n/lista.png"/>

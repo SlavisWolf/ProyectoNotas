@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.izv.dam.newquip.contrato.ContratoMain;
 import com.izv.dam.newquip.pojo.Nota;
+import com.izv.dam.newquip.util.PreferenciasCompartidas;
 
 public class PresentadorQuip implements ContratoMain.InterfacePresentador{
 
@@ -21,6 +22,11 @@ public class PresentadorQuip implements ContratoMain.InterfacePresentador{
                 PresentadorQuip.this.vista.mostrarDatos(c);
             }
         };*/
+    }
+
+    @Override
+    public void recuperarNota(Nota n) {
+        modelo.recuperarNota(n);
     }
 
     @Override
@@ -55,8 +61,8 @@ public class PresentadorQuip implements ContratoMain.InterfacePresentador{
     }
 
 
-    public  void borrarConjunto (String where, boolean listas) {
-        this.modelo.borrarConjunto(where,listas);
+    public  void borrarConjunto (String where, boolean papelera) {
+        this.modelo.borrarConjunto(where,papelera);
     }
 
     @Override
@@ -72,12 +78,24 @@ public class PresentadorQuip implements ContratoMain.InterfacePresentador{
     }
 
     @Override
-    public void onEditNota(int position) {
+    public void onClickNota(int position) {
         Nota n = this.modelo.getNota(position);
-        this.onEditNota(n);
+        if (n.isPapelera()) {
+            vista.mostrarConfirmarRecuperarNota(n);
+        }
+        else
+            this.onEditNota(n);
     }
+
+
 
     public void cargarCursorModelo(Cursor c){
         modelo.setCursor(c);
+    }
+
+    public void desconectarUsuario(Context c){
+        PreferenciasCompartidas prefs = new PreferenciasCompartidas(c);
+        prefs.borrarDatosUsuario();
+        //modelo.borrarTodo();
     }
 }

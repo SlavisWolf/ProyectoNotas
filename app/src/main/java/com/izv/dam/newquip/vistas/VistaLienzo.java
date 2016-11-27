@@ -136,6 +136,7 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
                 return true;
             case android.R.id.home: {
                 finish();
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 return true;
             }
             case R.id.menu_lienzo_guardar: {
@@ -242,6 +243,7 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
                     Toast.makeText(getApplicationContext(), R.string.dibujoGuardadoCorrectamente, Toast.LENGTH_SHORT).show();
                     startActivity(i);
                     finish();
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
                    // return i;
                 //}
 

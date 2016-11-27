@@ -135,4 +135,17 @@ public class PreferenciasCompartidas {
     public  String getPrefsAvatarUsuario () {
         return prefs.getString("avatar",null);
     }
+
+    public void borrarDatosUsuario(){
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("nombre",null);
+        editor.putString("apellidos",null);
+        editor.putString("ciudad",null);
+        editor.putString("cp",null);
+        editor.putInt("estado_civil",0);
+        editor.putString("telefono",null);
+        editor.putString("correo",null);
+        editor.putString("avatar",null);
+        editor.commit();
+    }
 }

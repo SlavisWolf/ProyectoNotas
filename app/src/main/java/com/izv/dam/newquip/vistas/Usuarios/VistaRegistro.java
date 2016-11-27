@@ -131,6 +131,7 @@ public class VistaRegistro extends AppCompatActivity {
     private void goToQuip(){
         Intent i = new Intent(this,VistaQuip.class);
         startActivity(i);
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
         finish();
     }
 

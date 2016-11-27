@@ -35,9 +35,6 @@ public class Proveedor extends ContentProvider {
     private static final int NOTA = 1;
     private static final int NOTA_ID = 2;
 
-    /*private static final int NOTA_LISTA = 3;
-    private static final int NOTA_LISTA_ID = 4;*/
-
     private static final int ITEM_NOTA_LISTA = 3;
     private static final int ITEM_NOTA_LISTA_ID = 4;
     private static final int ITEM_NOTA_LISTA_NOTA_ID = 5; //BUSCAR TODOS LOS ELEMENTOS DE UNA NOTA CONCRETA.
@@ -48,8 +45,6 @@ public class Proveedor extends ContentProvider {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaNota.TABLA, Proveedor.NOTA );
         uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaNota.TABLA+"/#", Proveedor.NOTA_ID);
-        /*uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaNotaLista.TABLA, Proveedor.NOTA_LISTA );
-        uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaNotaLista.TABLA+"/#", Proveedor.NOTA_LISTA_ID);*/
         uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaItemNotaLista.TABLA, Proveedor.ITEM_NOTA_LISTA );
         uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaItemNotaLista.TABLA+"/#", Proveedor.ITEM_NOTA_LISTA_ID);
         uriMatcher.addURI(ContratoBaseDatos.AUTHORITY, ContratoBaseDatos.TablaItemNotaLista.TABLA+"/"+ContratoBaseDatos.TablaNota.TABLA+"/#", Proveedor.ITEM_NOTA_LISTA_NOTA_ID);
@@ -77,13 +72,6 @@ public class Proveedor extends ContentProvider {
                 Cursor c =gestionNota.getCursor(projection, where, selectionArgs, null, null, sortOrder);
                 return c;
             }
-            /*case NOTA_LISTA_ID : {
-                where = "_id=" + uri.getLastPathSegment();
-            }
-            case NOTA_LISTA : {
-                Cursor c =gestionNotaLista.getCursor(projection, where, selectionArgs, null, null, sortOrder);
-                return c;
-            }*/
             case ITEM_NOTA_LISTA_ID : {
                 where = "_id=" + uri.getLastPathSegment();
                 Cursor c =gestionItemNotaLista.getCursor(projection, where, selectionArgs, null, null, sortOrder);
@@ -113,10 +101,6 @@ public class Proveedor extends ContentProvider {
                 return "vnd.android.cursor.dir/com.izv.dam.nota";
             case Proveedor.NOTA_ID:
                 return "vnd.android.cursor.item/com.izv.dam.nota";
-            /*case Proveedor.NOTA_LISTA:
-                return "vnd.android.cursor.item/com.izv.dam.nota_lista";
-            case Proveedor.NOTA_LISTA_ID:
-                return "vnd.android.cursor.item/com.izv.dam.nota_lista";*/
             case Proveedor.ITEM_NOTA_LISTA:
                 return "vnd.android.cursor.item/com.izv.dam.item_nota_lista";
             case Proveedor.ITEM_NOTA_LISTA_ID:
@@ -139,13 +123,6 @@ public class Proveedor extends ContentProvider {
                 return newUri;
             }
 
-            /*case NOTA_LISTA : {
-                regId = gestionNotaLista.insert(values);
-                Uri newUri = ContentUris.withAppendedId(ContratoBaseDatos.TablaNotaLista.CONTENT_URI_NOTA_LISTA, regId);
-                Log.v("NUEVA URI",newUri.toString());
-               //getContext().getContentResolver().notifyChange(uri,null);
-                return newUri;
-            }*/
             case ITEM_NOTA_LISTA : {
                 regId = gestionItemNotaLista.insert(values);
                 Uri newUri = ContentUris.withAppendedId(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, regId);
@@ -172,15 +149,6 @@ public class Proveedor extends ContentProvider {
                 //notificarCambio(uri,cont);
                 return cont;
             }
-           /* case NOTA_LISTA_ID : {
-                where = "_id=" + uri.getLastPathSegment();
-            }
-            case NOTA_LISTA : {
-                cont = gestionNotaLista.delete(where,selectionArgs);
-                //notificarCambio(uri,cont);
-                return cont;
-            }*/
-
             case ITEM_NOTA_LISTA_NOTA_ID : { //BORRA TODOS
                 where = ContratoBaseDatos.TablaItemNotaLista.ID_NOTA_LISTA+"=" + uri.getLastPathSegment();
                 cont = gestionItemNotaLista.delete(where,selectionArgs);
@@ -214,15 +182,6 @@ public class Proveedor extends ContentProvider {
                 //notificarCambio(uri,cont);
                 return cont;
             }
-
-            /*case NOTA_LISTA_ID : {
-                where = "_id=" + uri.getLastPathSegment();
-            }
-            case NOTA_LISTA : {
-                cont = gestionNotaLista.update(values,where,selectionArgs);
-                //notificarCambio(uri,cont);
-                return cont;
-            }*/
 
             case ITEM_NOTA_LISTA_ID : {
                 where = "_id=" + uri.getLastPathSegment();

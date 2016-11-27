@@ -6,22 +6,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.izv.dam.newquip.R;
 import com.izv.dam.newquip.pojo.Nota;
+import com.izv.dam.newquip.util.UtilBoolean;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.IllegalFormatCodePointException;
 import java.util.List;
+import java.util.Random;
 
 
 public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolder> implements View.OnClickListener,View.OnLongClickListener{
 
 
+
+    public  static  boolean ANIMACIONES_ADAPTADOR; //EN EL CONTENT ASINCRONO, LOS CAMBIOS EN LOS DATOS DESACTIVAN LAS ANIMACIONES, LOS CAMBIOS DE FILTRO LAS PONEN A
+                                                    // VERDADERO, Y LA PRIMERA CARGA, TAMBIEN SERA VERDADERO
     private Cursor cursor;
     private View.OnClickListener clickListener;
     private View.OnLongClickListener longClickListener;
@@ -160,8 +168,27 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
                     break;
                 }
             }
+
+            if (AdaptadorNota.ANIMACIONES_ADAPTADOR) {
+                setScaleAnimation(holder.itemView);
+            }
             //ESPACIO PARA RECORDATORIO, IMPLEMENTAR MÁS ADELANTE
         }
+    }
+
+
+
+
+    private void setFadeAnimation(View view) {
+        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(3000);
+        view.startAnimation(anim);
+    }
+
+    private void setScaleAnimation(View view) {
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(new Random().nextInt(501));//to make duration random number between [0,501)
+        view.startAnimation(anim);
     }
 
     @Override
@@ -175,7 +202,7 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
     @Override
     public int getItemViewType(int position) {
         if (cursor.moveToPosition(position)) {
-            return Nota.getNota(cursor).getTipo(); //devolvemos el tipo que tiene guardado la nota.
+            return UtilBoolean.booleanToInt(Nota.getNota(cursor).isPapelera()); //devolvemos el tipo que tiene guardado la nota.
         }
         return -1;
     }

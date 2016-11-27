@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -179,6 +181,7 @@ public class VistaDatosUsuario extends AppCompatActivity implements OnCambiarAva
             prefs.setPrefsAvatarUsuario(rutaImagen);
             Toast.makeText(this,R.string.datosUsuarioActualizados, Toast.LENGTH_SHORT).show();
             finish();
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
         }
     }
     @Override
@@ -206,9 +209,15 @@ public class VistaDatosUsuario extends AppCompatActivity implements OnCambiarAva
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId()==R.id.menu_usuario_editar) {
+        int id = item.getItemId();
+        if (id==R.id.menu_usuario_editar) {
             binding.setEditable(!binding.getEditable());
             return true;
+        }
+        else if(id == android.R.id.home){
+                finish();
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
         }
         return false;
     }
@@ -234,7 +243,6 @@ public class VistaDatosUsuario extends AppCompatActivity implements OnCambiarAva
         switch (requestCode){
             case Permisos.GALERIA:
                 if(resultCode == RESULT_OK) {
-
                     new AsyncTask<Object,Void, String>() { //añadido en 2º plano.
                         @Override
                         protected String doInBackground(Object... params) {
@@ -245,7 +253,6 @@ public class VistaDatosUsuario extends AppCompatActivity implements OnCambiarAva
                             String nombreImagen =  timestamp +rutaAbsoluta.substring(rutaAbsoluta.lastIndexOf("/") + 1, rutaAbsoluta.length());
                             return DirectoriosArchivosQuip.crearImagenAlmacenamientoInterno(VistaDatosUsuario.this, BitmapFactory.decodeFile(rutaAbsoluta), nombreImagen); // le pasas un nombre y un bitmap, y guarda dentro de files el archivo,devuelve la ruta.
                         }
-
                         @Override
                         protected void onPostExecute(String s) {
                             rutaImagen= s;

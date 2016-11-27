@@ -1,4 +1,4 @@
-package com.izv.dam.newquip.dialogo;
+package com.izv.dam.newquip.dialogo.interfaces;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -9,23 +9,23 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import com.izv.dam.newquip.R;
-import com.izv.dam.newquip.dialogo.interfaces.OnBorrarDialogListener;
+import com.izv.dam.newquip.dialogo.DialogoBorrar;
 import com.izv.dam.newquip.pojo.Nota;
 
 /**
- * Created by Pilar on 26/09/2016.
+ * Created by anton on 27/11/2016.
  */
 
-public class DialogoBorrar extends DialogFragment {
+public class DialogoRecuperarNota extends DialogFragment {
     private Nota n;
     // Interfaz de comunicación
-    OnBorrarDialogListener listener;
+    OnRecuperarDialogListener listener;
 
-    public DialogoBorrar() {
+    public DialogoRecuperarNota() {
     }
 
-    public static DialogoBorrar newInstance(Nota n) {
-        DialogoBorrar fragment = new DialogoBorrar();
+    public static DialogoRecuperarNota newInstance(Nota n) {
+        DialogoRecuperarNota fragment = new DialogoRecuperarNota();
         Bundle args = new Bundle();
         args.putParcelable("nota",n);
         fragment.setArguments(args);
@@ -43,33 +43,28 @@ public class DialogoBorrar extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return createDialogBorrar();
+        return createDialogRecuperar();
     }
-    public AlertDialog createDialogBorrar() {
+    public AlertDialog createDialogRecuperar() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String titulo_dialogo;
         String texto_dialogo;
-        if (n.isPapelera()) {
-            titulo_dialogo= String.format("%s %s", getString(R.string.tituloBorrarPapelera),n.getTitulo());
-            texto_dialogo = getString(R.string.textoBorrarPapelera);
-        }
-        else  {
-            titulo_dialogo= String.format("%s %s", getString(R.string.etiqueta_dialogo_borrar),n.getTitulo());
-            texto_dialogo = getString(R.string.mensaje_confirm_borrar);
-        }
+
+        titulo_dialogo= String.format("%s %s", getString(R.string.dialogoRecuperarTitulo),n.getTitulo());
+        texto_dialogo = getString(R.string.dialogoRecuperarNotaTexto);
 
         builder.setTitle(titulo_dialogo);
         builder.setMessage(texto_dialogo);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-               listener.onBorrarPossitiveButtonClick(n);
+                listener.onRecuperarNotaPossitiveButtonClick(n);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                listener.onBorrarNegativeButtonClick();
+                listener.onRecuperarNotaNegativeButtonClick();
             }
         });
         AlertDialog alertBorrar = builder.create();
@@ -80,7 +75,7 @@ public class DialogoBorrar extends DialogFragment {
         super.onAttach(context);
 
         try {
-            listener = (OnBorrarDialogListener) context;
+            listener = (OnRecuperarDialogListener) context;
 
         } catch (ClassCastException e) {
             throw new ClassCastException(
@@ -91,4 +86,5 @@ public class DialogoBorrar extends DialogFragment {
     }
 
 }
+
 

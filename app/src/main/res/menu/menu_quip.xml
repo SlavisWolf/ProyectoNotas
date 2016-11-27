@@ -8,6 +8,9 @@
         android:id="@+id/menu_quip_borrar_listas_no_titulo"
         />
 
+    <item android:title="@string/vaciarPapelera"
+        android:id="@+id/menu_quip_vaciar_papelera"
+        />
     <item android:title="@string/configuracionNotas"
         android:id="@+id/menu_quip_configuracion"/>
    <!-- <group android:checkableBehavior="all">

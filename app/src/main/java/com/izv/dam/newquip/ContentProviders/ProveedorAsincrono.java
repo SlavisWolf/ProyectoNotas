@@ -3,9 +3,11 @@ package com.izv.dam.newquip.ContentProviders;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.izv.dam.newquip.adaptadores.AdaptadorNota;
 import com.izv.dam.newquip.contrato.ContratoBaseDatos;
 import com.izv.dam.newquip.pojo.ItemNotaLista;
 import com.izv.dam.newquip.pojo.Nota;
@@ -32,6 +34,8 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
     public  static  final int TOKEN_INSERCION_NOTA =60;
     public  static final  int TOKEN_INSERT_LISTA=50;
     public static final int TOKEN_INSERT_ITEM =70;
+    public  static final  int TOKEN_RECUPERAR_NOTA=90;
+    public static final int TOKEN_QUERY_BORRAR_CONJUNTO =80;
     //public  static final  int TOKEN_UPDATE_LISTA=60; //borrar nota desde quip
 
     public ProveedorAsincrono(ContentResolver cr) {
@@ -42,6 +46,7 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
     protected void onDeleteComplete(int token, Object cookie, int result) {
 //        super.onDeleteComplete(token, cookie, result);
         if (token==TOKEN_CAMBIO_ESTANDAR) {
+            AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
             VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_ACTUAL);
         }
     }
@@ -51,6 +56,7 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
         //super.onInsertComplete(token, cookie, uri);
 
 
+
         if (token==TOKEN_INSERT_LISTA) { // si insertamos una lista, hay que crear sus items.
             Bundle b = (Bundle) cookie;
             long idNuevaLista=Long.parseLong(uri.getLastPathSegment());
@@ -58,6 +64,8 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
             n.setId(idNuevaLista);
             ArrayList<ItemNotaLista> lista = b.getParcelableArrayList("array");
             VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_TODO); //solo avisa del cambio la inserción de la nota, no los items.
+            AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
+            VistaQuip.ID_CURSOR_ACTUAL=VistaQuip.ID_CURSOR_TODO;
 
 
             if (!lista.isEmpty()) {
@@ -68,12 +76,16 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
             }
         }
         else if (token==TOKEN_CAMBIO_ESTANDAR) {
+            AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
             VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_TODO);
+            VistaQuip.ID_CURSOR_ACTUAL=VistaQuip.ID_CURSOR_TODO;
         }
         else if (token==TOKEN_INSERCION_NOTA){
             long id =Long.parseLong(uri.getLastPathSegment());
             ((Nota)cookie).setId(id);
+            AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
             VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_TODO);
+            VistaQuip.ID_CURSOR_ACTUAL=VistaQuip.ID_CURSOR_TODO;
         }
         else if(token==TOKEN_INSERT_ITEM) {
                 long id = Long.parseLong(uri.getLastPathSegment());
@@ -85,36 +97,29 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
 
     @Override
     protected void onUpdateComplete(int token, Object cookie, int result) {
-        //super.onUpdateComplete(token, cookie, result);
-
-        /*if (token==TOKEN_UPDATE_LISTA){  // NO ES NECESARIO
-            Bundle b = (Bundle)cookie;
-            long idLista=b.getLong("idLista");
-            ItemNotaLista[] lista = (ItemNotaLista[]) b.getParcelableArray("lista");
-            ItemNotaLista[] borrados = (ItemNotaLista[]) b.getParcelableArray("borrados");
-
-            if (lista.length>0) {
-                for (ItemNotaLista item : lista) {
-                    if (item.getId() == 0) {
-                        item.setId_NotaLista(idLista);
-                        startInsert(0,null,ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, item.getContentValues());
-                    } else {
-                        Uri uriItem = ContentUris.withAppendedId(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA, item.getId());
-                        startUpdate(0,null,uriItem, item.getContentValues(), "", null);
-                    }
-                }
-            }
-            if (borrados.length>0) { // si hemos borrado algo del array
-                for (ItemNotaLista item : borrados) {
-                    if (item.getId()!=0){ // en la base de datos no hay ids que sean 0 , por tanto este elemento lo hemos borrado en la edición, pero nunca lo habiamos llegado a guardar en la base de datos.
-                        Uri uriItem = ContentUris.withAppendedId(ContratoBaseDatos.TablaItemNotaLista.CONTENT_URI_ITEM_NOTA_LISTA,item.getId());
-                        startDelete(0,null,uriItem,"",null);
-                    }
-                }
-            }
-        }*/
         if (token==TOKEN_CAMBIO_ESTANDAR) {
+            AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
             VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_TODO);
+            VistaQuip.ID_CURSOR_ACTUAL=VistaQuip.ID_CURSOR_TODO;
+        }
+        else if(token==TOKEN_RECUPERAR_NOTA) {
+            AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
+            VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_ACTUAL);
+        }
+    }
+
+    @Override
+    protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+        //super.onQueryComplete(token, cookie, cursor);
+        if (token==TOKEN_QUERY_BORRAR_CONJUNTO) {
+            while(cursor.moveToNext()) {
+                Nota n = Nota.getNota(cursor);
+                n.setPapelera(true);
+                Uri uri = ContentUris.withAppendedId(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getId());
+                startUpdate(0,null,uri,n.getContentValues(),null,null);
+            }
+            AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
+            VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_ACTUAL);
         }
     }
 }

@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -102,12 +104,19 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
             binding.setEditable(viewsAreEnabled);
             if (position==(lista.size()-1)&&focusUltimo){
                 binding.itemNotaListaTexto.requestFocus();
+                setScaleAnimation(holder.itemView);
                 focusUltimo=false;
             }
             //Log.v("ITEM",item.toString());
 
     }
 
+
+    private void setScaleAnimation(View view) {
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_PARENT, 0.5f, Animation.RELATIVE_TO_PARENT, 0.5f);
+        anim.setDuration(600);
+        view.startAnimation(anim);
+    }
     @Override
     public int getItemCount() {
         if(lista!=null)
@@ -201,13 +210,21 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
 
 
     private void borrarElementoTrim(ItemNotaLista item) {
-        item.setTexto(item.getTexto().trim());
+        if (item.getTexto()==null)
+            item.setTexto("");
+        else
+            item.setTexto(item.getTexto().trim());
         borrados.add(item);
     }
 
     public  void trimTextosLista(){
-        for (ItemNotaLista item : lista)
+        for (ItemNotaLista item : lista) {
+            if (item.getTexto()==null)
+                item.setTexto("");
+            else
                 item.setTexto(item.getTexto().trim());
+        }
+
     }
 
 

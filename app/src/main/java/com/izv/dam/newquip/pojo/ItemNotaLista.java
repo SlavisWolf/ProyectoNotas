@@ -125,7 +125,7 @@ public class ItemNotaLista implements Parcelable {
         ItemNotaLista item = new ItemNotaLista();
         item.setId(c.getLong(c.getColumnIndex(ContratoBaseDatos.TablaItemNotaLista._ID)));
         item.setTexto(c.getString(c.getColumnIndex(ContratoBaseDatos.TablaItemNotaLista.TEXTO)));
-        item.setMarcado(UtilBoolean.intToBoolean(c.getInt(c.getColumnIndex(ContratoBaseDatos.TablaItemNotaLista.MARCADO))));
+        item.setMarcado(c.getInt(c.getColumnIndex(ContratoBaseDatos.TablaItemNotaLista.MARCADO))!=0);
         item.setId_NotaLista(c.getLong(c.getColumnIndex(ContratoBaseDatos.TablaItemNotaLista.ID_NOTA_LISTA)));
         return item;
     }

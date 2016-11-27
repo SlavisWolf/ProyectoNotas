@@ -137,16 +137,8 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if( id == R.id.recordatorio) {
-           /* Toast.makeText(getApplicationContext(), "recordatorio", Toast.LENGTH_SHORT).show();
-            CalendarView calendar = (CalendarView) findViewById(R.id.calendario1);
-            calendar.setVisibility(calendar.VISIBLE);
 
-            LinearLayout calendario = (LinearLayout) findViewById(R.id.calendario);
-            calendario.setVisibility(calendario.VISIBLE);
-            */
-        }
-        else if(id == R.id.menu_nota_editar) {
+        if(id == R.id.menu_nota_editar) {
             //cambiarEditable(!binding.etTitulo.isEnabled());
             binding.setEditable(!binding.getEditable());
         }
@@ -170,9 +162,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
                 saveNota();
                 notaGuardada=true; // despues se saldra, con esto evitamos que duplique
                 finish();
-                //cambiarEnabled(false);
-               /* Intent intent = new Intent(VistaNota.this, VistaQuip.class);
-                startActivity(intent);*/
+                overridePendingTransition(R.anim.zoom_fordward_in, R.anim.zoom_fordward_out);
             }
 
         }
@@ -226,15 +216,13 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
             i.putExtras(b);
             Toast.makeText(this, getResources().getString(R.string.abrirLienzo), Toast.LENGTH_SHORT).show();
             startActivity(i);
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
             finish();
         }
         else if(id == android.R.id.home){
-            Intent upIntent = NavUtils.getParentActivityIntent(this);
-            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
-            } else {
-                NavUtils.navigateUpTo(this, upIntent);
-            }
+                finish();
+                overridePendingTransition(R.anim.zoom_fordward_in, R.anim.zoom_fordward_out);
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -313,7 +301,6 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
             }
             else {
                 saveNota();
-
             }
         }
         notaGuardada=false;

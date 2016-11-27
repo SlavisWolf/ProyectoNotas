@@ -10,6 +10,7 @@ import android.os.Parcelable;
 
 import com.android.databinding.library.baseAdapters.BR;
 import com.izv.dam.newquip.contrato.ContratoBaseDatos;
+import com.izv.dam.newquip.util.UtilBoolean;
 
 public class Nota  extends BaseObservable implements Parcelable {
 
@@ -27,6 +28,7 @@ public class Nota  extends BaseObservable implements Parcelable {
     private long id;
     private String titulo, nota,imagen,audio;
     private int tipo;
+    private boolean papelera;
 
 
     public Nota() {
@@ -40,6 +42,7 @@ public class Nota  extends BaseObservable implements Parcelable {
         this.imagen=imagen;
         this.audio=audio;
         this.tipo=tipo;
+        papelera=false;
     }
 
     public  Nota (int tipo) {
@@ -53,6 +56,7 @@ public class Nota  extends BaseObservable implements Parcelable {
         imagen = in.readString();
         audio = in.readString();
         tipo = in.readInt();
+        papelera = in.readByte()!=0;
     }
 
     public static final Creator<Nota> CREATOR = new Creator<Nota>() {
@@ -85,6 +89,14 @@ public class Nota  extends BaseObservable implements Parcelable {
         } catch(NumberFormatException e){
             this.id = 0;
         }
+    }
+
+    public boolean isPapelera() {
+        return papelera;
+    }
+
+    public void setPapelera(boolean papelera) {
+        this.papelera = papelera;
     }
 
     public String getTitulo() {
@@ -143,6 +155,7 @@ public class Nota  extends BaseObservable implements Parcelable {
         valores.put(ContratoBaseDatos.TablaNota.IMAGEN,this.getImagen());
         valores.put(ContratoBaseDatos.TablaNota.AUDIO,this.getAudio());
         valores.put(ContratoBaseDatos.TablaNota.TIPO,this.getTipo());
+        valores.put(ContratoBaseDatos.TablaNota.PAPELERA,this.isPapelera());
         return valores;
     }
 
@@ -154,6 +167,7 @@ public class Nota  extends BaseObservable implements Parcelable {
         objeto.setImagen(c.getString(c.getColumnIndex(ContratoBaseDatos.TablaNota.IMAGEN)));
         objeto.setAudio(c.getString(c.getColumnIndex(ContratoBaseDatos.TablaNota.AUDIO)));
         objeto.setTipo(c.getInt(c.getColumnIndex(ContratoBaseDatos.TablaNota.TIPO)));
+        objeto.setPapelera(c.getInt(c.getColumnIndex(ContratoBaseDatos.TablaNota.PAPELERA))!=0);
         return objeto;
     }
 
@@ -182,6 +196,7 @@ public class Nota  extends BaseObservable implements Parcelable {
         dest.writeString(imagen);
         dest.writeString(audio);
         dest.writeInt(tipo);
+        dest.writeByte(UtilBoolean.booleanToByte(papelera));
     }
 
     public boolean comprobarNotaVacia() {

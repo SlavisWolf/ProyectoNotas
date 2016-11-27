@@ -29,7 +29,7 @@ public class ModeloQuip implements ContratoMain.InterfaceModelo {
         //cr=c.getContentResolver();
     }
 
-    public  void  borrarConjunto(String where,boolean listas) {
+   /* public  void  borrarConjunto(String where,boolean listas) {
 
         if (listas)
             where += " and "+ContratoBaseDatos.TablaNota.TIPO+"="+Nota.TIPO_LISTA;
@@ -37,6 +37,17 @@ public class ModeloQuip implements ContratoMain.InterfaceModelo {
             where += " and "+ContratoBaseDatos.TablaNota.TIPO+"!="+Nota.TIPO_LISTA;
 
         pa.startDelete(ProveedorAsincrono.TOKEN_CAMBIO_ESTANDAR,null,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,where,null);
+    }*/
+
+    public  void  borrarConjunto(String where,boolean papelera) {
+        if (papelera) {
+            where = ContratoBaseDatos.TablaNota.PAPELERA+"=1";
+            pa.startDelete(ProveedorAsincrono.TOKEN_CAMBIO_ESTANDAR,null,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,where,null);
+        }
+        else { //
+            pa.startQuery(ProveedorAsincrono.TOKEN_QUERY_BORRAR_CONJUNTO,null,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,ContratoBaseDatos.TablaNota.PROJECTION_ALL,where,null,ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
+        }
+
     }
 
     @Override
@@ -45,18 +56,15 @@ public class ModeloQuip implements ContratoMain.InterfaceModelo {
     }
 
     @Override
-    public void deleteNota(Nota n) {
+    public void deleteNota(Nota n) { // ahora dependiendo de si la nota esta en la papelera, la borra, o la actualiza
         Uri uri = ContentUris.withAppendedId(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getId());
-        pa.startDelete(ProveedorAsincrono.TOKEN_CAMBIO_ESTANDAR,null,uri,"",null);
-       /* if (n.getTipo()==Nota.TIPO_LISTA) { //BORRA TAMBIEN LOS ITEMS// USAREMOS UN TRIGGER MEJOR.
-            String uriItems = ContratoBaseDatos.TablaItemNotaLista.URI_ITEM_NOTA_LISTA+"/"+ContratoBaseDatos.TablaNota.TABLA+"/"+uri.getLastPathSegment();//URI PARA BUSCAR LOS ELEMENTOS DE UNA LISTA
-            Log.v("ITEMS_URI",uriItems);
-            //pa.startDelete(0,null,Uri.parse(uriItems),"",null);
-            //cr.delete(Uri.parse(uriItems),"",null);
-        }*/
-        //return cr.delete(uri,"",null);
-
-        //return valor
+        if (n.isPapelera()){
+            pa.startDelete(ProveedorAsincrono.TOKEN_CAMBIO_ESTANDAR,null,uri,"",null);
+        }
+        else {
+            n.setPapelera(true);
+            pa.startUpdate(ProveedorAsincrono.TOKEN_CAMBIO_ESTANDAR,null,uri,n.getContentValues(),"",null);
+        }
 
     }
 
@@ -80,12 +88,14 @@ public class ModeloQuip implements ContratoMain.InterfaceModelo {
         this.cursor=c;
     }
 
-   /* @Override
-    public void loadData(OnDataLoadListener listener) {
-        cursor = cr.query(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,ContratoBaseDatos.TablaNota.PROJECTION_ALL,null,null,ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
-       // Log.v("MSG",Proveedor.CONTENT_URI_NOTA.toString());
-        listener.setCursor(cursor);
+    @Override
+    public void recuperarNota(Nota n) {
+        n.setPapelera(false);
+        Uri uri =ContentUris.withAppendedId(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getId());
+        pa.startUpdate(ProveedorAsincrono.TOKEN_RECUPERAR_NOTA,null,uri,n.getContentValues(),null,null);
+    }
+
+    /*public void borrarTodo(){
+        pa.startDelete(0,null,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,null,null);
     }*/
-
-
 }

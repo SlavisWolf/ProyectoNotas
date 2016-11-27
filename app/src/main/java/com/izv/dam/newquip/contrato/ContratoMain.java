@@ -19,16 +19,14 @@ public interface ContratoMain {
 
         void setCursor(Cursor c);
 
-        void borrarConjunto(String where,boolean listas);
+        void recuperarNota(Nota n);
 
-        /*void loadData(OnDataLoadListener listener);
-
-        interface OnDataLoadListener {
-            public void setCursor(Cursor c);
-        }*/
+        void borrarConjunto(String where,boolean papelera);
     }
 
     interface InterfacePresentador {
+
+        void recuperarNota(Nota n);
 
         void onAddNota();
 
@@ -38,7 +36,7 @@ public interface ContratoMain {
 
         void onDeleteNota(Nota n);
 
-        void onEditNota(int position);
+        void onClickNota(int position);
 
         void onEditNota(Nota n);
 
@@ -63,6 +61,7 @@ public interface ContratoMain {
         void mostrarEditarNota(Nota n);
 
         void mostrarConfirmarBorrarNota(Nota n);
+        void mostrarConfirmarRecuperarNota(Nota n);
 
         void reiniciarDatos(int id);
 

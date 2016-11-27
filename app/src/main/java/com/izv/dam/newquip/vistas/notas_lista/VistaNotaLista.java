@@ -215,6 +215,7 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
                     guardarLista(textoTitulo);
                     listaGuardada=true;
                     finish();
+                    overridePendingTransition(R.anim.zoom_fordward_in, R.anim.zoom_fordward_out);
                 }
                 return true;
             }
@@ -268,12 +269,8 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
             }
 
             case android.R.id.home : {
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
-                } else {
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
+                finish();
+                overridePendingTransition(R.anim.zoom_fordward_in, R.anim.zoom_fordward_out);
             }
             default: {
                 return false;

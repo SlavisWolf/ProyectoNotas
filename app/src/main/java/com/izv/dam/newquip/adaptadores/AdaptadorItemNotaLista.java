@@ -114,7 +114,7 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
 
     private void setScaleAnimation(View view) {
         ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_PARENT, 0.5f, Animation.RELATIVE_TO_PARENT, 0.5f);
-        anim.setDuration(600);
+        anim.setDuration(100);
         view.startAnimation(anim);
     }
     @Override

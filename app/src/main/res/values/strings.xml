@@ -27,10 +27,11 @@
     <string name="listaVacia">Lista sin título</string>
 
     <!-- MENU DE BOTONES -->
-    <string name="anadirNota">Crear nota</string>
-    <string name="anadirNotaLista">Crear lista</string>
-    <string name="anadirNotaImagen">Crear nota con una imagen.</string>
-    <string name="anadirNotaDibujo">Crear nota con un dibujo.</string>
+    <string name="anadirNota">Nueva Nota</string>
+    <string name="anadirNotaLista">Nueva Lista</string>
+    <string name="anadirNotaImagen">Galería</string>
+    <string name="anadirNotaCamara">Camara</string>
+    <string name="anadirNotaDibujo">Lienzo</string>
     <!-- FIN MENU DE BOTONES -->
 
     <!-- MENU NOTA LISTA -->
@@ -49,10 +50,10 @@
     <string name="menuDibujar">Crear dibujo</string>
 
     <!-- MENU QUIP -->
-    <string name="configuracionNotas">Configurar opciones de nota.</string>
-    <string name="borrarNotasSinTitulo">Borrar notas sin texto.</string>
-    <string name="borrarListasSinTitulo">Borrar listas sin título.</string>
-    <string name="vaciarPapelera">Vaciar Papelera.</string>
+    <string name="configuracionNotas">Configurar opciones de nota</string>
+    <string name="borrarNotasSinTitulo">Borrar notas sin texto</string>
+    <string name="borrarListasSinTitulo">Borrar listas sin título</string>
+    <string name="vaciarPapelera">Vaciar Papelera</string>
 
 
     <!--Dialogo Preferencias Nota -->
@@ -102,8 +103,8 @@
 
     <!-- NAVIGATION DRAWER -->
     <string name="navViewGrupoNotas">Tus notas</string>
-    <string name="navViewTodasNotas">Todas las notas</string>
-    <string name="navViewNotasNormales">Notas normales</string>
+    <string name="navViewTodasNotas">Notas y Listas</string>
+    <string name="navViewNotasNormales">Notas</string>
     <string name="navViewNotasMultimedia">Notas multimedia</string>
     <string name="navViewSoloListas">Listas</string>
     <string name="navViewGrupoUsuario">Usuario</string>
@@ -160,6 +161,9 @@
     <!--Dialogo recuperar nota -->
     <string name="dialogoRecuperarTitulo">Recuperar Nota:</string>
     <string name="dialogoRecuperarNotaTexto">¿Quieres recuperar esta nota de la papelera?</string>
+
+    <!--MARCAS GPS-->
+    <string name="marcaSinTexto">Nota sin texto</string>
      <!-- otros -->
     <string name="guardarNotaPart1">Su nota </string>
     <string name="guardarListaPart1">Su lista </string>
@@ -173,5 +177,9 @@
     <string name="nuevaNotaDibujo">Abiendo Lienzo para nueva nota.</string>
     <string name="imagenNoGuardada">La imagen no ha podido guardarse</string>
     <string name="appImagen">Selecciona una aplicación con la que coger la imagen.</string>
+
+    <string name="PRUEBA1">HOLA</string>
+    <string name="PRUEBA2">HOLA2</string>
+
 
 </resources>

@@ -54,13 +54,7 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
             super(itemView);
 
             binding =DataBindingUtil.bind(itemView);
-           /* cb= (CheckBox)  itemView.findViewById(R.id.item_nota_lista_marcado);
-            et = (EditText) itemView.findViewById(R.id.item_nota_lista_texto);
-            ib = (ImageButton) itemView.findViewById(R.id.item_nota_lista_boton_borrar_item);*/
-
-
             //EVENTOS
-
             binding.itemNotaListaBotonBorrarItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -70,9 +64,6 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
                 }
             });
             // EVENTOS PARA GUARDAR EN TIEMPO REAL LOS CAMBIOS QUE HACEMOS EN LOS ELEMENTOS DE LA LISTA.
-
-
-
             binding.itemNotaListaMarcado.setOnClickListener(new View.OnClickListener() { // ES MEJOR AGREGAR AQUI LOS EVENTOS(los que afectan a elementos individuales, no a la lista entera), PARA QUE CUANDO HAGAS SCROLL NO TENGA QUE AÑADIR LOS LISTENER OTRA VEZ
                 @Override
                 public void onClick(View v) {
@@ -125,16 +116,18 @@ public class AdaptadorItemNotaLista extends RecyclerView.Adapter<AdaptadorItemNo
     }
 
 
+
     public void borrarItem(int posicion){
         ItemNotaLista item = lista.remove(posicion);
         borrarElementoTrim(item);
-        notifyDataSetChanged();
+        notifyItemRemoved(posicion);
     }
 
     public void añadirItem(ItemNotaLista item){
         lista.add(item);
         focusUltimo=true;
         notifyDataSetChanged();
+       // notifyItemInserted(lista.size()-1);
     }
     public void setLista(ArrayList<ItemNotaLista> lista){
         this.lista=lista;

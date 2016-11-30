@@ -105,6 +105,7 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
             ArrayList<ItemNotaLista> borrados = savedInstanceState.getParcelableArrayList("borrados");
             adaptador.setLista(lista);
             adaptador.setBorrados(borrados);
+            binding.setNota(nota);
         } else {
             Bundle b = getIntent().getExtras();
             if(b != null ) {
@@ -120,8 +121,9 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
             getSupportLoaderManager().initLoader(0,null,this);
             //cargarItems(presentador.getItems(nota.getId()));
         }
+
         cambiarEditable(enabled);
-        //titulo.setText(nota.getTitulo());
+
 
         binding.notaListaTitulo.addTextChangedListener(new TextWatcher() {
             @Override

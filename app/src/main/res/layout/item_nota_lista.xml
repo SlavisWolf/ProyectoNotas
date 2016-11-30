@@ -31,7 +31,6 @@
             android:button="@drawable/checkbox_selector_no_disabled"
             android:text="" />
 
-        <!-- android:button="@drawable/checkbox_selector_no_disabled"-->
         <EditText
             android:id="@+id/item_nota_lista_texto"
             android:layout_width="wrap_content"

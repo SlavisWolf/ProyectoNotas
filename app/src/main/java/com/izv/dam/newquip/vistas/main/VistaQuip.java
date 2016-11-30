@@ -1,17 +1,17 @@
 package com.izv.dam.newquip.vistas.main;
-
 import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
-
-
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.LoaderManager;
@@ -19,6 +19,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.izv.dam.newquip.R;
@@ -51,12 +52,13 @@ import com.izv.dam.newquip.vistas.Usuarios.VistaRegistro;
 import com.izv.dam.newquip.vistas.VistaLienzo;
 import com.izv.dam.newquip.vistas.notas.VistaNota;
 import com.izv.dam.newquip.vistas.notas_lista.VistaNotaLista;
-
 import java.io.File;
 
 public class VistaQuip extends AppCompatActivity implements ContratoMain.InterfaceVista , OnBorrarDialogListener,LoaderManager.LoaderCallbacks<Cursor>,OnRecuperarDialogListener { //PREGUNTAR A CARMELO EL ERROR DEL ID 0 EN EL LOADER
 
     private PresentadorQuip presentador;
+
+    private String rutaFoto;
     private RecyclerView rv;
     private TextView textoTipo;
     private DrawerLayout drawerLayout;
@@ -67,10 +69,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     private static final int ID_CURSOR_LISTA = 3;
     private static final int ID_CURSOR_MULTIMEDIA = 4;
     private static final int ID_CURSOR_PAPELERA = 5;
-
     public static int ID_CURSOR_ACTUAL;
-
-    public  static  boolean ANIMACIONES_ADAPTADOR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,13 +104,14 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         rv.setAdapter(adaptador);
 
         //MENU DE FLOAT BUTTONS
-        FloatingActionsMenu fam = (FloatingActionsMenu) findViewById(R.id.vista_principal_menuFloat);
+       final FloatingActionsMenu fam = (FloatingActionsMenu) findViewById(R.id.vista_principal_menuFloat);
+
         FloatingActionButton anadirNota = (FloatingActionButton) findViewById(R.id.vista_principal_anadir_nota_normal);
         anadirNota.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fam.collapse();
                 presentador.onAddNota();
-                // fam.toggle();
             }
         });
 
@@ -119,6 +119,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         anadirNotaLista.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fam.collapse();
                 presentador.onAddNotaLista();
             }
         });
@@ -127,6 +128,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         anadirImagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fam.collapse();
                 if (Permisos.solicitarPermisos(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, VistaQuip.this)) { //AÑADIDA SOLICITUD DE PERMISOS, PORQUE AHORA CREA UN ARCHIVO NUEVO.
                     Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");//para que busque cualquier tipo de imagen
@@ -140,10 +142,38 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         anadirDibujo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fam.collapse();
                 Toast.makeText(VistaQuip.this, R.string.nuevaNotaDibujo, Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(VistaQuip.this, VistaLienzo.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            }
+        });
+
+        FloatingActionButton sacarFoto = (FloatingActionButton) findViewById(R.id.vista_principal_anadir_nota_camara);
+        sacarFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fam.collapse();
+                if (Permisos.solicitarPermisos(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},VistaQuip.this)) {
+                    new AsyncTask<Void,Void,Intent>() {  // añadido el proceso en 2º plano.
+                        @Override
+                        protected Intent doInBackground(Void... params) {
+                            Long timestamp = System.currentTimeMillis() / 1000;
+                            DirectoriosArchivosQuip.comprobarDirectorioImagenes();
+                            String nombreImagen = timestamp.toString() + ".jpg";
+                            rutaFoto = Environment.getExternalStorageDirectory() + File.separator + DirectoriosArchivosQuip.IMAGE_DIRECTORY + File.separator + nombreImagen;
+                            File newFile = new File(rutaFoto);
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
+                            return intent;
+                        }
+                        @Override
+                        protected void onPostExecute(Intent intent) {
+                            startActivityForResult(intent, Permisos.HACER_FOTO);
+                        }
+                    }.execute();
+                }
             }
         });
         //FIN MENU DE FLOAT BUTTONS
@@ -170,8 +200,6 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
 
     @Override
     protected void onResume() {
-        //presentador.onResume();
-        // getSupportLoaderManager().restartLoader(ID_CURSOR_ACTUAL,null,this);
         super.onResume();
     }
 
@@ -226,6 +254,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
 
     @Override
     public void onBorrarPossitiveButtonClick(Nota n) {
+        AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
         presentador.onDeleteNota(n);
         //getSupportLoaderManager().restartLoader(0,null,this);
     }
@@ -233,6 +262,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     @Override
     public void onBorrarNegativeButtonClick() {
         //añadido por el deslizador, para que vuelva a pintar los items...xd
+        AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
         rv.getAdapter().notifyDataSetChanged();
     }
 
@@ -241,7 +271,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case Permisos.GALERIA:
+            case Permisos.GALERIA: {
                 if (resultCode == RESULT_OK) {
 
                     new AsyncTask<Object, Void, String>() { //añadido en 2º plano.
@@ -273,6 +303,30 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                     }.execute(data);
                 }
                 break;
+            }
+
+            case Permisos.HACER_FOTO: {
+                if (resultCode == RESULT_OK) {
+                    MediaScannerConnection.scanFile(this, new String[]{rutaFoto}, null, new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            Log.i("ExternalStorage", "Scanned " + path + ":");
+                            Log.i("ExternalStorage", "-> Uri = " + uri);
+                        }
+                    });
+                    Nota n = new Nota(Nota.TIPO_IMAGEN);
+                    n.setImagen(rutaFoto);
+                    Intent i = new Intent(VistaQuip.this, VistaNota.class);
+                    Bundle b = new Bundle();
+
+                    b.putParcelable("nota", n);
+                    i.putExtras(b);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
+                }
+                rutaFoto=null;
+                break;
+            }
         }
     }
 
@@ -315,7 +369,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                 return new CursorLoader(this, ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, where, valores, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
             }
             default: {
-                return null;//new CursorLoader(this,ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, null, null, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
+                return null;
             }
         }
 
@@ -346,7 +400,6 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                 adaptador = null;
             }
         } catch (Throwable localThrowable) {
-            // Proyectar la excepción
             localThrowable.printStackTrace();
         }
     }
@@ -384,6 +437,13 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                 presentador.borrarConjunto(null, true);
                 return true;
             }
+            case  android.R.id.home :{ //BOTÓN DEL NAVIGATION DRAWER
+                NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+                if(drawerLayout.isDrawerOpen(nav))
+                    drawerLayout.closeDrawers();
+                else
+                    drawerLayout.openDrawer(nav);
+            }
             default:
                 return false;
         }
@@ -403,6 +463,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
 
     private void crearNavigationView() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        crearDrawerToggle();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -459,6 +520,36 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                 }
             }
         });
+    }
+
+    private  void crearDrawerToggle() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        final ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.PRUEBA1,R.string.PRUEBA2) {
+
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                supportInvalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                supportInvalidateOptionsMenu();
+            }
+        };
+
+
+
+        drawerLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                drawerToggle.syncState();
+            }
+        });
+
+        drawerLayout.addDrawerListener(drawerToggle);
     }
 
 

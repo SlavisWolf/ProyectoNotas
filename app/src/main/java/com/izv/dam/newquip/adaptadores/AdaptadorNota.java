@@ -74,28 +74,15 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
         public ViewHolder(View itemView) { // aqui irian todos los elementos del layout
             super(itemView);
             tvTituloNota = (TextView) itemView.findViewById(R.id.tvTituloNota);
-            tvRecordatorio = (TextView) itemView.findViewById(R.id.tvFechaRecordatorioNota);
+            //tvRecordatorio = (TextView) itemView.findViewById(R.id.tvFechaRecordatorioNota);
             ivTipoNota = (ImageView) itemView.findViewById(R.id.imagenTipoNota);
-            ivRecordatorio = (ImageView) itemView.findViewById(R.id.imagenRecordatorio);
+            //ivRecordatorio = (ImageView) itemView.findViewById(R.id.imagenRecordatorio);
         }
         public TextView getTextView(){
             return tvTituloNota;
         }
-
-        public TextView getTvRecordatorio() {
-            return tvRecordatorio;
-        }
-
         public ImageView getIvTipoNota() {
             return ivTipoNota;
-        }
-
-        public TextView getTvTituloNota() {
-            return tvTituloNota;
-        }
-
-        public ImageView getIvRecordatorio() {
-            return ivRecordatorio;
         }
     }
 

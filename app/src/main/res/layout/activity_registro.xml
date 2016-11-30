@@ -185,8 +185,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/boton_registro"
+        android:background="@drawable/boton_registro_selector"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="85dp"
-        android:layout_marginLeft="85dp" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
 
 </LinearLayout>

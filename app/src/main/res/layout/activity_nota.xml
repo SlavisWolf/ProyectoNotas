@@ -46,12 +46,11 @@
                         android:id="@+id/etTitulo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
                         android:text="@={nota.titulo}"
                         android:enabled="@{editable}"
+                        android:textColor="@android:color/primary_text_light_nodisable"
                         android:hint="@string/hintTituloNota"
-                        android:inputType="text"
-                        android:textColor="@android:color/primary_text_light_nodisable" />
+                        android:inputType="text" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -63,7 +62,6 @@
                         android:id="@+id/etNota"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
                         android:text="@={nota.nota}"
                         android:ems="10"
                         android:enabled="@{editable}"

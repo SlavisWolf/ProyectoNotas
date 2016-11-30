@@ -9,6 +9,8 @@
     tools:openDrawer="start">
 
 
+
+
     <!-- EN ESTE INCLUDE SE INTRODUCE EL LAYOUT PRINCIPAL -->
     <include
     layout="@layout/activity_quip"

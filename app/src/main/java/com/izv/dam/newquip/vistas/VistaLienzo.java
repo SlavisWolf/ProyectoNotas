@@ -77,28 +77,21 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
 
         pdefecto = pmediano;
 
-        if (savedInstanceState != null) {
+      /*  if (savedInstanceState != null) {
             nota = savedInstanceState.getParcelable("nota");
             String color = savedInstanceState.getString("color");
             float grosor = savedInstanceState.getFloat("grosor");
             lienzo.setColor(color);
             lienzo.setTamanyoPunto(grosor);
+        } else {*/
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            nota = b.getParcelable("nota");
         } else {
-            Bundle b = getIntent().getExtras();
-            if (b != null) {
-                nota = b.getParcelable("nota");
-            }
-            else {
-                nota= new Nota();
-            }
+            nota = new Nota();
         }
-
-
-
-
-
-
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

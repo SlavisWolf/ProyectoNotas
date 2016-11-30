@@ -58,7 +58,7 @@
                 android:layout_weight="0.5"
                 android:clickable="true"
                 app:fabSize="auto"
-                app:srcCompat="@drawable/ic_action_anadir" />
+                android:src="@drawable/ic_action_annadir_white" />
         </LinearLayout>
 
     </LinearLayout>

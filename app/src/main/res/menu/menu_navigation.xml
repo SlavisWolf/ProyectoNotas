@@ -6,42 +6,38 @@
         <menu>
             <item
                 android:id="@+id/nav_view_datos_usuario"
-                android:icon="@android:drawable/ic_menu_compass"
+                android:icon="@drawable/ic_nav_perfil"
                 android:title="@string/navViewDatosUsuario" />
-
-
             <item
                 android:id="@+id/nav_view_papelera"
-                android:icon="@drawable/ic_action_borrar_item"
-                android:title="@string/navViewPapelera" />
+                android:icon="@drawable/ic_nav_vaciar_papelera"
+                android:title="@string/navViewPapelera"/>
             <item
                 android:id="@+id/nav_view_desconectar"
-                android:icon="@android:drawable/ic_menu_compass"
+                android:icon="@drawable/ic_nav_desconectar_usuario"
                 android:title="@string/navViewDesconectarUsuario" />
         </menu>
     </item>
-
-
 
     <item android:title="@string/navViewGrupoNotas">
         <menu>
             <item
                 android:id="@+id/nav_todas_notas"
-                android:icon="@android:drawable/ic_menu_compass"
+                android:icon="@drawable/ic_nav_todo"
                 android:title="@string/navViewTodasNotas" />
             <item
                 android:id="@+id/nav_solo_notas_normales"
-                android:icon="@android:drawable/ic_menu_compass"
+                android:icon="@drawable/ic_nav_notas"
                 android:title="@string/navViewNotasNormales" />
 
             <item
                 android:id="@+id/nav_solo_notas_multimedia"
-                android:icon="@android:drawable/ic_menu_compass"
+                android:icon="@drawable/ic_nav_multimedia"
                 android:title="@string/navViewNotasMultimedia" />
 
             <item
                 android:id="@+id/nav_solo_listas"
-                android:icon="@android:drawable/ic_menu_compass"
+                android:icon="@drawable/ic_nav_lista"
                 android:title="@string/navViewSoloListas" />
         </menu>
     </item>

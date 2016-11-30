@@ -166,6 +166,7 @@ public class VistaDatosUsuario extends AppCompatActivity implements OnCambiarAva
         PreferenciasCompartidas prefs = new PreferenciasCompartidas(this);
         if (textoNombre.isEmpty()) {
             til_nombre.setError(getString(R.string.errorNoNombre));
+            nombre.requestFocus();
         }
         else {
             //GUARDAMOS LOS CAMPOS EN LAS PREFERENCIAS

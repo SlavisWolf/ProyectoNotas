@@ -5,6 +5,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -26,21 +27,27 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.izv.dam.newquip.R;
+import com.izv.dam.newquip.basedatos.AyudanteOrm;
 import com.izv.dam.newquip.contrato.ContratoNota;
 import com.izv.dam.newquip.databinding.ActivityNotaBinding;
 import com.izv.dam.newquip.dialogo.DialogoBorrarGeneral;
 import com.izv.dam.newquip.dialogo.interfaces.OnBorrarGeneralDialogListener;
+import com.izv.dam.newquip.pojo.MarcaNota;
 import com.izv.dam.newquip.pojo.Nota;
 import com.izv.dam.newquip.util.DirectoriosArchivosQuip;
 import com.izv.dam.newquip.util.ImprimirPDF;
+import com.izv.dam.newquip.util.Localizaciones;
 import com.izv.dam.newquip.util.Permisos;
 import com.izv.dam.newquip.util.PreferenciasCompartidas;
 import com.izv.dam.newquip.util.UtilFecha;
 import com.izv.dam.newquip.vistas.VistaLienzo;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 
 
 import java.io.File;
-
+import java.sql.SQLException;
+import java.util.Date;
 
 
 public class VistaNota extends AppCompatActivity implements ContratoNota.InterfaceVista, OnBorrarGeneralDialogListener {
@@ -168,6 +175,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
         }
         else if(id == R.id.camara){
 
+            Permisos.solicitarPermisos(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},this);
             if (Permisos.solicitarPermisos(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},this)) {
 
 
@@ -189,9 +197,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
                     }
                 }.execute();
             }
-            else{
-                Permisos.solicitarPermisos(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},this);
-            }
+
         }
         else if(id == R.id.menu_nota_imprimir){
 
@@ -251,10 +257,6 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
                             rutaImage =  Environment.getExternalStorageDirectory() + File.separator + DirectoriosArchivosQuip.IMAGE_DIRECTORY + File.separator + nombreImagen;
 
                             DirectoriosArchivosQuip.crearImagen(rutaImage,BitmapFactory.decodeFile(rutaAbsoluta),VistaNota.this); // le pasas una ruta,una imagen, y te crea un nuevo archivo en esa ruta con esa imagen
-
-                            //binding.imageView.setVisibility(View.VISIBLE);
-                            //binding.imageView.setImageBitmap(BitmapFactory.decodeFile(rutaImage));
-
                             return null;
                         }
                         @Override
@@ -265,11 +267,9 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
                     }.execute(data);
                 }
                 break;
-            case Permisos.HACER_FOTO:
-                if(resultCode == RESULT_OK) {
+            case Permisos.HACER_FOTO: {
+                if (resultCode == RESULT_OK) {
 
-
-                    //binding.imageView.setVisibility(View.VISIBLE);
 
                     MediaScannerConnection.scanFile(this, new String[]{rutaImage}, null, new MediaScannerConnection.OnScanCompletedListener() {
                         @Override
@@ -282,10 +282,8 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
                     //MetodosBinding.setImagenConRuta(imagen,rutaImage); AHORA USA BINDABLE
                     binding.getNota().setTipo(Nota.TIPO_IMAGEN);
                 }
-               /* else {
-                    fotosBorradas.remove(fotosBorradas.size()-1); //esto hace que sino  seleccionamos nada, quite de fotos borradas la ultima imagen.
-                }*/
                 break;
+            }
         }
     }
 
@@ -325,21 +323,17 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
 
     @Override
     public void mostrarNota(Nota n) {
-        //rutaImage=binding.getNota().getImagen();
-        /*if (rutaImage!=null) {
-            Bitmap nuevaImagen = BitmapFactory.decodeFile(rutaImage);
-            binding.imageView.setImageBitmap(nuevaImagen);
-            //binding.imageView.setVisibility(View.VISIBLE);
-        }*/
     }
 
     private void saveNota() {
+
         guardarDatosEnNota();//solo se hace trim a los textos
         Nota n = binding.getNota();
         if (!n.comprobarNotaVacia()) {
              presentador.onSaveNota(n);
-            /*if (r > 0 & nota.getId() == 0) {
-                nota.setId(r);
+            //Localización Nota!
+            /*if (Permisos.solicitarPermisos(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},this)) {
+                marcarLocalizacionNota();
             }*/
             Toast.makeText(getApplicationContext(),
                     getResources().getString(R.string.guardarNotaPart1) +" "+ n.getTitulo() + " "+getResources().getString(R.string.guardarNotaPart2),
@@ -347,13 +341,6 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
         }
 
     }
-
-    private void cambiarEditable(boolean enabled) {
-       /* binding.etTitulo.setEnabled(enabled);
-        binding.etNota.setEnabled(enabled);
-        binding.imageView.setLongClickable(enabled);*/
-    }
-
     @Override
     public void onBorrarPossitiveButtonClick() {
         binding.getNota().setTipo(Nota.TIPO_DEFECTO);
@@ -373,4 +360,33 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
 
 
 
-}
+    //http://androcode.es/2012/12/primeros-pasos-con-ormlite/
+    private  void marcarLocalizacionNota(){
+       /* new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {*/
+                //AÑADIDO MARCAS
+                try {
+                    AyudanteOrm helper = OpenHelperManager.getHelper(VistaNota.this,AyudanteOrm.class);
+                    Dao dao = helper.getMarcaNotaDao();
+                    //OBTENCION DATOS MARCA
+                    String texto;
+                    Nota n = binding.getNota();
+                    if (n.getTitulo()==null || n.getTitulo().trim().isEmpty())
+                        texto = n.getTitulo().trim();
+                    else if(n.getNota()==null || n.getNota().trim().isEmpty())
+                        texto=n.getNota().trim();
+                    else
+                        texto = getString(R.string.marcaSinTexto);
+                    Location l = Localizaciones.devolverLocalizacionActual(VistaNota.this);
+                    //------------------------------------------------------------------------
+                    MarcaNota marca = new MarcaNota(texto,new Date(),l.getLatitude(),l.getLongitude(),n.getId());
+                    dao.create(marca);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+               // return null;
+            }
+        //}.execute();
+    }
+

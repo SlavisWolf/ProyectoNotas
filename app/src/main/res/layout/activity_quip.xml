@@ -8,7 +8,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".vistas.main.VistaQuip">
+    tools:context=".vistas.main.VistaQuip"
+    android:backgroundTint="@color/ColorFondoLayout"
+    android:background="@android:drawable/screen_background_light">
 
 
     <TextView
@@ -17,12 +19,13 @@
         android:id="@+id/tv_quip_tipo_cursor"
         android:layout_gravity="top"
         android:textStyle="bold"
-        android:textSize="18sp" />
+        android:textSize="24sp"
+        android:textColor="?android:attr/editTextColor" />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="43dp"
         android:id="@+id/lvListaNotas"
         android:scrollbars="vertical" />
 
@@ -56,14 +59,13 @@
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/vista_principal_anadir_nota_lista"
+            android:id="@+id/vista_principal_anadir_nota_camara"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_colorPressed="@color/colorButtonPressed"
-            app:fab_icon="@drawable/ic_action_anadir_nota_lista"
+            app:fab_icon="@drawable/ic_action_foto_nueva"
             app:fab_size="mini"
-            app:fab_title="@string/anadirNotaLista"
+            app:fab_title="@string/anadirNotaCamara"
             />
-
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,6 +75,17 @@
             app:fab_icon="@drawable/ic_action_anadir_imagen"
             app:fab_size="mini"
             app:fab_title="@string/anadirNotaImagen"
+            />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vista_principal_anadir_nota_lista"
+            app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorButtonPressed"
+            app:fab_icon="@drawable/ic_action_anadir_nota_lista"
+            app:fab_size="mini"
+            app:fab_title="@string/anadirNotaLista"
             />
 
         <com.getbase.floatingactionbutton.FloatingActionButton

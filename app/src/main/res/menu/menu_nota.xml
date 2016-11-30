@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/recordatorio"
-        android:title="recordatorio"
-        android:icon="@mipmap/ic_recordatorio"
-        app:showAsAction="always"
-        />
-
-    <item
         android:id="@+id/adjuntar"
         android:title="adjuntar"
         android:icon="@mipmap/ic_adjuntar"

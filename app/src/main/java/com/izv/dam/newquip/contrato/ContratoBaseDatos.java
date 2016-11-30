@@ -7,6 +7,7 @@ import android.provider.BaseColumns;
 public class ContratoBaseDatos {
 
     public final static String BASEDATOS = "quiip.sqlite";
+    public final static String BASEDATOS_OBJETOS = "quiip_ormlite.db";
     public static final String AUTHORITY ="com.izv.dam.bd";
 
     private ContratoBaseDatos(){

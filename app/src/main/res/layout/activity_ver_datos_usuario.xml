@@ -38,7 +38,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/datos_usuario_foto_perfil"
                 android:layout_width="100dp"
                 android:longClickable="@{editable}"

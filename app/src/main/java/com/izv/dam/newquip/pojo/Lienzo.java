@@ -115,6 +115,9 @@ public class Lienzo extends View {
         return drawPaint.getStrokeWidth();
     }
 
+    public Bitmap getBitmap(){
+        return canvasBitmap;
+    }
 
 }
 

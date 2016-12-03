@@ -2,6 +2,7 @@ package com.izv.dam.newquip.vistas.main;
 import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,6 +19,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,6 +33,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -46,8 +50,10 @@ import com.izv.dam.newquip.pojo.Nota;
 import com.izv.dam.newquip.dialogo.DialogoBorrar;
 import com.izv.dam.newquip.util.DirectoriosArchivosQuip;
 import com.izv.dam.newquip.util.Permisos;
+import com.izv.dam.newquip.util.PreferenciasCompartidas;
 import com.izv.dam.newquip.util.UtilFecha;
 import com.izv.dam.newquip.vistas.Usuarios.VistaDatosUsuario;
+import com.izv.dam.newquip.vistas.Usuarios.VistaMapa;
 import com.izv.dam.newquip.vistas.Usuarios.VistaRegistro;
 import com.izv.dam.newquip.vistas.VistaLienzo;
 import com.izv.dam.newquip.vistas.notas.VistaNota;
@@ -334,8 +340,6 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     //LOAD MANAGER
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) { // HACE LA CONSULTA CON LOS DATOS,el ID ES EL ID A USAR DEL MANAGER
-
-        System.out.println(id + "ID DEL LOADER");
         switch (id) {
             case VistaQuip.ID_CURSOR_TODO: {
                 String where = ContratoBaseDatos.TablaNota.PAPELERA + "= ?";
@@ -458,6 +462,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     @Override
     protected void onStart() {
         VistaQuip.REFERENCIA_MENU_PRINCIPAL = this;
+        inicializarValoresUsuarioNavHeader(); // Para cuando volvamos de otro layout, que se actualic en por si han cambiado.
         super.onStart();
     }
 
@@ -515,6 +520,14 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                         reiniciarDatos(ID_CURSOR_PAPELERA);
                         return true;
                     }
+                    case R.id.nav_map: {
+                        if (Permisos.solicitarPermisos(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, VistaQuip.this)) {
+                            Intent i = new Intent(VistaQuip.this, VistaMapa.class);
+                            startActivity(i);
+                            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                        }
+                        return true;
+                    }
                     default:
                         return false;
                 }
@@ -522,11 +535,31 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         });
     }
 
+
+    private void inicializarValoresUsuarioNavHeader(){
+        PreferenciasCompartidas prefs = new PreferenciasCompartidas(this);
+
+        NavigationView nav = (NavigationView) findViewById(R.id.nav_view); // los ids no estan en quip, sino dentro del header del navigation.
+        View header = nav.getHeaderView(0); // 0 es porque es el primero, si estuviera el 2º en el layout seria el 1
+        TextView tvNombre = (TextView) header.findViewById(R.id.nav_header_usuario_name);
+        tvNombre.setText(prefs.getPrefsNombreUsuario());
+        String correo = prefs.getPrefsCorreoUsuario();
+        TextView tvCorreo = (TextView) header.findViewById(R.id.nav_header_user_mail);
+        tvCorreo.setText(correo);
+
+        ImageView avatar= (de.hdodenhof.circleimageview.CircleImageView) header.findViewById(R.id.nav_header_avatar);
+        String rutaAvatar = prefs.getPrefsAvatarUsuario();
+        if (rutaAvatar!=null && !rutaAvatar.isEmpty()) {
+            avatar.setImageBitmap(BitmapFactory.decodeFile(rutaAvatar));
+        }
+        else
+            avatar.setImageDrawable(getDrawable(R.drawable.ic_no_avatar));
+    }
     private  void crearDrawerToggle() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        final ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.PRUEBA1,R.string.PRUEBA2) {
+        final ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.empty,R.string.empty) {
 
 
             @Override

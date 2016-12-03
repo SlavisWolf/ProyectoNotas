@@ -132,8 +132,6 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
                     }
                 }
             }
-
-            Log.v("TIPO",nota.getTipo()+"");
             switch (nota.getTipo()) { //AQUI CAMBIAREMOS LA IMAGEN QUE SE MUESTRA PARA QUE EL USUARIO SEPA A 1ª VISTA QUE TIPO DE NOTA ES.
                 case Nota.TIPO_DEFECTO: {
                     holder.getIvTipoNota().setImageResource(R.drawable.ic_tipo_defecto48px);
@@ -166,11 +164,11 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
 
 
 
-    private void setFadeAnimation(View view) {
+   /* private void setFadeAnimation(View view) {
         AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setDuration(3000);
         view.startAnimation(anim);
-    }
+    }*/
 
     private void setScaleAnimation(View view) {
         ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -194,30 +192,3 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
         return -1;
     }
 }
-
-
-
-//VERSION ANTIGUA ADAPTADOR PARA LISTVIEW
-/*public class AdaptadorNota extends CursorAdapter {
-
-    public AdaptadorNota(Context context, Cursor c) {
-        super(context, c, 0);
-    }
-
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        TextView tv = (TextView) view.findViewById(R.id.tvTituloNota);
-        Nota n = Nota.getNota(cursor);
-        tv.setText(n.getTitulo());
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return super.getView(position, convertView, parent);
-    }
-
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.item, parent, false);
-    }
-}*/

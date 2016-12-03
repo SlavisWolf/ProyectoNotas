@@ -95,9 +95,7 @@ public class VistaDatosUsuario extends AppCompatActivity implements OnCambiarAva
                 Bitmap btm = BitmapFactory.decodeFile(rutaImagen);
                 avatar.setImageBitmap(btm);
             }
-
         }
-
         binding.setEditable(editable);
     }
 
@@ -130,16 +128,12 @@ public class VistaDatosUsuario extends AppCompatActivity implements OnCambiarAva
             }
         });
         til_nombre = binding.datosUsuarioTilNombre;
-
-
         binding.botonActualizarDatos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 actualizarDatos();
             }
         });
-
-
         //INICIAR
         apellidos = binding.datosUsuarioApellidos;
         ciudad =  binding.datosUsuarioCiudad;
@@ -157,7 +151,6 @@ public class VistaDatosUsuario extends AppCompatActivity implements OnCambiarAva
                 return true;
             }
         });
-
     }
 
 
@@ -234,8 +227,10 @@ public class VistaDatosUsuario extends AppCompatActivity implements OnCambiarAva
 
     @Override
     public void borrarAvatar() {
+            new PreferenciasCompartidas(this).setPrefsAvatarUsuario(null);
             rutaImagen=null;
             avatar.setImageResource(android.R.drawable.ic_menu_camera);
+
     }
 
     @Override

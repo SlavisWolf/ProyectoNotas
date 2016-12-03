@@ -8,6 +8,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -211,16 +212,13 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onGuardarPossitiveButtonClick() { //Guardar el dibujo como un archivo png
 
-        lienzo.setDrawingCacheEnabled(true);
+        //lienzo.setDrawingCacheEnabled(true);
 
-       /*String imgSaved = MediaStore.Images.Media.insertImage(
-                getContentResolver(), lienzo.getDrawingCache(),
-                UUID.randomUUID().toString() + ".png", "drawing");*/
-        Bitmap dibujoLienzo = lienzo.getDrawingCache();
+        final Bitmap dibujoLienzo = lienzo.getBitmap();   //lienzo.getDrawingCache();
         if (dibujoLienzo != null) { //OPTIMIZADO
-            /*new AsyncTask<Bitmap,Void,Intent>() {
+            new AsyncTask<Bitmap,Void,Intent>() {
                 @Override
-                protected Intent doInBackground(Bitmap... params) {*/
+                protected Intent doInBackground(Bitmap... params) {
                     DirectoriosArchivosQuip.comprobarDirectorioImagenes();
                     String nombreImagen = UtilFecha.fechaActual()+"dibujoQuip.png";
                     rutaImage = Environment.getExternalStorageDirectory() + File.separator + DirectoriosArchivosQuip.IMAGE_DIRECTORY + File.separator + nombreImagen;
@@ -233,20 +231,17 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
                     Bundle b = new Bundle();
                     b.putParcelable("nota", nota);
                     i.putExtras(b);
-                    Toast.makeText(getApplicationContext(), R.string.dibujoGuardadoCorrectamente, Toast.LENGTH_SHORT).show();
-                    startActivity(i);
-                    finish();
-            overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                   // return i;
-                //}
+                    return i;
+                }
 
-              /*  @Override
+                @Override
                 protected void onPostExecute(Intent intent) {
                     Toast.makeText(getApplicationContext(), R.string.dibujoGuardadoCorrectamente, Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                     finish();
-                }*/
-          //  }.execute(dibujoLienzo);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+            }.execute(dibujoLienzo);
         } else {
             Toast.makeText(getApplicationContext(), R.string.imagenNoGuardada, Toast.LENGTH_SHORT).show();
         }

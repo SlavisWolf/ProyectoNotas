@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#202020</color>
-    <color name="colorPrimaryDark">#000</color>
+    <color name="colorPrimary">#030B55</color>
+    <color name="colorPrimaryDark">#02062B</color>
     <color name="colorAccent">#e56333</color>
 
     <color name="colorButtonPressed">#AAe56333</color>
     <color name="ColorFondoLayout">#DAD9DA</color>
     <color name="fondo">#ffffff</color>
-
-    <color name="tiposImagen">#33b5e5</color>
+    <color name="tiposImagen">#2CA6D2</color>
 
 </resources>

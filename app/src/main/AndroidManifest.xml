@@ -18,6 +18,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <provider android:name=".ContentProviders.Proveedor"
             android:authorities="com.izv.dam.bd"
             android:enabled="true" />
@@ -51,6 +52,7 @@
 
         <activity android:name=".vistas.VistaLienzo"
             android:label="@string/lienzoLabel"
+            android:screenOrientation="portrait"
             android:parentActivityName=".vistas.main.VistaQuip">
 
             <meta-data
@@ -67,5 +69,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".vistas.main.VistaQuip" />
         </activity>
+
+        <activity android:name=".vistas.Usuarios.VistaMapa"
+            android:parentActivityName=".vistas.main.VistaQuip">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".vistas.main.VistaQuip" />
+        </activity>
+
+       <meta-data
+           android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAnIeULRNtPRC9Y5LlEF7XGlkY_TPGRdnM"/>
+           />
     </application>
 </manifest>

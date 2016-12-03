@@ -1,185 +1,184 @@
 <resources>
     <string name="app_name">Quip</string>
     // Strings botones
-    <string name="ok">Aceptar</string>
-    <string name="cancel">Cancelar</string>
+    <string name="ok">Accept</string>
+    <string name="cancel">Cancel</string>
     // Strings dialogo borrar
-    <string name="mensaje_confirm_borrar">¿Seguro que quieres borrar esta nota?</string>
-    <string name="etiqueta_dialogo_borrar">Eliminar: </string>
+    <string name="mensaje_confirm_borrar">Are you sure you want to remove this note?</string>
+    <string name="etiqueta_dialogo_borrar">Remove: </string>
 
     // Strings dialogo guardar
-    <string name="mensaje_confirm_guardar_lienzo">¿Estás seguro de que deseas guardar el dibujo?</string>
-    <string name="etiqueta_dialogo_guardar">Guardar: </string>
-    <string name="tituloBorrarPapelera">Borrar de la papelera:</string>
-    <string name="textoBorrarPapelera">¿Seguro que deseas borrar esta nota de la papelera?Si lo haces ya nunca podrás recuperarla.</string>
+    <string name="mensaje_confirm_guardar_lienzo">Are you sure do you want to save this drawing?</string>
+    <string name="etiqueta_dialogo_guardar">Save: </string>
+    <string name="tituloBorrarPapelera">Remove from paper bin:</string>
+    <string name="textoBorrarPapelera">Are you sure do you want to remove this note from paper bin?(If you do, you can not recover it)</string>
     // nota
-    <string name="Nota">Nota</string>
-    <string name="Lista">Lista</string>
-    <string name="titulo">Título</string>
-    <string name="hintTituloNota">Título Nota</string>
-    <string name="hintTituloNotaObligatorio">* Título Nota</string>
-    <string name="hintTituloLista">Título Lista</string>
-    <string name="hintTituloListaObligatorio">* Título Lista</string>
-    <string name="hintRecordar">¿Qué desea recordar?</string>
-    <string name="textoCerrar">Cerrar</string>
+    <string name="Nota">Note</string>
+    <string name="Lista">List</string>
+    <string name="titulo">Title</string>
+    <string name="hintTituloNota">Note title</string>
+    <string name="hintTituloNotaObligatorio">* Note title</string>
+    <string name="hintTituloLista">List title</string>
+    <string name="hintTituloListaObligatorio">* List title</string>
+    <string name="hintRecordar"> What do you want to remember?</string>
+    <string name="textoCerrar">Close</string>
 
-    <string name="notaVacia">Nota sin texto</string>
-    <string name="listaVacia">Lista sin título</string>
+    <string name="notaVacia">Note without text</string>
+    <string name="listaVacia">List without title</string>
 
     <!-- MENU DE BOTONES -->
-    <string name="anadirNota">Nueva Nota</string>
-    <string name="anadirNotaLista">Nueva Lista</string>
-    <string name="anadirNotaImagen">Galería</string>
-    <string name="anadirNotaCamara">Camara</string>
-    <string name="anadirNotaDibujo">Lienzo</string>
+    <string name="anadirNota">New Note</string>
+    <string name="anadirNotaLista">New List</string>
+    <string name="anadirNotaImagen">Gallery</string>
+    <string name="anadirNotaCamara">Camera</string>
+    <string name="anadirNotaDibujo">Canvas</string>
     <!-- FIN MENU DE BOTONES -->
 
     <!-- MENU NOTA LISTA -->
-    <string name="borrarItems">Borrar lista</string>
-    <string name="marcarCheckBox">Marcar/Desmarcar casillas</string>
-    <string name="vaciarElementos">Vaciar lista</string>
-    <string name="invertirElementos">Invertir casillas</string>
-    <string name="menuImprimirLista">Imprimir lista en PDF</string>
+    <string name="borrarItems">Remove list</string>
+    <string name="marcarCheckBox">Mark/Unmark checkbox</string>
+    <string name="vaciarElementos">Empty list</string>
+    <string name="invertirElementos">Invert checkbox</string>
+    <string name="menuImprimirLista">Print list in pdf</string>
 
     <!-- MENU NOTA NORMAL -->
 
-    <string name="menuCamara">Camara</string>
-    <string name="menuGaleria">Galería</string>
-    <string name="menuMicrofono">Microfono</string>
-    <string name="menuImprimir">Imprimir nota en PDF</string>
-    <string name="menuDibujar">Crear dibujo</string>
+    <string name="menuCamara">Camera</string>
+    <string name="menuGaleria">Gallery</string>
+    <string name="menuMicrofono">Microphone</string>
+    <string name="menuImprimir">Print note in pdf</string>
+    <string name="menuDibujar">New drawing</string>
 
     <!-- MENU QUIP -->
-    <string name="configuracionNotas">Configurar opciones de nota</string>
-    <string name="borrarNotasSinTitulo">Borrar notas sin texto</string>
-    <string name="borrarListasSinTitulo">Borrar listas sin título</string>
-    <string name="vaciarPapelera">Vaciar Papelera</string>
+    <string name="configuracionNotas">Configure note options</string>
+    <string name="borrarNotasSinTitulo">Remove notes without text</string>
+    <string name="borrarListasSinTitulo">Remove lists without title</string>
+    <string name="vaciarPapelera">Clear out paper bin</string>
 
 
     <!--Dialogo Preferencias Nota -->
-    <string name="menuQuipGuardarAutomatico">Guardar notas automáticamente.</string>
-    <string name="menuQuipTituloObligatorio">Título obligatorio.</string>
-    <string name="menuQuipNotaEditable">Habilitar edición de nota.</string>
-    <string name="dialogoPreferenciasNotaTitulo">Configuración Nota</string>
+    <string name="menuQuipGuardarAutomatico">Automatically save notes</string>
+    <string name="menuQuipTituloObligatorio">Required title</string>
+    <string name="menuQuipNotaEditable">Enable note editing</string>
+    <string name="dialogoPreferenciasNotaTitulo">Note Configuration</string>
 
 
     <!-- Dialogo Borrar General-->
 
-    <string name="textoDialogoGeneral">¿Estás seguro de que deseas borrar</string>
+    <string name="textoDialogoGeneral">Are you sure do you want to remove?</string>
 
-    <string name="tituloDialogoImagen">Imagen</string>
-    <string name="textoDialogoImagen">esta imagen?</string>
+    <string name="tituloDialogoImagen">Image</string>
+    <string name="textoDialogoImagen">that image?</string>
 
-    <string name="tituloDialogoBorrarDibujo">Dibujo</string>
-    <string name="textoDialogoBorrarDibujo">este dibujo?(Se creara uno nuevo vacío)</string>
+    <string name="tituloDialogoBorrarDibujo">Drawing</string>
+    <string name="textoDialogoBorrarDibujo">that drawing?(A empty drawing will be created)</string>
 
 
     <!-- LIENZO -->
-    <string name="lienzoLabel">Lienzo</string>
-    <string name="grosorGrande">Grande</string>
-    <string name="grosorMediano">Mediano</string>
-    <string name="grosorPequeno">Pequeño</string>
-    <string name="abrirLienzo">Abriendo editor: Lienzo</string>
-    <string name="tituloNuevoDibujo">Nuevo Dibujo</string>
-    <string name="textoDialogoNuevoDibujo">¿Comenzar un nuevo dibujo(perderás el dibujo actual)?</string>
-    <string name="seleccionGrosorGrande">Ha seleccionado el tamaño: grande</string>
-    <string name="seleccionGrosorMediano">Ha seleccionado el tamaño: mediano</string>
-    <string name="seleccionGrosorpequeno">Ha seleccionado el tamaño: pequeño</string>
-    <string name="tituloGuardarDibujo">Guardar Dibujo.</string>
-    <string name="textoDialogoGuardarDibujo">¿Quieres guardar este dibujo en la galería?</string>
-    <string name="dibujoGuardadoCorrectamente">Dibujo guardado correctamente.</string>
-    <string name="labelDibujo">Dibujo</string>
+    <string name="lienzoLabel">Canvas</string>
+    <string name="grosorGrande">Big</string>
+    <string name="grosorMediano">Medium</string>
+    <string name="grosorPequeno">Small</string>
+    <string name="abrirLienzo">Opening publisher: Canvas</string>
+    <string name="tituloNuevoDibujo">New Drawing</string>
+    <string name="textoDialogoNuevoDibujo">Start a new drawing?(you will lose the current it)</string>
+    <string name="seleccionGrosorGrande">You have selected the size: big</string>
+    <string name="seleccionGrosorMediano">You have selected the size: medium</string>
+    <string name="seleccionGrosorpequeno">You have selected the size: small</string>
+    <string name="tituloGuardarDibujo">Save Drawing</string>
+    <string name="textoDialogoGuardarDibujo">Do you want to save this drawing in the gallery?</string>
+    <string name="dibujoGuardadoCorrectamente">Drawing correctly saved</string>
+    <string name="labelDibujo">Drawing</string>
 
     <!-- PERMISOS -->
 
-    <string name="permisoConcedido">3.1 Permiso Concedido</string>
-    <string name="permisoNoConcedido">3.2 Permiso No Concedido</string>
+    <string name="permisoConcedido">3.1 Permission granted</string>
+    <string name="permisoNoConcedido">3.2 Permission ungranted</string>
 
     <!-- PDF -->
-    <string name="notaVaciaPdf">No se puede imprimir nota vacia.</string>
-    <string name="listaVaciaPdf">No se puede imprimir lista vacia.</string>
-    <string name="imprimirNota">Se esta imprimiendo la nota...</string>
-    <string name="imprimirLista">Se esta imprimiendo la lista...</string>
+    <string name="notaVaciaPdf">You can not print empty note.</string>
+    <string name="listaVaciaPdf">You can not print empty list.</string>
+    <string name="imprimirNota">Printing note...</string>
+    <string name="imprimirLista">Printing list</string>
 
     <!-- NAVIGATION DRAWER -->
-    <string name="navViewGrupoNotas">Tus notas</string>
-    <string name="navViewTodasNotas">Notas y Listas</string>
-    <string name="navViewNotasNormales">Notas</string>
-    <string name="navViewNotasMultimedia">Notas multimedia</string>
-    <string name="navViewSoloListas">Listas</string>
-    <string name="navViewGrupoUsuario">Usuario</string>
-    <string name="navViewDatosUsuario">Datos personales</string>
-    <string name="navViewDesconectarUsuario">Desconectar</string>
-    <string name="navViewPapelera">Papelera</string>
+    <string name="navViewGrupoNotas">Your notes</string>
+    <string name="navViewTodasNotas">Notes and Lists</string>
+    <string name="navViewNotasNormales">Notes</string>
+    <string name="navViewNotasMultimedia">Multimedia notes</string>
+    <string name="navViewSoloListas">Lists</string>
+    <string name="navViewGrupoUsuario">User</string>
+    <string name="navViewDatosUsuario">Personal information</string>
+    <string name="navViewDesconectarUsuario">Log off</string>
+    <string name="navViewPapelera">Paper bin</string>
+    <string name="navMapa">Map</string>
 
     <!-- Registro Usuario -->
 
 
-    <string name="textViewWelcome">¡Bienvenidos a Quip!</string>
-    <string name="textViewDameDatos">Esperamos profundamente que disfrute de nuestra aplicación, permítanos conocerle mejor :)</string>
-    <string name="registroHintNombre">* Nombre</string>
-    <string name="registroHintApellidos">Apellidos</string>
-    <string name="registroHintCiudad">Ciudad</string>
-    <string name="registroHintCP">Codigo Postal</string>
-    <string name="registroHintFechaNacimiento">F.Nacimiento</string>
-    <string name="registroHintCorreo">Correo Electrónico</string>
-    <string name="registroHintTelefono">Teléfono</string>
-    <string name="registroTituloEstadoCivil">Estado Civil</string>
-    <string name="botonRegistro">Enviar Datos</string>
-    <string name="errorNoNombre">Es necesario que nos facilites un nombre</string>
+    <string name="textViewWelcome">Welcome to Quip!</string>
+    <string name="textViewDameDatos">We deeply hope you enjoy our application, let us know you better :)</string>
+    <string name="registroHintNombre">* Firstname</string>
+    <string name="registroHintApellidos">Surnames</string>
+    <string name="registroHintCiudad">City</string>
+    <string name="registroHintCP">Postal Code</string>
+    <string name="registroHintFechaNacimiento">Birthdate</string>
+    <string name="registroHintCorreo">Mail</string>
+    <string name="registroHintTelefono">Phone Number</string>
+    <string name="registroTituloEstadoCivil">Civil Status</string>
+    <string name="botonRegistro">Send Data</string>
+    <string name="errorNoNombre">A name is required</string>
 
     <string-array name="estadoCivilArray">
-        <item>Estado Civil</item>
-        <item>Soltero</item>
-        <item>Casado</item>
-        <item>Viudo</item>
-        <item>Pareja de hecho</item>
+        <item>Civil Status</item>
+        <item>Single</item>
+        <item>Married</item>
+        <item>Widower</item>
+        <item>De facto partnership</item>
     </string-array>
 
     <!-- MODIFICAR DATOS USUARIO ,El resto los coge de registro-->
 
-    <string name="datosUsuarioTitulo">Tus Datos</string>
-    <string name="datosUsuarioBoton">Actualizar Datos</string>
-    <string name="datosUsuarioActualizados">Tus datos han sido actualizados correctamente</string>
-    <string name="datosUsuarioLabel">Perfil</string>
+    <string name="datosUsuarioTitulo">Personal Information</string>
+    <string name="datosUsuarioBoton">Update Data</string>
+    <string name="datosUsuarioActualizados">Your personal information has been updated correctly</string>
+    <string name="datosUsuarioLabel">Profile</string>
 
     <!-- DIALOGO CAMBIAR DE AVATAR -->
 
-    <string name="dialogoCambiarAvatarTitulo">Cambiar Avatar</string>
-    <string name="dialogoCambiarAvatarTexto">¿Desea elegir un nuevo avatar de la galería?</string>
-    <string name="dialogoBorrarAvatar">Borrar Avatar</string>
-    <string name="dialogoNuevoAvatar">Abrir Galería</string>
+    <string name="dialogoCambiarAvatarTitulo">Change Avatar</string>
+    <string name="dialogoCambiarAvatarTexto">Do you want to choose a new avatar from gallery?</string>
+    <string name="dialogoBorrarAvatar">Delete</string>
+    <string name="dialogoNuevoAvatar">Gallery</string>
 
 
     <!--Tipo Cursor Quip-->
-    <string name="cursorTipoTodo">Todo</string>
-    <string name="cursorTipoSoloNota">Notas</string>
-    <string name="cursorTipoSoloNotaMultimedia">Notas Multimedia</string>
-    <string name="cursorTipoSoloListas">Listas</string>
-    <string name="cursorTipoPapelera">Papelera</string>
+    <string name="cursorTipoTodo">All</string>
+    <string name="cursorTipoSoloNota">Notes</string>
+    <string name="cursorTipoSoloNotaMultimedia">Multimedia Notes</string>
+    <string name="cursorTipoSoloListas">Lists</string>
+    <string name="cursorTipoPapelera">Paper bin</string>
 
     <!--Dialogo recuperar nota -->
-    <string name="dialogoRecuperarTitulo">Recuperar Nota:</string>
-    <string name="dialogoRecuperarNotaTexto">¿Quieres recuperar esta nota de la papelera?</string>
+    <string name="dialogoRecuperarTitulo">Recover Note:</string>
+    <string name="dialogoRecuperarNotaTexto">Do you want to recover this note from paper bin?</string>
 
     <!--MARCAS GPS-->
-    <string name="marcaSinTexto">Nota sin texto</string>
+    <string name="marcaSinTexto">Note without text</string>
      <!-- otros -->
-    <string name="guardarNotaPart1">Su nota </string>
-    <string name="guardarListaPart1">Su lista </string>
-    <string name="guardarNotaPart2"> ha sido guardada.</string>
-    <string name="errorTituloNoEscrito">No has introducido título</string>
-    <string name="editarNota">Abriendo nota para editarla.</string>
-    <string name="nuevaNota">Creando nueva nota.</string>
-    <string name="nuevaNotaImagen">Buscando imagen para crear nota.</string>
-    <string name="editarNotaLista">Abriendo lista para editarla.</string>
-    <string name="nuevaNotaLista">Creando nueva lista.</string>
-    <string name="nuevaNotaDibujo">Abiendo Lienzo para nueva nota.</string>
-    <string name="imagenNoGuardada">La imagen no ha podido guardarse</string>
-    <string name="appImagen">Selecciona una aplicación con la que coger la imagen.</string>
-
-    <string name="PRUEBA1">HOLA</string>
-    <string name="PRUEBA2">HOLA2</string>
+    <string name="guardarNotaPart1">Your note </string>
+    <string name="guardarListaPart1">Your list </string>
+    <string name="guardarNotaPart2"> has been saved.</string>
+    <string name="errorTituloNoEscrito">You has not written a title</string>
+    <string name="editarNota">Opening note to edit.</string>
+    <string name="nuevaNota">Creating new note.</string>
+    <string name="nuevaNotaImagen">Looking for a image to create a note.</string>
+    <string name="editarNotaLista">Opening list to edit.</string>
+    <string name="nuevaNotaLista">Creating new list.</string>
+    <string name="nuevaNotaDibujo">Opening canvas for a new note.</string>
+    <string name="imagenNoGuardada">Image could not be saved</string>
+    <string name="appImagen">Select a app for taking a image.</string>
 
 
+    <string name="empty"></string>
 </resources>

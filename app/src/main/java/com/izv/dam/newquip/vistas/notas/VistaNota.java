@@ -120,9 +120,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
 
         binding.setNota(nota);
         mostrarNota(nota);
-        if (Permisos.solicitarPermisos(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, this)) {
-            odla = new ObtenedorDeLocalizacionActual(this);
-        }
+
     }
 
 
@@ -325,7 +323,6 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
         binding.getNota().setTipo(Nota.TIPO_DEFECTO);
         rutaImage = null;
         binding.getNota().setImagen(rutaImage);
-        //MetodosBinding.setImagenConRuta(imagen,null);
     }
 
     @Override
@@ -353,14 +350,14 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
                     //OBTENCION DATOS MARCA
                     String texto;
                     Nota n = binding.getNota();
-                    if (n.getTitulo() == null || n.getTitulo().trim().isEmpty())
+                    if (n.getTitulo() != null && !n.getTitulo().trim().isEmpty())
                         texto = n.getTitulo().trim();
-                    else if (n.getNota() == null || n.getNota().trim().isEmpty())
+                    else if (n.getNota() != null && !n.getNota().trim().isEmpty())
                         texto = n.getNota().trim();
                     else
                         texto = getString(R.string.marcaSinTexto);
                     Location l = odla.getLocalizacion();
-                    System.out.println("Llega hasta Localización");
+
                     //------------------------------------------------------------------------
                         MarcaNota marca = new MarcaNota(texto, new Date(), l.getLatitude(), l.getLongitude(), n.getId());
                         Log.v("MARCA",marca.toString());
@@ -368,15 +365,27 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
 
 
                 } catch (SQLException e) {
+
                     e.printStackTrace();
                 }
                 catch (NullPointerException e) {
+
                     e.printStackTrace();
+                }
+                finally {
+                    odla.desconectar();
                 }
                 return null;
             }
         }.execute();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (Permisos.solicitarPermisos(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, this)) {
+            odla = new ObtenedorDeLocalizacionActual(this);
+        }
+    }
 }
 

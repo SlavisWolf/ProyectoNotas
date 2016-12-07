@@ -3,7 +3,9 @@ package com.izv.dam.newquip.vistas.notas_lista;
 import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
@@ -28,21 +30,29 @@ import android.widget.Toast;
 import com.izv.dam.newquip.R;
 import com.izv.dam.newquip.adaptadores.AdaptadorItemNotaLista;
 import com.izv.dam.newquip.adaptadores.AdaptadorNota;
+import com.izv.dam.newquip.basedatos.AyudanteOrm;
 import com.izv.dam.newquip.contrato.ContratoBaseDatos;
 import com.izv.dam.newquip.contrato.ContratoNotaLista;
 import com.izv.dam.newquip.databinding.ActivityNotaListaBinding;
 import com.izv.dam.newquip.pojo.ItemNotaLista;
+import com.izv.dam.newquip.pojo.MarcaNota;
 import com.izv.dam.newquip.pojo.Nota;
 import com.izv.dam.newquip.util.ImprimirPDF;
+import com.izv.dam.newquip.util.ObtenedorDeLocalizacionActual;
 import com.izv.dam.newquip.util.Permisos;
 import com.izv.dam.newquip.util.PreferenciasCompartidas;
 import com.izv.dam.newquip.util.UtilArray;
 import com.izv.dam.newquip.util.UtilFecha;
 import com.izv.dam.newquip.vistas.main.VistaQuip;
+import com.izv.dam.newquip.vistas.notas.VistaNota;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 
 import android.databinding.DataBindingUtil;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,6 +72,7 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
     private AdaptadorItemNotaLista adaptador;
     //private TextInputLayout til_titulo;
     private  ActivityNotaListaBinding binding;
+    private  ObtenedorDeLocalizacionActual odla;
     private boolean marcarDesmarcar;
 
     boolean  listaGuardada; //variable usada para evitar duplicados
@@ -335,7 +346,57 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
                         getResources().getString(R.string.guardarListaPart1)+" "+titulo+" "+getResources().getString(R.string.guardarNotaPart2),
                         Toast.LENGTH_SHORT).show();
             }
-            //cambiarEditable(false);
 
+        if (Permisos.solicitarPermisos(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, this))
+            marcarLocalizacionLista();
+
+    }
+
+    private void marcarLocalizacionLista() {
+
+        System.out.println("Si entra en el metodo");
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                //AÑADIDO MARCAS
+                try {
+                    AyudanteOrm helper = OpenHelperManager.getHelper(VistaNotaLista.this, AyudanteOrm.class);
+                    Dao dao = helper.getMarcaNotaDao();
+                    //OBTENCION DATOS MARCA
+                    String texto;
+                    Nota n = binding.getNota();
+                    if (n.getTitulo() != null && !n.getTitulo().trim().isEmpty())
+                        texto = n.getTitulo().trim();
+                    else
+                        texto = getString(R.string.listaSinTexto);
+                    Location l = odla.getLocalizacion();
+                    //------------------------------------------------------------------------
+                    MarcaNota marca = new MarcaNota(texto, new Date(), l.getLatitude(), l.getLongitude(), n.getId());
+                    Log.v("MARCA",marca.toString());
+                    dao.create(marca);
+
+
+                } catch (SQLException e) {
+
+                    e.printStackTrace();
+                }
+                catch (NullPointerException e) {
+
+                    e.printStackTrace();
+                }
+                finally {
+                    odla.desconectar();
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (Permisos.solicitarPermisos(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, this)) {
+            odla = new ObtenedorDeLocalizacionActual(this);
+        }
     }
 }

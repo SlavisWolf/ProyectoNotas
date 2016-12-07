@@ -165,6 +165,7 @@
 
     <!--MARCAS GPS-->
     <string name="marcaSinTexto">Nota sin texto</string>
+    <string name="listaSinTexto">Lista sin texto</string>
     <!-- otros -->
     <string name="guardarNotaPart1">Su nota </string>
     <string name="guardarListaPart1">Su lista </string>

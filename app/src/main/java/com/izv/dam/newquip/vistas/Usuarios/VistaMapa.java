@@ -22,6 +22,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.izv.dam.newquip.R;
+import com.izv.dam.newquip.basedatos.AyudanteOrm;
+import com.izv.dam.newquip.pojo.MarcaNota;
+import com.izv.dam.newquip.vistas.notas.VistaNota;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by anton on 01/12/2016.
@@ -78,12 +86,23 @@ public class VistaMapa extends FragmentActivity implements OnMapReadyCallback, G
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        try {
+            AyudanteOrm helper = OpenHelperManager.getHelper(this, AyudanteOrm.class);
+            Dao dao = helper.getMarcaNotaDao();
+            List<MarcaNota> marcas= dao.queryForAll();
+            if (!marcas.isEmpty()) {
+                LatLng posicion=null;
+                for (MarcaNota marca : marcas) {
+                    posicion = new LatLng(marca.getLatitud(), marca.getLongitud());
+                    System.out.println(marca.toString());
+                    mMap.addMarker(new MarkerOptions().position(posicion).title(marca.getTexto()));
+                }
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicion, 18));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        // Add a marker in Sydney and move the camera
-        // LatLng sydney = new LatLng(-34, 151);
-        LatLng granada = new LatLng(37.1730345, -3.6045043); // Latitud y longitud.
-        mMap.addMarker(new MarkerOptions().position(granada).title("Bienvenido Ataurfo"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(granada, 18));
     }
 
     private void init() {
@@ -109,7 +128,6 @@ public class VistaMapa extends FragmentActivity implements OnMapReadyCallback, G
     @Override
     public void onLocationChanged(Location location) {
         LatLng punto = new LatLng(location.getLatitude(), location.getLongitude()); // Latitud y longitud.
-        mMap.addMarker(new MarkerOptions().position(punto).title("Punto mundo"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(punto,7));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(punto,18));
     }
 }

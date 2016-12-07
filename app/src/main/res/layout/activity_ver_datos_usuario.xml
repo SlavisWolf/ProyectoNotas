@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-
 <!--BINDING SOLO USADO PARA EL EDITABLE XD -->
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout>
 
     <data>
+
         <variable
             name="editable"
-            type="boolean"/>
+            type="boolean" />
     </data>
-
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -41,11 +39,11 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/datos_usuario_foto_perfil"
                 android:layout_width="100dp"
-                android:longClickable="@{editable}"
                 android:layout_height="100dp"
-                android:visibility="visible"
+                android:layout_alignParentRight="true"
+                android:longClickable="@{editable}"
                 android:src="@android:drawable/ic_menu_camera"
-                android:layout_alignParentRight="true" />
+                android:visibility="visible" />
 
         </RelativeLayout>
 
@@ -69,8 +67,8 @@
                     android:enabled="@{editable}"
                     android:hint="@string/registroHintNombre"
                     android:imeOptions="actionNext"
-                    android:textColor="@android:color/primary_text_light_nodisable"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textColor="@android:color/primary_text_light_nodisable" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -84,11 +82,11 @@
                     android:id="@+id/datos_usuario_apellidos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/primary_text_light_nodisable"
+                    android:enabled="@{editable}"
                     android:hint="@string/registroHintApellidos"
                     android:imeOptions="actionNext"
-                    android:enabled="@{editable}"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textColor="@android:color/primary_text_light_nodisable" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -109,11 +107,11 @@
                     android:id="@+id/datos_usuario_ciudad"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/primary_text_light_nodisable"
                     android:enabled="@{editable}"
                     android:hint="@string/registroHintCiudad"
                     android:imeOptions="actionNext"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textColor="@android:color/primary_text_light_nodisable" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -127,11 +125,11 @@
                     android:id="@+id/datos_usuario_cp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/primary_text_light_nodisable"
                     android:enabled="@{editable}"
                     android:hint="@string/registroHintCP"
                     android:imeOptions="actionNext"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:textColor="@android:color/primary_text_light_nodisable" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -149,23 +147,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:layout_weight="1">
+
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/datos_usuario_fecha_nacimiento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="@{editable}"
-                    android:textColor="@android:color/primary_text_light_nodisable"
                     android:hint="@string/registroHintFechaNacimiento"
                     android:imeOptions="actionNext"
-                    android:inputType="date" />
+                    android:inputType="date"
+                    android:textColor="@android:color/primary_text_light_nodisable" />
             </android.support.design.widget.TextInputLayout>
+
             <Spinner
                 android:id="@+id/datos_usuario_estado_civil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
-                android:clickable="@{editable}"
                 android:layout_weight="1"
+                android:clickable="@{editable}"
                 android:paddingTop="18dp"
                 android:prompt="@string/registroTituloEstadoCivil" />
         </LinearLayout>
@@ -184,12 +184,12 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/datos_usuario_telefono"
                     android:layout_width="match_parent"
-                    android:textColor="@android:color/primary_text_light_nodisable"
                     android:layout_height="wrap_content"
-                    android:hint="@string/registroHintTelefono"
                     android:enabled="@{editable}"
+                    android:hint="@string/registroHintTelefono"
                     android:imeOptions="actionNext"
-                    android:inputType="phone" />
+                    android:inputType="phone"
+                    android:textColor="@android:color/primary_text_light_nodisable" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -203,22 +203,24 @@
                     android:id="@+id/datos_usuario_correo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/primary_text_light_nodisable"
                     android:enabled="@{editable}"
                     android:hint="@string/registroHintCorreo"
                     android:imeOptions="actionDone"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:textColor="@android:color/primary_text_light_nodisable" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
+
         <Button
             android:id="@+id/boton_actualizar_datos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="23dp"
+            android:layout_marginRight="23dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/boton_registro_selector"
             android:clickable="@{editable}"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="20dp"
+            android:padding="10dp"
             android:text="@string/datosUsuarioBoton" />
     </LinearLayout>
 </layout>

@@ -12,6 +12,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -188,6 +189,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         if (savedInstanceState != null) {
             System.out.println(savedInstanceState.getInt("cursor_actual"));
             VistaQuip.ID_CURSOR_ACTUAL = savedInstanceState.getInt("cursor_actual"); // coge del bundle el cursor actual, sino existe le asocia el de todos.
+            textoTipo.setText(savedInstanceState.getString("texto"));
         } else {
             VistaQuip.ID_CURSOR_ACTUAL = ID_CURSOR_TODO;
         }
@@ -196,6 +198,8 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         getSupportLoaderManager().initLoader(VistaQuip.ID_CURSOR_ACTUAL, null, this); // LO 1º ES ID DEL MANAGER, , LO 2º SON LOS ARGUMENTOS.
 
     }
+
+
 
 
     @Override
@@ -590,6 +594,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     protected void onSaveInstanceState(Bundle outState) { //cursor actual.
         super.onSaveInstanceState(outState);
         outState.putInt("cursor_actual", VistaQuip.ID_CURSOR_ACTUAL);
+        outState.putString("texto",textoTipo.getText().toString());
     }
 
 

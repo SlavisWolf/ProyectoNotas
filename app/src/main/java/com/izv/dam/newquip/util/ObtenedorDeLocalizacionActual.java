@@ -1,6 +1,7 @@
 package com.izv.dam.newquip.util;
 
 
+import android.content.Context;
 import android.location.Location;
 
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by anton on 28/11/2016.
@@ -26,7 +26,7 @@ public class ObtenedorDeLocalizacionActual implements   GoogleApiClient.Connecti
     private static  Location localizacion;
     private GoogleApiClient apiClient;
 
-    public ObtenedorDeLocalizacionActual(AppCompatActivity c) {
+    public ObtenedorDeLocalizacionActual(Context c) {
 
         System.out.println("Constructor");
         if (apiClient == null) {
@@ -35,11 +35,14 @@ public class ObtenedorDeLocalizacionActual implements   GoogleApiClient.Connecti
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
+
+            apiClient.connect(); // ERES ESTUPIDO POR NO HABER PUESTO ESTE METODO ANTONIO
+            System.out.println("Entra API");
         }
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
+    public void onConnected(Bundle bundle) {
         // ACTUALIZAR POSICION
         System.out.println("onConnected");
         LocationRequest locationRequest = new LocationRequest();
@@ -64,6 +67,10 @@ public class ObtenedorDeLocalizacionActual implements   GoogleApiClient.Connecti
     }
     public Location getLocalizacion() {
         return localizacion;
+    }
+
+    public  void desconectar(){
+         apiClient.disconnect();
     }
 }
 

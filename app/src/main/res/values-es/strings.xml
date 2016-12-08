@@ -166,6 +166,10 @@
     <!--MARCAS GPS-->
     <string name="marcaSinTexto">Nota sin texto</string>
     <string name="listaSinTexto">Lista sin texto</string>
+    <string name="menuNotaMapa">Ver marcas de esta nota en el mapa</string>
+    <string name="menuListaMapa">Ver marcas de esta lista en la nota</string>
+    <string name="notaSinMarcas">Las notas nuevas no tienen marcas</string>
+    <string name="listaSinMarcas">Las listas nuevas no tienen marcas</string>
     <!-- otros -->
     <string name="guardarNotaPart1">Su nota </string>
     <string name="guardarListaPart1">Su lista </string>

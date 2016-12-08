@@ -43,6 +43,7 @@ import com.izv.dam.newquip.util.Permisos;
 import com.izv.dam.newquip.util.PreferenciasCompartidas;
 import com.izv.dam.newquip.util.UtilArray;
 import com.izv.dam.newquip.util.UtilFecha;
+import com.izv.dam.newquip.vistas.Usuarios.VistaMapa;
 import com.izv.dam.newquip.vistas.main.VistaQuip;
 import com.izv.dam.newquip.vistas.notas.VistaNota;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -269,7 +270,6 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
 
                     Nota nota = binding.getNota();
                     nota.setTitulo(nota.getTitulo().trim());
-                    //AdaptadorItemNotaLista adapter = (AdaptadorItemNotaLista) items.getAdapter();
                     if((nota.getTitulo().isEmpty() || nota.getTitulo() == null) && adaptador.getLista().isEmpty()){
                         Toast.makeText(getApplicationContext(), getString(R.string.listaVaciaPdf), Toast.LENGTH_SHORT).show();
                     }
@@ -281,9 +281,26 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
                 return true;
             }
 
+            case R.id.menu_lista_map : {
+                long id =binding.getNota().getId();
+                if (id!=0) {
+                    Intent i = new Intent(this, VistaMapa.class);
+                    Bundle b = new Bundle();
+                    b.putLong("id_nota",id);
+                    i.putExtras(b);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                }
+                else {
+                    Toast.makeText(this,R.string.listaSinMarcas, Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+
             case android.R.id.home : {
                 finish();
                 overridePendingTransition(R.anim.zoom_fordward_in, R.anim.zoom_fordward_out);
+                return true;
             }
             default: {
                 return false;

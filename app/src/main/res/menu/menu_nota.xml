@@ -44,5 +44,7 @@
                     />
                 <item android:id="@+id/menu_nota_dibujar"
                     android:title="@string/menuDibujar"/>
+                <item android:id="@+id/menu_nota_map"
+                    android:title="@string/menuNotaMapa"/>
     </item>
 </menu>

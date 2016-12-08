@@ -35,6 +35,8 @@
             android:title="@string/menuImprimirLista"
             android:id="@+id/menu_nota_lista_imprimir_pdf"
             />
+        <item android:id="@+id/menu_lista_map"
+            android:title="@string/menuListaMapa"/>
     </group>
 
 </menu>

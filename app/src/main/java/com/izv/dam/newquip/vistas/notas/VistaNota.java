@@ -38,6 +38,7 @@ import com.izv.dam.newquip.util.ObtenedorDeLocalizacionActual;
 import com.izv.dam.newquip.util.Permisos;
 import com.izv.dam.newquip.util.PreferenciasCompartidas;
 import com.izv.dam.newquip.util.UtilFecha;
+import com.izv.dam.newquip.vistas.Usuarios.VistaMapa;
 import com.izv.dam.newquip.vistas.VistaLienzo;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -207,7 +208,23 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
             startActivity(i);
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
             finish();
-        } else if (id == android.R.id.home) {
+        }
+        else if (id==R.id.menu_nota_map){
+
+                long id_nota =binding.getNota().getId();
+                if (id_nota!=0) {
+                    Intent i = new Intent(this, VistaMapa.class);
+                    Bundle b = new Bundle();
+                    b.putLong("id_nota",id_nota);
+                    i.putExtras(b);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                }
+                else {
+                    Toast.makeText(this,R.string.notaSinMarcas, Toast.LENGTH_SHORT).show();
+                }
+        }
+        else if (id == android.R.id.home) {
             finish();
             overridePendingTransition(R.anim.zoom_fordward_in, R.anim.zoom_fordward_out);
 

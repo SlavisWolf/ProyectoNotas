@@ -24,9 +24,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.izv.dam.newquip.R;
 import com.izv.dam.newquip.basedatos.AyudanteOrm;
 import com.izv.dam.newquip.pojo.MarcaNota;
+import com.izv.dam.newquip.pojo.Nota;
 import com.izv.dam.newquip.vistas.notas.VistaNota;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -35,10 +37,11 @@ import java.util.List;
  * Created by anton on 01/12/2016.
  */
 
-public class VistaMapa extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class VistaMapa extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
     private GoogleApiClient googleApiClient;
+    private long  id_nota;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,12 @@ public class VistaMapa extends FragmentActivity implements OnMapReadyCallback, G
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.activity_mapa);
+
+        Bundle b = getIntent().getExtras();
+        if (b!=null)
+            id_nota = b.getLong("id_nota");
+        else
+            id_nota = 0;
         mapFragment.getMapAsync(this);
         init();
     }
@@ -65,12 +74,12 @@ public class VistaMapa extends FragmentActivity implements OnMapReadyCallback, G
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
-        // ACTUALIZAR POSICION
+       /* // ACTUALIZAR POSICION
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);//ES EL MAS EQUILIBRADO entre precision y batería.
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);*/
     }
 
     @Override
@@ -89,7 +98,14 @@ public class VistaMapa extends FragmentActivity implements OnMapReadyCallback, G
         try {
             AyudanteOrm helper = OpenHelperManager.getHelper(this, AyudanteOrm.class);
             Dao dao = helper.getMarcaNotaDao();
-            List<MarcaNota> marcas= dao.queryForAll();
+            List<MarcaNota> marcas;
+            if (id_nota==0)
+                 marcas= dao.queryForAll();
+            else {
+                QueryBuilder query = dao.queryBuilder();
+                query.setWhere(query.where().eq(MarcaNota.ID_NOTA,id_nota));
+                marcas = dao.query(query.prepare());
+            }
             if (!marcas.isEmpty()) {
                 LatLng posicion=null;
                 for (MarcaNota marca : marcas) {
@@ -102,7 +118,6 @@ public class VistaMapa extends FragmentActivity implements OnMapReadyCallback, G
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     private void init() {
@@ -126,8 +141,14 @@ public class VistaMapa extends FragmentActivity implements OnMapReadyCallback, G
     }
 
     @Override
+    public void finish() { // animación
+        super.finish();
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+    }
+
+    /* @Override
     public void onLocationChanged(Location location) {
         LatLng punto = new LatLng(location.getLatitude(), location.getLongitude()); // Latitud y longitud.
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(punto,18));
-    }
+    }*/
 }

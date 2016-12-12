@@ -1,5 +1,6 @@
 package com.izv.dam.newquip.vistas.main;
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,7 +13,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -20,8 +20,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -41,17 +39,20 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.izv.dam.newquip.R;
 import com.izv.dam.newquip.adaptadores.AdaptadorNota;
+import com.izv.dam.newquip.basedatos.AyudanteOrm;
 import com.izv.dam.newquip.contrato.ContratoBaseDatos;
 import com.izv.dam.newquip.contrato.ContratoMain;
 import com.izv.dam.newquip.dialogo.DialogoPreferenciasNota;
 import com.izv.dam.newquip.dialogo.interfaces.DialogoRecuperarNota;
 import com.izv.dam.newquip.dialogo.interfaces.OnBorrarDialogListener;
 import com.izv.dam.newquip.dialogo.interfaces.OnRecuperarDialogListener;
+import com.izv.dam.newquip.pojo.MarcaNota;
 import com.izv.dam.newquip.pojo.Nota;
 import com.izv.dam.newquip.dialogo.DialogoBorrar;
 import com.izv.dam.newquip.util.DirectoriosArchivosQuip;
 import com.izv.dam.newquip.util.Permisos;
 import com.izv.dam.newquip.util.PreferenciasCompartidas;
+import com.izv.dam.newquip.util.UtilDialogos;
 import com.izv.dam.newquip.util.UtilFecha;
 import com.izv.dam.newquip.vistas.Usuarios.VistaDatosUsuario;
 import com.izv.dam.newquip.vistas.Usuarios.VistaMapa;
@@ -59,8 +60,29 @@ import com.izv.dam.newquip.vistas.Usuarios.VistaRegistro;
 import com.izv.dam.newquip.vistas.VistaLienzo;
 import com.izv.dam.newquip.vistas.notas.VistaNota;
 import com.izv.dam.newquip.vistas.notas_lista.VistaNotaLista;
-import java.io.File;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 
+import java.io.File;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+import java.sql.SQLException;
+
+
+/*
+    FCM
+    firebase cloud M
+
+        *asistente
+        * sin permisos
+        * servicio
+        *asyntask
+
+     Clase a  buscar FirebaseMessagingService
+
+
+ */
 public class VistaQuip extends AppCompatActivity implements ContratoMain.InterfaceVista , OnBorrarDialogListener,LoaderManager.LoaderCallbacks<Cursor>,OnRecuperarDialogListener { //PREGUNTAR A CARMELO EL ERROR DEL ID 0 EN EL LOADER
 
     private PresentadorQuip presentador;
@@ -164,6 +186,14 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                 fam.collapse();
                 if (Permisos.solicitarPermisos(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},VistaQuip.this)) {
                     new AsyncTask<Void,Void,Intent>() {  // añadido el proceso en 2º plano.
+
+                        ProgressDialog dialogo;
+                        @Override
+                        protected void onPreExecute() {
+                             dialogo = UtilDialogos.crearDialogoProgreso(VistaQuip.this);
+                             dialogo.show();
+                        }
+
                         @Override
                         protected Intent doInBackground(Void... params) {
                             Long timestamp = System.currentTimeMillis() / 1000;
@@ -177,9 +207,27 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                         }
                         @Override
                         protected void onPostExecute(Intent intent) {
+                            dialogo.dismiss();
                             startActivityForResult(intent, Permisos.HACER_FOTO);
                         }
                     }.execute();
+                }
+            }
+        });
+
+        FloatingActionButton botonAudio = (FloatingActionButton) findViewById(R.id.vista_principal_anadir_nota_audio);
+        botonAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fam.collapse();
+                if (Permisos.solicitarPermisos(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},VistaQuip.this)) {
+                    Intent i = new Intent(VistaQuip.this, VistaNota.class);
+                    Bundle b = new Bundle();
+                    b.putBoolean("nuevo_audio",true);
+                    b.putParcelable("nota",new Nota());
+                    i.putExtras(b);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
                 }
             }
         });
@@ -265,8 +313,12 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     @Override
     public void onBorrarPossitiveButtonClick(Nota n) {
         AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
+        if (Permisos.solicitarPermisos(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, this)) {
+            if (!n.isPapelera())
+                borrarMarcasNota(n.getId());
+
+        }
         presentador.onDeleteNota(n);
-        //getSupportLoaderManager().restartLoader(0,null,this);
     }
 
     @Override
@@ -285,6 +337,13 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                 if (resultCode == RESULT_OK) {
 
                     new AsyncTask<Object, Void, String>() { //añadido en 2º plano.
+                        ProgressDialog dialogo;
+
+                        @Override
+                        protected void onPreExecute() {
+                            dialogo = UtilDialogos.crearDialogoProgreso(VistaQuip.this);
+                            dialogo.show();
+                        }
 
                         @Override
                         protected String doInBackground(Object... params) {
@@ -294,7 +353,9 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                             String nombreImagen = UtilFecha.fechaActual() + rutaAbsoluta.substring(rutaAbsoluta.lastIndexOf("/") + 1, rutaAbsoluta.length());
                             String rutaNuevaImagen = Environment.getExternalStorageDirectory() + File.separator + DirectoriosArchivosQuip.IMAGE_DIRECTORY + File.separator + nombreImagen;
 
-                            DirectoriosArchivosQuip.crearImagen(rutaNuevaImagen, BitmapFactory.decodeFile(rutaAbsoluta), VistaQuip.this); // le pasas una ruta,una imagen, y te crea un nuevo archivo en esa ruta con esa imagen
+                            WeakReference<Bitmap> reference = new WeakReference<Bitmap>(BitmapFactory.decodeFile(rutaAbsoluta));
+                            DirectoriosArchivosQuip.crearImagen(rutaNuevaImagen,reference.get() , VistaQuip.this); // le pasas una ruta,una imagen, y te crea un nuevo archivo en esa ruta con esa imagen
+                            reference.clear();
                             return rutaNuevaImagen;
                         }
 
@@ -307,6 +368,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                             b.putParcelable("nota", nota);
                             i.putExtras(b);
 
+                            dialogo.dismiss();
                             startActivity(i);
                             overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
                         }
@@ -554,7 +616,8 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         ImageView avatar= (de.hdodenhof.circleimageview.CircleImageView) header.findViewById(R.id.nav_header_avatar);
         String rutaAvatar = prefs.getPrefsAvatarUsuario();
         if (rutaAvatar!=null && !rutaAvatar.isEmpty()) {
-            avatar.setImageBitmap(BitmapFactory.decodeFile(rutaAvatar));
+            WeakReference<Bitmap> reference = new WeakReference<Bitmap>(BitmapFactory.decodeFile(rutaAvatar));
+            avatar.setImageBitmap(reference.get());
         }
         else
             avatar.setImageDrawable(getDrawable(R.drawable.ic_no_avatar));
@@ -681,4 +744,29 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     public void onRecuperarNotaNegativeButtonClick() {
 
     }
+
+    public void borrarMarcasNota(final long id_nota){
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                //AÑADIDO MARCAS
+                try {
+                    Log.v("METODO BORRAR","BORRAR");
+                    AyudanteOrm helper = OpenHelperManager.getHelper(VistaQuip.this, AyudanteOrm.class);
+                    Dao dao = helper.getMarcaNotaDao();
+                    DeleteBuilder query = dao.deleteBuilder();
+                    query.where().eq(MarcaNota.ID_NOTA,id_nota);
+                    dao.delete(query.prepare());
+                } catch (SQLException e) {
+
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+                return  null;
+            }
+        }.execute();
+    }
+
+
 }

@@ -8,5 +8,6 @@
     <color name="ColorFondoLayout">#DAD9DA</color>
     <color name="fondo">#ffffff</color>
     <color name="tiposImagen">#2CA6D2</color>
+    <color name="fondoReproductor">#CEE3F6</color>
 
 </resources>

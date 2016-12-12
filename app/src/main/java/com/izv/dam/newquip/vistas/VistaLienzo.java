@@ -130,7 +130,6 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
                 return true;
             case android.R.id.home: {
                 finish();
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 return true;
             }
             case R.id.menu_lienzo_guardar: {
@@ -236,10 +235,10 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
 
                 @Override
                 protected void onPostExecute(Intent intent) {
+                    VistaNota.NOTA_ACTUAL.finish();
                     Toast.makeText(getApplicationContext(), R.string.dibujoGuardadoCorrectamente, Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                     finish();
-                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 }
             }.execute(dibujoLienzo);
         } else {
@@ -263,6 +262,12 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onBorrarNegativeButtonClick() {
 
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 }
 

@@ -19,7 +19,6 @@ public class Nota  extends BaseObservable implements Parcelable {
     public static final int TIPO_DEFECTO= 1;//solo texto.
     public static final int TIPO_IMAGEN= 2;
     public static final int TIPO_DIBUJO= 3; // la diferencia entre este y el de imagen, es que la imagen guardada se ha creado con la aplicación interna de dibujo
-    public static final int TIPO_AUDIO= 4;
     public static final int TIPO_LISTA= 5;
 
 
@@ -32,7 +31,7 @@ public class Nota  extends BaseObservable implements Parcelable {
 
 
     public Nota() {
-        this(0, "", "",null,null,1);
+        this(0, "", "",null,null,TIPO_DEFECTO);
     } // he puesto el texto y la descripción vacios para evitar conflictos con los metodos .trim
 
     public Nota(long id, String titulo, String nota, String imagen, String audio,int tipo) {

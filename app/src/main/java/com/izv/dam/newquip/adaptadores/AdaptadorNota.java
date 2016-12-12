@@ -68,21 +68,24 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
 
     public class ViewHolder extends  RecyclerView.ViewHolder { //USADO PARA LAS NOTAS NORMALES
         private TextView tvTituloNota;
-        private TextView tvRecordatorio;
         private ImageView ivTipoNota;
-        private ImageView ivRecordatorio;
+        private  ImageView ivAudio;
         public ViewHolder(View itemView) { // aqui irian todos los elementos del layout
             super(itemView);
             tvTituloNota = (TextView) itemView.findViewById(R.id.tvTituloNota);
-            //tvRecordatorio = (TextView) itemView.findViewById(R.id.tvFechaRecordatorioNota);
+            ivAudio =(ImageView) itemView.findViewById(R.id.imagenTipoAudio);// este es complementario para cuando hay imagenes y audio
             ivTipoNota = (ImageView) itemView.findViewById(R.id.imagenTipoNota);
-            //ivRecordatorio = (ImageView) itemView.findViewById(R.id.imagenRecordatorio);
+
         }
         public TextView getTextView(){
             return tvTituloNota;
         }
         public ImageView getIvTipoNota() {
             return ivTipoNota;
+        }
+
+        public ImageView getIvAudio() {
+            return ivAudio;
         }
     }
 
@@ -134,22 +137,37 @@ public class AdaptadorNota  extends RecyclerView.Adapter<AdaptadorNota.ViewHolde
             }
             switch (nota.getTipo()) { //AQUI CAMBIAREMOS LA IMAGEN QUE SE MUESTRA PARA QUE EL USUARIO SEPA A 1ª VISTA QUE TIPO DE NOTA ES.
                 case Nota.TIPO_DEFECTO: {
-                    holder.getIvTipoNota().setImageResource(R.drawable.ic_tipo_defecto48px);
+                    if (nota.getAudio()!=null)
+                        holder.getIvTipoNota().setImageResource(R.drawable.ic_tipo_audio_48px);
+                    else {
+                        holder.getIvTipoNota().setImageResource(R.drawable.ic_tipo_defecto48px);
+                        holder.getIvAudio().setVisibility(View.GONE);
+                    }
                     break;
                 }
                 case Nota.TIPO_IMAGEN: {
+                    if (nota.getAudio()!=null) {
+                        holder.getIvAudio().setImageResource(R.drawable.ic_tipo_audio_48px);
+                        holder.getIvAudio().setVisibility(View.VISIBLE);
+                    }
+                    else
+                        holder.getIvAudio().setVisibility(View.GONE);
                     holder.getIvTipoNota().setImageResource(R.drawable.ic_tipo_imagen48px);
                     break;
                 }
                 case Nota.TIPO_DIBUJO: {
+                    if (nota.getAudio()!=null) {
+                        holder.getIvAudio().setImageResource(R.drawable.ic_tipo_audio_48px);
+                        holder.getIvAudio().setVisibility(View.VISIBLE);
+                    }
+                    else
+                        holder.getIvAudio().setVisibility(View.GONE);
                     holder.getIvTipoNota().setImageResource(R.drawable.ic_tipo_dibujo48px);
-                    break;
-                }
-                case Nota.TIPO_AUDIO: {
                     break;
                 }
                 case Nota.TIPO_LISTA: {
                     holder.getIvTipoNota().setImageResource(R.drawable.ic_tipo_lista48px);
+                    holder.getIvAudio().setVisibility(View.GONE);
                     break;
                 }
             }

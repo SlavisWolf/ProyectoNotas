@@ -35,6 +35,7 @@ import com.izv.dam.newquip.util.PreferenciasCompartidas;
 import com.izv.dam.newquip.vistas.main.VistaQuip;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by anton on 22/11/2016.
@@ -78,8 +79,8 @@ public class VistaDatosUsuario extends AppCompatActivity implements OnCambiarAva
             editable = savedInstanceState.getBoolean("editable");
             rutaImagen = savedInstanceState.getString("avatar");
             if (rutaImagen!=null && !rutaImagen.isEmpty()){
-                Bitmap btm = BitmapFactory.decodeFile(rutaImagen);
-                avatar.setImageBitmap(btm);
+                WeakReference<Bitmap> reference = new WeakReference<Bitmap>(BitmapFactory.decodeFile(rutaImagen));
+                avatar.setImageBitmap(reference.get());
             }
         }else {
             nombre.setText(prefs.getPrefsNombreUsuario());
@@ -92,8 +93,8 @@ public class VistaDatosUsuario extends AppCompatActivity implements OnCambiarAva
             estadoCivil.setSelection(prefs.getPrefsEstadoCivilUsuario());
             rutaImagen = prefs.getPrefsAvatarUsuario();
             if (rutaImagen!=null && !rutaImagen.isEmpty()){
-                Bitmap btm = BitmapFactory.decodeFile(rutaImagen);
-                avatar.setImageBitmap(btm);
+                WeakReference<Bitmap> reference = new WeakReference<Bitmap>(BitmapFactory.decodeFile(rutaImagen));
+                avatar.setImageBitmap(reference.get());
             }
         }
         binding.setEditable(editable);

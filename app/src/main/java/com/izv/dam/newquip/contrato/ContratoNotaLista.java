@@ -41,6 +41,7 @@ public interface ContratoNotaLista {
      interface InterfaceVista {
          void cargarItems(Cursor c);
          void cargarItems(ArrayList<ItemNotaLista> l);
+         void marcarLocalizacionLista();
     }
 
 }

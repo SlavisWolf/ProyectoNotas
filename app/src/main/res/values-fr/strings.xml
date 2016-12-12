@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Quip</string>
+    // Strings botones
+<string name="ok">Accepter</string>
+<string name="cancel">annuler</string>
+    // Strings dialogo borrar
+<string name="mensaje_confirm_borrar">Etes-vous sûr de vouloir supprimer cette note?</string>
+    <string name="etiqueta_dialogo_borrar">Annuler: </string>
+
+    // Strings dialogo guardar
+    <string name="mensaje_confirm_guardar_lienzo"> Êtes-vous sûr que vous voulez enregistrer le dessin?</string>
+    <string name="etiqueta_dialogo_guardar">Garder: </string>
+    <string name="tituloBorrarPapelera">Vider la corbeille:</string>
+    <string name="textoBorrarPapelera">Etes-vous sûr de vouloir supprimer cette note de la corbeille? Si vous faites, vous ne pouvez jamais la récupéré.</string>
+    // nota
+<string name="Nota">Note</string>
+<string name="Lista">Liste</string>
+<string name="titulo">Títre</string>
+<string name="hintTituloNota">Tíitre Note</string>
+<string name="hintTituloNotaObligatorio">* Titre Note</string>
+<string name="hintTituloLista">Titre liste</string>
+<string name="hintTituloListaObligatorio"> Titre liste </string>
+<string name="hintRecorda">Qu´est-ce que vous voulez vous rappeler?</string>
+    <string name="textoCerrar">Fermer</string>
+
+    <string name="notaVacia">Note sans texte</string>
+    <string name="listaVacia">Liste sans titre </string>
+
+    <!-- MENU DE BOUTONS -->
+    <string name="anadirNota">Nouvelle note</string>
+    <string name="anadirNotaLista">Nouvelle liste </string>
+    <string name="anadirNotaImagen">Galerie </string>
+    <string name="anadirNotaCamara">Camara</string>
+    <string name="anadirNotaDibujo">toile</string>
+    <!-- FIN MENÚ DE BOUTONS -->
+
+    <!-- MENÚ NOTE LISTE -->
+    <string name="borrarItems">Supprimer liste</string>
+    <string name="marcarCheckBox">Cochez / décochez les cases</string>
+    <string name="vaciarElementos">Effacer la liste</string>
+    <string name="invertirElementos">investir les  boîtes</string>
+    <string name="menuImprimirLista">Imprimer Liste PDF</string>
+
+    <!-- MENU NOTA NORMAL -->
+
+<string name="menuCamara">Camara</string>
+<string name="menuGaleria">Galerie </string>
+    <string name="menuMicrofono">Microphone </string>
+    <string name="menuImprimir">Imprimer la note en PDF</string>
+    <string name="menuDibujar">Faire le dessin</string>
+
+        <!-- MENU QUIP -->
+    <string name="configuracionNotas">Configurer la note </string>
+    <string name="borrarNotasSinTitulo">Suppprimer les notes sans texte</string>
+    <string name="borrarListasSinTitulo">Effacer les listes sans texte</string>
+    <string name="vaciarPapelera">vider la poubelle</string>
+
+
+        <!--Dialogo Preferencias Nota -->
+    <string name="menuQuipGuardarAutomatico">Garder les notes automatiquement</string>
+    <string name="menuQuipTituloObligatorio">titre obligatoire</string>
+    <string name="menuQuipNotaEditable">Activer la modification note </string>
+    <string name="dialogoPreferenciasNotaTitulo">configuration Remarque</string>
+
+
+        <!-- Dialogo Borrar General-->
+
+    <string name="textoDialogoGeneral">Etes-vous sûr de vouloir supprimer ?</string>
+
+    <string name="tituloDialogoImagen">Image</string>
+    <string name="textoDialogoImagen">cette image </string>
+
+    <string name="tituloDialogoAudio">Audio</string>
+    <string name="textoDialogoAudio">cet audio </string>
+
+    <string name="tituloDialogoBorrarDibujo">Dessin</string>
+    <string name="textoDialogoBorrarDibujo">cette image? (un nouveau vide est créé) </string>
+
+
+    <!-- LIENZO -->
+    <string name="lienzoLabel">toile </string>
+    <string name="grosorGrande">Grand</string>
+    <string name="grosorMediano">Medium</string>
+    <string name="grosorPequeno">Petite </string>
+    <string name="abrirLienzo">ouverture d´éditeur: toile</string>
+    <string name="tituloNuevoDibujo">nouveau dessin</string>
+    <string name="textoDialogoNuevoDibujo">Démarrer un nouveau dessin (vous perdrez le dessin courant)?</string>
+    <string name="seleccionGrosorGrande">Vous avez choisi la taille: grand</string>
+    <string name="seleccionGrosorMediano">Vous avez choisi la taille: Medium</string>
+    <string name="seleccionGrosorpequeno">Vous avez choisi la taille: petite</string>
+    <string name="tituloGuardarDibujo">garder le dessin</string>
+    <string name="textoDialogoGuardarDibujo"> Voulez-vous enregistrer ce dessin dans la galerie? </string>
+    <string name="dibujoGuardadoCorrectamente">Dessin enregistré avec succès.</string>
+    <string name="labelDibujo">dessin</string>
+
+    <!-- PERMISOS -->
+
+    <string name="permisoConcedido">3.1permission accordée </string>
+    <string name="permisoNoConcedido">3.2 permission pas accordée </string>
+
+        <!-- PDF -->
+    <string name="notaVaciaPdf">vous ne pouvez pas imprimer la note vide</string>
+    <string name="listaVaciaPdf">Vous ne pouvez pas imprimer la liste vide. </string>
+    <string name="imprimirNota">Imprimer Note PDF</string>
+    <string name="imprimirLista">Imprimer Liste PDF</string>
+
+        <!-- NAVIGATION DRAWER -->
+    <string name="navViewGrupoNotas">VOS NOTES </string>>
+    <string name="navViewTodasNotas">Notes et listes </string>
+    <string name="navViewNotasNormales">Notes</string>
+    <string name="navViewNotasMultimedia">Notes multimedia</string>
+    <string name="navViewSoloListas">Listes </string>
+    <string name="navViewGrupoUsuario">usuario </string>
+    <string name="navViewDatosUsuario">Informations personnelles</string>
+    <string name="navViewDesconectarUsuario">débrancher</string>
+    <string name="navViewPapelera">Poubelle</string>
+    <string name="navMapa">Carte </string>
+
+        <!-- Registro Usuario -->
+
+
+    <string name="textViewWelcome">Bienvenue à Quip!</string>
+    <string name="textViewDameDatos">Nous espérons vivement que vous apprécierez notre application, laissez-nous de mieux vous connaître:)</string>
+    <string name="registroHintNombre">* Nom</string>
+    <string name="registroHintApellidos">prénom</string>
+    <string name="registroHintCiudad">Ville </string>
+    <string name="registroHintCP">CodePostal</string>
+    <string name="registroHintFechaNacimiento">date de naissance</string>
+    <string name="registroHintCorreo">courrier électronique></string>
+    <string name="registroHintTelefono">Portable</string>
+    <string name="registroTituloEstadoCivil">état civil </string>
+    <string name="botonRegistro">Envoyer les données</string>
+    <string name="errorNoNombre">Vous devez nous fournir un nom</string>
+
+    <string-array name="estadoCivilArray">
+        <item>état civil</item>
+        <item>célibataire</item>
+        <item>marié</item>
+        <item>Veuf </item>
+        <item>Droit partenaire</item>
+    </string-array>
+
+        <!-- MODIFICAR DATOS USUARIO ,El resto los coge de registro-->
+
+    <string name="datosUsuarioTitulo">votre information</string>
+    <string name="datosUsuarioBoton">Mise à jour des données</string>
+    <string name="datosUsuarioActualizados">Vos données ont été correctement mis à jour</string>
+    <string name="datosUsuarioLabel">Profil</string>
+
+        <!-- DIALOGO CAMBIAR DE AVATAR -->
+
+    <string name="dialogoCambiarAvatarTitulo">changer d´avatar</string>
+    <string name="dialogoCambiarAvatarTexto">Voulez-vous de choisir une nouvelle avatar de la galerie</string>
+    <string name="dialogoBorrarAvatar">Supprimer</string>
+    <string name="dialogoNuevoAvatar">Galerie string</string>
+
+
+        <!--Tipo Cursor Quip-->
+    <string name="cursorTipoTodo">Tout </string>
+    <string name="cursorTipoSoloNota">Notes</string>
+    <string name="cursorTipoSoloNotaMultimedia">Notes Multimedia </string>
+    <string name="cursorTipoSoloListas">Listes</string>
+    <string name="cursorTipoPapelera">Poubelle</string>
+
+        <!--Dialogo recuperar nota -->
+    <string name="dialogoRecuperarTitulo">Recuper note </string>
+    <string name="dialogoRecuperarNotaTexto">VOUS voulezrécupérer cette note de la corbeille?</string>
+
+    <!--MARCAS GPS-->
+    <string name="marcaSinTexto">Note sans texte</string>
+    <string name="listaSinTexto">Liste sans texte</string>
+    <string name="menuNotaMapa">Voir les marques de cette note dans la carte</string>
+    <string name="menuListaMapa">Voir les marques de cetteliste dans la note</string>
+    <string name="notaSinMarcas">les nouvelles notes n´ont pas des marques</string>
+    <string name="listaSinMarcas">les nouvelles listes n´ont pas des marques</string>
+
+    <!--Audio-->
+    <string name="audioGrabando">enregistrement audio</string>
+    <string name="audioParar">arrêter audio</string>
+        <!-- otros -->
+    <string name="guardarNotaPart1">Votre note</string>
+    <string name="guardarListaPart1">votre liste</string>
+    <string name="guardarNotaPart2"> .a été gardee </string>
+    <string name="errorTituloNoEscrito">vous n´avez pas introduit le titre</string>
+    <string name="editarNota">.ouverture d´une Note pour la modifier</string>
+    <string name="nuevaNota">.Création d´une nouvelle note</string>
+    <string name="nuevaNotaImagen">recherche d´image à créer la note.</string>
+    <string name="editarNotaLista">ouverture de la liste pour l´édition.</string>
+    <string name="nuevaNotaLista">Création d´une nouvelle liste.</string>
+    <string name="nuevaNotaDibujo">ouverture de toile pour une nouvelle note .</string>
+    <string name="imagenNoGuardada">L´image n´a pas pu être sauvé</string>
+    <string name="appImagen">choisissez une application pour sélectionner l´image.</string>
+
+</resources>

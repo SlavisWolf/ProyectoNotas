@@ -5,8 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.izv.dam.newquip.R;
 import com.izv.dam.newquip.dialogo.interfaces.OnBorrarDialogListener;
@@ -46,6 +50,7 @@ public class DialogoBorrar extends DialogFragment {
         return createDialogBorrar();
     }
     public AlertDialog createDialogBorrar() {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String titulo_dialogo;
         String texto_dialogo;
@@ -73,6 +78,7 @@ public class DialogoBorrar extends DialogFragment {
             }
         });
         AlertDialog alertBorrar = builder.create();
+        alertBorrar.setCanceledOnTouchOutside(false); // añadido para evitar que se pueda tocar fuera de la pantalla
         return alertBorrar;
     }
     @Override

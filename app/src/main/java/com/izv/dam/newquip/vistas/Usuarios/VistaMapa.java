@@ -99,11 +99,13 @@ public class VistaMapa extends FragmentActivity implements OnMapReadyCallback, G
             AyudanteOrm helper = OpenHelperManager.getHelper(this, AyudanteOrm.class);
             Dao dao = helper.getMarcaNotaDao();
             List<MarcaNota> marcas;
-            if (id_nota==0)
-                 marcas= dao.queryForAll();
+            if (id_nota==0) {
+                marcas = dao.queryForAll();
+            }
             else {
+                System.out.println("else, osea falla query");
                 QueryBuilder query = dao.queryBuilder();
-                query.setWhere(query.where().eq(MarcaNota.ID_NOTA,id_nota));
+                query.where().eq(MarcaNota.ID_NOTA,id_nota);
                 marcas = dao.query(query.prepare());
             }
             if (!marcas.isEmpty()) {

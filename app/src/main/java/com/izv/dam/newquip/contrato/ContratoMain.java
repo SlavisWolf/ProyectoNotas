@@ -52,6 +52,8 @@ public interface ContratoMain {
 
     interface InterfaceVista {
 
+        void borrarMarcasNota(long id_nota);
+
         void mostrarAgregarNota();
 
         void mostrarAgregarNotaLista();

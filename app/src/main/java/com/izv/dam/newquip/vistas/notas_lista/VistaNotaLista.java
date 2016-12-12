@@ -69,6 +69,8 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
     //private RecyclerView items;
     //private FloatingActionButton anadirItem;
     //private Nota nota = new Nota(Nota.TIPO_LISTA);
+
+    public  static  ContratoNotaLista.InterfaceVista  LISTA_ACTUAL;
     private PresentadorNotaLista presentador;
     private AdaptadorItemNotaLista adaptador;
     //private TextInputLayout til_titulo;
@@ -86,10 +88,6 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
         marcarDesmarcar=true;
         listaGuardada = false;
         PreferenciasCompartidas prefs = new PreferenciasCompartidas(this);
-        //til_titulo = (TextInputLayout) findViewById(R.id.nota_lista_til_titulo);
-        //titulo = (EditText) findViewById(R.id.nota_lista_titulo);
-        //items = (RecyclerView) findViewById(R.id.nota_lista_items);
-        //anadirItem = (FloatingActionButton) findViewById(R.id.nota_lista_añadir_item);
         binding.notaListaAnadirItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,7 +227,6 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
                     guardarLista(textoTitulo);
                     listaGuardada=true;
                     finish();
-                    overridePendingTransition(R.anim.zoom_fordward_in, R.anim.zoom_fordward_out);
                 }
                 return true;
             }
@@ -299,7 +296,6 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
 
             case android.R.id.home : {
                 finish();
-                overridePendingTransition(R.anim.zoom_fordward_in, R.anim.zoom_fordward_out);
                 return true;
             }
             default: {
@@ -364,49 +360,52 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
                         Toast.LENGTH_SHORT).show();
             }
 
-        if (Permisos.solicitarPermisos(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, this))
+        if (binding.getNota().getId()!=0)
             marcarLocalizacionLista();
 
     }
 
-    private void marcarLocalizacionLista() {
+    public void marcarLocalizacionLista() {
 
-        System.out.println("Si entra en el metodo");
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                //AÑADIDO MARCAS
-                try {
-                    AyudanteOrm helper = OpenHelperManager.getHelper(VistaNotaLista.this, AyudanteOrm.class);
-                    Dao dao = helper.getMarcaNotaDao();
-                    //OBTENCION DATOS MARCA
-                    String texto;
-                    Nota n = binding.getNota();
-                    if (n.getTitulo() != null && !n.getTitulo().trim().isEmpty())
-                        texto = n.getTitulo().trim();
-                    else
-                        texto = getString(R.string.listaSinTexto);
-                    Location l = odla.getLocalizacion();
-                    //------------------------------------------------------------------------
-                    MarcaNota marca = new MarcaNota(texto, new Date(), l.getLatitude(), l.getLongitude(), n.getId());
-                    Log.v("MARCA",marca.toString());
-                    dao.create(marca);
+         if (Permisos.solicitarPermisos(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, this)) {
+             System.out.println("Si entra en el metodo");
+             new AsyncTask<Void, Void, Void>() {
+                 @Override
+                 protected Void doInBackground(Void... params) {
+                     //AÑADIDO MARCAS
+                     try {
+                         AyudanteOrm helper = OpenHelperManager.getHelper(VistaNotaLista.this, AyudanteOrm.class);
+                         Dao dao = helper.getMarcaNotaDao();
+                         //OBTENCION DATOS MARCA
+                         String texto;
+                         Nota n = binding.getNota();
+                         if (n.getTitulo() != null && !n.getTitulo().trim().isEmpty())
+                             texto = n.getTitulo().trim();
+                         else
+                             texto = getString(R.string.listaSinTexto);
+                         Location l = odla.getLocalizacion();
+                         //------------------------------------------------------------------------
+                         MarcaNota marca = new MarcaNota(texto, new Date(), l.getLatitude(), l.getLongitude(), n.getId());
+                         Log.v("MARCA", marca.toString());
+                         dao.create(marca);
 
 
-                } catch (SQLException e) {
+                     } catch (SQLException e) {
 
-                    e.printStackTrace();
-                }
-                catch (NullPointerException e) {
+                         e.printStackTrace();
+                     } catch (NullPointerException e) {
 
-                    e.printStackTrace();
-                }
-                finally {
-                    odla.desconectar();
-                }
-                return null;
-            }
-        }.execute();
+                         e.printStackTrace();
+                     } finally {
+                         try {
+                             odla.desconectar();
+                         }
+                         catch (NullPointerException e) {}
+                     }
+                     return null;
+                 }
+             }.execute();
+         }
     }
 
     @Override
@@ -415,5 +414,12 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
         if (Permisos.solicitarPermisos(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, this)) {
             odla = new ObtenedorDeLocalizacionActual(this);
         }
+        LISTA_ACTUAL=this;
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.zoom_fordward_in, R.anim.zoom_fordward_out);
     }
 }

@@ -69,11 +69,66 @@
                         android:inputType="textMultiLine"
                         android:textColor="@android:color/primary_text_light_nodisable" />
                 </android.support.design.widget.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:background="@drawable/fondo_reproductor"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:id="@+id/nota_reproductor">
+
+
+                    <ImageButton
+                        android:text="grabar"
+                        android:layout_width="wrap_content"
+                        android:background="@color/fondoReproductor"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_audio_grabar"
+                        android:id="@+id/reproductor_grabar"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:text="detener"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/fondoReproductor"
+                        android:src="@mipmap/ic_audio_stop"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:clickable="false"
+                        android:id="@+id/reproductor_detener"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:text="play"
+                        android:layout_width="match_parent"
+                        android:background="@color/fondoReproductor"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:src="@mipmap/ic_audio_play"
+                        android:id="@+id/reproductor_play_pause"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/reproductor_borrar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/fondoReproductor"
+                        app:srcCompat="@drawable/ic_action_borrar_item" />
+
+                </LinearLayout>
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
+                    android:layout_gravity="center"
                     android:src="@{nota.imagen}"
                     android:longClickable="@{editable}"
                     android:visibility="@{nota.imagen==null ? View.GONE : View.VISIBLE}"

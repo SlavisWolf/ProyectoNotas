@@ -69,7 +69,6 @@ public class MarcaNota {
         this.fecha = fecha;
     }
 
-
     public double getLatitud() {
         return latitud;
     }

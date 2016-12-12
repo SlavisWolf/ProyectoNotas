@@ -70,6 +70,9 @@
     <string name="tituloDialogoImagen">Image</string>
     <string name="textoDialogoImagen">that image?</string>
 
+    <string name="tituloDialogoAudio">Audio</string>
+    <string name="textoDialogoAudio">that audio?</string>
+
     <string name="tituloDialogoBorrarDibujo">Drawing</string>
     <string name="textoDialogoBorrarDibujo">that drawing?(A empty drawing will be created)</string>
 
@@ -172,6 +175,15 @@
 
     <string name="notaSinMarcas">New notes has not marks</string>
     <string name="listaSinMarcas">New lists has not marks</string>
+
+    <!--Audio-->
+    <string name="audioGrabando">Recording</string>
+    <string name="audioParar">Stop recording</string>
+
+    <!-- Dialogo progreso -->
+    <string name="tituloDialogoProgreso">Loading</string>
+    <string name="textoDialogoProgreso">wait a moment...</string>
+
      <!-- otros -->
     <string name="guardarNotaPart1">Your note </string>
     <string name="guardarListaPart1">Your list </string>

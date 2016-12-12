@@ -7,6 +7,9 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+
 /**
  * Created by anton on 18/11/2016.
  */
@@ -27,10 +30,10 @@ public class MetodosBinding {
             view.setImageResource(0);
         }
         else {
-            Bitmap bitmap = BitmapFactory.decodeFile(ruta);
-            if (bitmap!=null) {
-
-                view.setImageBitmap(bitmap);
+            WeakReference<Bitmap> reference = new WeakReference<Bitmap>(BitmapFactory.decodeFile(ruta));
+            if (reference.get()!=null) {
+                view.setImageBitmap(reference.get());
+                reference.clear();
             }
             else {
                 view.setImageResource(0);

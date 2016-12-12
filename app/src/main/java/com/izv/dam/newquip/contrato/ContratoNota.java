@@ -27,6 +27,7 @@ public interface ContratoNota {
     interface InterfaceVista {
 
         void mostrarNota(Nota n);
+        void marcarLocalizacionNota();
     }
 
 }

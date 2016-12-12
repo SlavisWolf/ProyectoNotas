@@ -45,7 +45,7 @@
 
     <string name="menuCamara">Camara</string>
     <string name="menuGaleria">Galería</string>
-    <string name="menuMicrofono">Microfono</string>
+    <string name="menuMicrofono">Micrófono</string>
     <string name="menuImprimir">Imprimir nota en PDF</string>
     <string name="menuDibujar">Crear dibujo</string>
 
@@ -69,6 +69,9 @@
 
     <string name="tituloDialogoImagen">Imagen</string>
     <string name="textoDialogoImagen">esta imagen?</string>
+
+    <string name="tituloDialogoAudio">Audio</string>
+    <string name="textoDialogoAudio">este audio?</string>
 
     <string name="tituloDialogoBorrarDibujo">Dibujo</string>
     <string name="textoDialogoBorrarDibujo">este dibujo?(Se creara uno nuevo vacío)</string>
@@ -170,6 +173,10 @@
     <string name="menuListaMapa">Ver marcas de esta lista en la nota</string>
     <string name="notaSinMarcas">Las notas nuevas no tienen marcas</string>
     <string name="listaSinMarcas">Las listas nuevas no tienen marcas</string>
+
+    <!--Audio-->
+    <string name="audioGrabando">Grabando</string>
+    <string name="audioParar">Grabación parada</string>
     <!-- otros -->
     <string name="guardarNotaPart1">Su nota </string>
     <string name="guardarListaPart1">Su lista </string>
@@ -183,5 +190,4 @@
     <string name="nuevaNotaDibujo">Abiendo Lienzo para nueva nota.</string>
     <string name="imagenNoGuardada">La imagen no ha podido guardarse</string>
     <string name="appImagen">Selecciona una aplicación con la que coger la imagen.</string>
-
 </resources>

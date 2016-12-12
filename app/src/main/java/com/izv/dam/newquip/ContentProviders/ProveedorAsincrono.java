@@ -12,6 +12,8 @@ import com.izv.dam.newquip.contrato.ContratoBaseDatos;
 import com.izv.dam.newquip.pojo.ItemNotaLista;
 import com.izv.dam.newquip.pojo.Nota;
 import com.izv.dam.newquip.vistas.main.VistaQuip;
+import com.izv.dam.newquip.vistas.notas.VistaNota;
+import com.izv.dam.newquip.vistas.notas_lista.VistaNotaLista;
 
 import java.util.ArrayList;
 import java.util.IllegalFormatCodePointException;
@@ -36,6 +38,7 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
     public static final int TOKEN_INSERT_ITEM =70;
     public  static final  int TOKEN_RECUPERAR_NOTA=90;
     public static final int TOKEN_QUERY_BORRAR_CONJUNTO =80;
+    public static  final  int TOKEN_PAPELERA=100;
     //public  static final  int TOKEN_UPDATE_LISTA=60; //borrar nota desde quip
 
     public ProveedorAsincrono(ContentResolver cr) {
@@ -62,6 +65,7 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
             long idNuevaLista=Long.parseLong(uri.getLastPathSegment());
             Nota n = b.getParcelable("nota");
             n.setId(idNuevaLista);
+            VistaNotaLista.LISTA_ACTUAL.marcarLocalizacionLista();
             ArrayList<ItemNotaLista> lista = b.getParcelableArrayList("array");
             VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_TODO); //solo avisa del cambio la inserción de la nota, no los items.
             AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
@@ -83,6 +87,7 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
         else if (token==TOKEN_INSERCION_NOTA){
             long id =Long.parseLong(uri.getLastPathSegment());
             ((Nota)cookie).setId(id);
+            VistaNota.NOTA_ACTUAL.marcarLocalizacionNota();
             AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
             VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_TODO);
             VistaQuip.ID_CURSOR_ACTUAL=VistaQuip.ID_CURSOR_TODO;
@@ -114,6 +119,7 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
         if (token==TOKEN_QUERY_BORRAR_CONJUNTO) {
             while(cursor.moveToNext()) {
                 Nota n = Nota.getNota(cursor);
+                VistaQuip.REFERENCIA_MENU_PRINCIPAL.borrarMarcasNota(n.getId());
                 n.setPapelera(true);
                 Uri uri = ContentUris.withAppendedId(ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA,n.getId());
                 startUpdate(0,null,uri,n.getContentValues(),null,null);
@@ -121,6 +127,7 @@ public class ProveedorAsincrono extends AsyncQueryHandler { // NO HAY QUE SOBREE
             AdaptadorNota.ANIMACIONES_ADAPTADOR=false;
             VistaQuip.REFERENCIA_MENU_PRINCIPAL.reiniciarDatos(VistaQuip.ID_CURSOR_ACTUAL);
         }
+
     }
 }
 

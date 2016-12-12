@@ -2,6 +2,7 @@ package com.izv.dam.newquip.vistas.main;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -192,10 +193,16 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                         protected void onPreExecute() {
                              dialogo = UtilDialogos.crearDialogoProgreso(VistaQuip.this);
                              dialogo.show();
+                            setRequestedOrientation(getResources().getConfiguration().orientation);
                         }
 
                         @Override
                         protected Intent doInBackground(Void... params) {
+                            try {
+                                Thread.sleep(4000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             Long timestamp = System.currentTimeMillis() / 1000;
                             DirectoriosArchivosQuip.comprobarDirectorioImagenes();
                             String nombreImagen = timestamp.toString() + ".jpg";
@@ -208,6 +215,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                         @Override
                         protected void onPostExecute(Intent intent) {
                             dialogo.dismiss();
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                             startActivityForResult(intent, Permisos.HACER_FOTO);
                         }
                     }.execute();
@@ -343,6 +351,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                         protected void onPreExecute() {
                             dialogo = UtilDialogos.crearDialogoProgreso(VistaQuip.this);
                             dialogo.show();
+                            setRequestedOrientation(getResources().getConfiguration().orientation);
                         }
 
                         @Override
@@ -369,6 +378,7 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                             i.putExtras(b);
 
                             dialogo.dismiss();
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                             startActivity(i);
                             overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
                         }

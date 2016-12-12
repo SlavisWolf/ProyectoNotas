@@ -177,6 +177,10 @@
     <!--Audio-->
     <string name="audioGrabando">Grabando</string>
     <string name="audioParar">Grabación parada</string>
+
+    <!-- Dialogo progreso -->
+    <string name="tituloDialogoProgreso">Cargando</string>
+    <string name="textoDialogoProgreso">espere un momento...</string>
     <!-- otros -->
     <string name="guardarNotaPart1">Su nota </string>
     <string name="guardarListaPart1">Su lista </string>

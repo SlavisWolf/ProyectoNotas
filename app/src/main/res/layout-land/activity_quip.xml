@@ -12,22 +12,11 @@
     android:backgroundTint="@color/ColorFondoLayout"
     android:background="@android:drawable/screen_background_light">
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_quip_tipo_cursor"
-        android:layout_gravity="top"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:textColor="?android:attr/editTextColor" />
-
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="55dp"
         android:paddingRight="65dp"
-        android:layout_marginTop="43dp"
         android:id="@+id/lvListaNotas"
         android:scrollbars="vertical" />
 

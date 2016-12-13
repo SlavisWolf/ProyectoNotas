@@ -88,9 +88,11 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
 
     private PresentadorQuip presentador;
 
+
     private String rutaFoto;
     private RecyclerView rv;
-    private TextView textoTipo;
+    private int id_item_nav_actual;
+    private FloatingActionsMenu fam;
     private DrawerLayout drawerLayout;
     public static ContratoMain.InterfaceVista REFERENCIA_MENU_PRINCIPAL; // ESTA INTERFAZ SE USARA PARA QUE EL PROVEEDOR ASINCRONO PUEDA ACTUALIZAR LOS DATOS CUANDO TERMINE SU TRABAJO
 
@@ -108,9 +110,9 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
 
 
 
+        id_item_nav_actual=0;
         presentador = new PresentadorQuip(this);
 
-        textoTipo = (TextView) findViewById(R.id.tv_quip_tipo_cursor);
         crearNavigationView(); // AÑADIDO PARA EL NAVIGATION DRAWER
         rv = (RecyclerView) findViewById(R.id.lvListaNotas);
         rv.setHasFixedSize(false); // true, la lista es estatica, false, los datos de la lista pueden variar.
@@ -134,13 +136,13 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         rv.setAdapter(adaptador);
 
         //MENU DE FLOAT BUTTONS
-       final FloatingActionsMenu fam = (FloatingActionsMenu) findViewById(R.id.vista_principal_menuFloat);
+        fam = (FloatingActionsMenu) findViewById(R.id.vista_principal_menuFloat);
+
 
         FloatingActionButton anadirNota = (FloatingActionButton) findViewById(R.id.vista_principal_anadir_nota_normal);
         anadirNota.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fam.collapse();
                 presentador.onAddNota();
             }
         });
@@ -149,7 +151,6 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         anadirNotaLista.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fam.collapse();
                 presentador.onAddNotaLista();
             }
         });
@@ -158,7 +159,6 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         anadirImagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fam.collapse();
                 if (Permisos.solicitarPermisos(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, VistaQuip.this)) { //AÑADIDA SOLICITUD DE PERMISOS, PORQUE AHORA CREA UN ARCHIVO NUEVO.
                     Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");//para que busque cualquier tipo de imagen
@@ -172,7 +172,6 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         anadirDibujo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fam.collapse();
                 Toast.makeText(VistaQuip.this, R.string.nuevaNotaDibujo, Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(VistaQuip.this, VistaLienzo.class);
                 startActivity(i);
@@ -184,7 +183,6 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         sacarFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fam.collapse();
                 if (Permisos.solicitarPermisos(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},VistaQuip.this)) {
                     new AsyncTask<Void,Void,Intent>() {  // añadido el proceso en 2º plano.
 
@@ -198,11 +196,6 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
 
                         @Override
                         protected Intent doInBackground(Void... params) {
-                            try {
-                                Thread.sleep(4000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                             Long timestamp = System.currentTimeMillis() / 1000;
                             DirectoriosArchivosQuip.comprobarDirectorioImagenes();
                             String nombreImagen = timestamp.toString() + ".jpg";
@@ -227,7 +220,6 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         botonAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fam.collapse();
                 if (Permisos.solicitarPermisos(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},VistaQuip.this)) {
                     Intent i = new Intent(VistaQuip.this, VistaNota.class);
                     Bundle b = new Bundle();
@@ -245,7 +237,10 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         if (savedInstanceState != null) {
             System.out.println(savedInstanceState.getInt("cursor_actual"));
             VistaQuip.ID_CURSOR_ACTUAL = savedInstanceState.getInt("cursor_actual"); // coge del bundle el cursor actual, sino existe le asocia el de todos.
-            textoTipo.setText(savedInstanceState.getString("texto"));
+            id_item_nav_actual =savedInstanceState.getInt("item_nav_actual");
+            NavigationView nav = (NavigationView) findViewById(R.id.nav_view); // los ids no estan en quip, sino dentro del header del navigation.
+            nav.getMenu().findItem(id_item_nav_actual).setChecked(true);
+
         } else {
             VistaQuip.ID_CURSOR_ACTUAL = ID_CURSOR_TODO;
         }
@@ -261,7 +256,10 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
     @Override
     protected void onPause() {
         presentador.onPause();
+        if (fam.isExpanded())
+            fam.collapse();
         super.onPause();
+
     }
 
     @Override
@@ -415,37 +413,59 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
 
     //LOAD MANAGER
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) { // HACE LA CONSULTA CON LOS DATOS,el ID ES EL ID A USAR DEL MANAGER
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) { // HACE LA CONSULTA CON LOS DATOS,el ID ES EL ID A USAR DEL
+
+        NavigationView nav = (NavigationView) findViewById(R.id.nav_view); // los ids no estan en quip, sino dentro del header del navigation.
+
+        Menu menu =nav.getMenu();
+
+        if (id_item_nav_actual!=0)
+            menu.findItem(id_item_nav_actual).setChecked(false);
+
         switch (id) {
             case VistaQuip.ID_CURSOR_TODO: {
                 String where = ContratoBaseDatos.TablaNota.PAPELERA + "= ?";
                 String[] valores = new String[]{String.valueOf(0)};
-                textoTipo.setText(getString(R.string.cursorTipoTodo));
+
+                id_item_nav_actual =R.id.nav_todas_notas;
+                menu.findItem(id_item_nav_actual).setChecked(true);
+
                 return new CursorLoader(this, ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, where, valores, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
             }
             case ID_CURSOR_NOTA: {
                 String where = ContratoBaseDatos.TablaNota.TIPO + "<>? and " + ContratoBaseDatos.TablaNota.PAPELERA + "=?";
                 String[] valores = new String[]{String.valueOf(Nota.TIPO_LISTA), String.valueOf(0)};
-                textoTipo.setText(getString(R.string.cursorTipoSoloNota));
+
+                id_item_nav_actual = R.id.nav_solo_notas_normales;
+                menu.findItem(id_item_nav_actual).setChecked(true);
+
                 return new CursorLoader(this, ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, where, valores, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
             }
             case ID_CURSOR_LISTA: {
                 String where = ContratoBaseDatos.TablaNota.TIPO + "=? and " + ContratoBaseDatos.TablaNota.PAPELERA + "=?";
                 String[] valores = new String[]{String.valueOf(Nota.TIPO_LISTA), String.valueOf(0)};
-                textoTipo.setText(getString(R.string.cursorTipoSoloListas));
+
+                id_item_nav_actual = R.id.nav_solo_listas;
+                menu.findItem(id_item_nav_actual).setChecked(true);
+
                 return new CursorLoader(this, ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, where, valores, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
             }
             case ID_CURSOR_MULTIMEDIA: {
                 String where = "(" + ContratoBaseDatos.TablaNota.IMAGEN + " is not null or " + ContratoBaseDatos.TablaNota.AUDIO + " is not null) and " + ContratoBaseDatos.TablaNota.PAPELERA + "=?";
                 String[] valores = new String[]{String.valueOf(0)};
-                textoTipo.setText(getString(R.string.cursorTipoSoloNotaMultimedia));
+
+                id_item_nav_actual = R.id.nav_solo_notas_multimedia;
+                menu.findItem(id_item_nav_actual).setChecked(true);
                 return new CursorLoader(this, ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, where, valores, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
             }
 
             case VistaQuip.ID_CURSOR_PAPELERA: {
                 String where = ContratoBaseDatos.TablaNota.PAPELERA + "=?";
                 String[] valores = new String[]{String.valueOf(1)};
-                textoTipo.setText(getString(R.string.cursorTipoPapelera));
+
+                id_item_nav_actual = R.id.nav_view_papelera;
+                menu.findItem(id_item_nav_actual).setChecked(true);
+
                 return new CursorLoader(this, ContratoBaseDatos.TablaNota.CONTENT_URI_NOTA, ContratoBaseDatos.TablaNota.PROJECTION_ALL, where, valores, ContratoBaseDatos.TablaNota.SORT_ORDER_DEFAULT);
             }
             default: {
@@ -662,12 +682,11 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
         drawerLayout.addDrawerListener(drawerToggle);
     }
 
-
     @Override
     protected void onSaveInstanceState(Bundle outState) { //cursor actual.
         super.onSaveInstanceState(outState);
         outState.putInt("cursor_actual", VistaQuip.ID_CURSOR_ACTUAL);
-        outState.putString("texto",textoTipo.getText().toString());
+        outState.putInt("item_nav_actual",id_item_nav_actual);
     }
 
 
@@ -777,6 +796,4 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
             }
         }.execute();
     }
-
-
 }

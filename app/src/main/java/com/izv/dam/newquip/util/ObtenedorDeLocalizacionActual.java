@@ -45,6 +45,7 @@ public class ObtenedorDeLocalizacionActual implements   GoogleApiClient.Connecti
     public void onConnected(Bundle bundle) {
         // ACTUALIZAR POSICION
         System.out.println("onConnected");
+        localizacion= LocationServices.FusedLocationApi.getLastLocation(apiClient);
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(2000);
         locationRequest.setFastestInterval(1000);

@@ -19,7 +19,6 @@ public class UtilDialogos {
         dialogo.setIndeterminate(true);
         dialogo.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialogo.setCanceledOnTouchOutside(false);
-        //dialogo.setIndeterminate(true);
         dialogo.setMessage(c.getString(R.string.textoDialogoProgreso));
         return dialogo;
     }

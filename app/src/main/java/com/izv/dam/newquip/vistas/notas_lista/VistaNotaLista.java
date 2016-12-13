@@ -2,6 +2,7 @@ package com.izv.dam.newquip.vistas.notas_lista;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
@@ -85,6 +86,16 @@ public class VistaNotaLista extends AppCompatActivity implements ContratoNotaLis
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_nota_lista);
         //setContentView(R.layout.activity_nota_lista);
+
+
+
+        int orientacion = getResources().getConfiguration().orientation;
+
+        if(orientacion== Configuration.ORIENTATION_LANDSCAPE ) {
+            binding.notaListaTilTitulo.setPadding(300,16,300,16);
+            binding.notaListaItems.setPadding(300,16,300,16);
+        }
+
         marcarDesmarcar=true;
         listaGuardada = false;
         PreferenciasCompartidas prefs = new PreferenciasCompartidas(this);

@@ -3,6 +3,8 @@ package com.izv.dam.newquip.vistas.notas;
 import android.Manifest;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -76,9 +78,11 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
 
 
 
+        int orientacion = getResources().getConfiguration().orientation;
 
-
-
+        if(orientacion== Configuration.ORIENTATION_LANDSCAPE ) {
+            binding.contenedorVistaNota.setPadding(300,16,300,16);
+        }
         notaGuardada = false;
         Nota nota = new Nota();
         reproductor = new Reproductor(this);

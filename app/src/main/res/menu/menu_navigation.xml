@@ -8,10 +8,12 @@
                 android:id="@+id/nav_view_datos_usuario"
                 android:icon="@drawable/ic_nav_perfil"
                 android:title="@string/navViewDatosUsuario" />
+
             <item
-                android:id="@+id/nav_view_papelera"
-                android:icon="@drawable/ic_nav_vaciar_papelera"
-                android:title="@string/navViewPapelera"/>
+                android:id="@+id/nav_map"
+                android:title="@string/navMapa"
+                android:icon="@drawable/ic_nav_map"
+                />
             <item
                 android:id="@+id/nav_view_desconectar"
                 android:icon="@drawable/ic_nav_desconectar_usuario"
@@ -39,11 +41,11 @@
                 android:id="@+id/nav_solo_listas"
                 android:icon="@drawable/ic_nav_lista"
                 android:title="@string/navViewSoloListas" />
+
             <item
-                android:id="@+id/nav_map"
-                android:title="@string/navMapa"
-                android:icon="@drawable/ic_nav_map"
-                />
+                android:id="@+id/nav_view_papelera"
+                android:icon="@drawable/ic_nav_vaciar_papelera"
+                android:title="@string/navViewPapelera"/>
         </menu>
     </item>
 </menu>

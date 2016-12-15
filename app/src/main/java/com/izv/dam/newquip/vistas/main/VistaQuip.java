@@ -44,6 +44,7 @@ import com.izv.dam.newquip.basedatos.AyudanteOrm;
 import com.izv.dam.newquip.contrato.ContratoBaseDatos;
 import com.izv.dam.newquip.contrato.ContratoMain;
 import com.izv.dam.newquip.dialogo.DialogoPreferenciasNota;
+import com.izv.dam.newquip.dialogo.interfaces.DialogoProgreso;
 import com.izv.dam.newquip.dialogo.interfaces.DialogoRecuperarNota;
 import com.izv.dam.newquip.dialogo.interfaces.OnBorrarDialogListener;
 import com.izv.dam.newquip.dialogo.interfaces.OnRecuperarDialogListener;
@@ -53,7 +54,6 @@ import com.izv.dam.newquip.dialogo.DialogoBorrar;
 import com.izv.dam.newquip.util.DirectoriosArchivosQuip;
 import com.izv.dam.newquip.util.Permisos;
 import com.izv.dam.newquip.util.PreferenciasCompartidas;
-import com.izv.dam.newquip.util.UtilDialogos;
 import com.izv.dam.newquip.util.UtilFecha;
 import com.izv.dam.newquip.vistas.Usuarios.VistaDatosUsuario;
 import com.izv.dam.newquip.vistas.Usuarios.VistaMapa;
@@ -66,9 +66,9 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 
 import java.io.File;
-import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.sql.SQLException;
+import java.util.Timer;
 
 
 /*
@@ -87,6 +87,8 @@ import java.sql.SQLException;
 public class VistaQuip extends AppCompatActivity implements ContratoMain.InterfaceVista , OnBorrarDialogListener,LoaderManager.LoaderCallbacks<Cursor>,OnRecuperarDialogListener { //PREGUNTAR A CARMELO EL ERROR DEL ID 0 EN EL LOADER
 
     private PresentadorQuip presentador;
+
+
 
 
     private String rutaFoto;
@@ -185,13 +187,14 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
             public void onClick(View v) {
                 if (Permisos.solicitarPermisos(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},VistaQuip.this)) {
                     new AsyncTask<Void,Void,Intent>() {  // añadido el proceso en 2º plano.
+                        DialogoProgreso dialogoProgreso;
 
-                        ProgressDialog dialogo;
                         @Override
                         protected void onPreExecute() {
-                             dialogo = UtilDialogos.crearDialogoProgreso(VistaQuip.this);
-                             dialogo.show();
-                            setRequestedOrientation(getResources().getConfiguration().orientation);
+                            dialogoProgreso = dialogoProgreso.newInstance();
+                            dialogoProgreso.setRetainInstance(true);
+                            dialogoProgreso.show(getSupportFragmentManager(), "Dialogo progreso");
+                            //setRequestedOrientation(getResources().getConfiguration().orientation);
                         }
 
                         @Override
@@ -207,8 +210,8 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                         }
                         @Override
                         protected void onPostExecute(Intent intent) {
-                            dialogo.dismiss();
-                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                            dialogoProgreso.dismiss();
+                            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                             startActivityForResult(intent, Permisos.HACER_FOTO);
                         }
                     }.execute();
@@ -343,13 +346,15 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                 if (resultCode == RESULT_OK) {
 
                     new AsyncTask<Object, Void, String>() { //añadido en 2º plano.
-                        ProgressDialog dialogo;
 
+                        DialogoProgreso dialogoProgreso;
                         @Override
                         protected void onPreExecute() {
-                            dialogo = UtilDialogos.crearDialogoProgreso(VistaQuip.this);
-                            dialogo.show();
-                            setRequestedOrientation(getResources().getConfiguration().orientation);
+                            dialogoProgreso = dialogoProgreso.newInstance();
+
+                            dialogoProgreso.setRetainInstance(true);
+                            dialogoProgreso.show(getSupportFragmentManager(), "Dialogo progreso");
+                            //setRequestedOrientation(getResources().getConfiguration().orientation);
                         }
 
                         @Override
@@ -375,8 +380,8 @@ public class VistaQuip extends AppCompatActivity implements ContratoMain.Interfa
                             b.putParcelable("nota", nota);
                             i.putExtras(b);
 
-                            dialogo.dismiss();
-                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                            dialogoProgreso.dismiss();
+                            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                             startActivity(i);
                             overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
                         }

@@ -54,6 +54,7 @@ import java.io.File;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -67,6 +68,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
     private PresentadorNota presentador;
     private ActivityNotaBinding binding;
     private Reproductor reproductor;
+    private  ArrayList<AsyncTask> hilos;
     private ObtenedorDeLocalizacionActual odla;
     boolean notaGuardada; // esta variable se usara para que no se hagan seguidos el metodo de guardar del boton, y el de guardar automaticamente en el onPause
     private String rutaImage;
@@ -76,6 +78,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_nota);
 
+        hilos = new ArrayList<>();
 
 
         int orientacion = getResources().getConfiguration().orientation;
@@ -204,7 +207,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
         } else if (id == R.id.camara) {
 
             if (Permisos.solicitarPermisos(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, this)) {
-                new AsyncTask<Void, Void, Intent>() {  // añadido el proceso en 2º plano.
+                hilos.add( new AsyncTask<Void, Void, Intent>() {  // añadido el proceso en 2º plano.
                     @Override
                     protected Intent doInBackground(Void... params) {
                         Long timestamp = System.currentTimeMillis() / 1000;
@@ -221,13 +224,12 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
                     protected void onPostExecute(Intent intent) {
                         startActivityForResult(intent, Permisos.HACER_FOTO);
                     }
-                }.execute();
+                }.execute());
             }
 
         } else if (id == R.id.menu_nota_imprimir) {
 
             if (Permisos.solicitarPermisos(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, this)) {
-
                 guardarDatosEnNota();
                 if (binding.getNota().comprobarNotaVaciaParaPDF()) {
                     Toast.makeText(getApplicationContext(), getString(R.string.notaVaciaPdf), Toast.LENGTH_SHORT).show();
@@ -288,7 +290,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
             case Permisos.GALERIA:
                 if (resultCode == RESULT_OK) {
 
-                    new AsyncTask<Object, Void, Void>() {  //copia de archivos en 2º plano.
+                    hilos.add(new AsyncTask<Object, Void, Void>() {  //copia de archivos en 2º plano.
                         @Override
                         protected Void doInBackground(Object... params) {
 
@@ -307,7 +309,8 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
                             binding.getNota().setImagen(rutaImage);
                             binding.getNota().setTipo(Nota.TIPO_IMAGEN);
                         }
-                    }.execute(data);
+                    }.execute(data));
+
                 }
                 break;
             case Permisos.HACER_FOTO: {
@@ -409,7 +412,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
         if (Permisos.solicitarPermisos(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, this))
         {
             System.out.println("Si entra en el metodo");
-            new AsyncTask<Void, Void, Void>() {
+            new AsyncTask<Void, Void, Void>() { //este no es necesario añadirlo a hilos, ya que no actua sobre la vista, sino sobre la bd
                 @Override
                 protected Void doInBackground(Void... params) {
                     //AÑADIDO MARCAS
@@ -448,6 +451,7 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
                     return null;
                 }
             }.execute();
+
         }
     }
 
@@ -458,6 +462,11 @@ public class VistaNota extends AppCompatActivity implements ContratoNota.Interfa
         reproductor.liberarRecursos();
         if (rutaImage!=null)
             binding.imageView.setImageResource(0);
+
+        for (AsyncTask hilo : hilos) {
+            if (hilo.getStatus()!=AsyncTask.Status.FINISHED)
+                hilo.cancel(true);
+        }
     }
 
     public  void finishAnimacion() {

@@ -235,7 +235,8 @@ public class VistaLienzo extends AppCompatActivity implements View.OnClickListen
 
                 @Override
                 protected void onPostExecute(Intent intent) {
-                    VistaNota.NOTA_ACTUAL.finish();
+                    if (VistaNota.NOTA_ACTUAL!=null)
+                        VistaNota.NOTA_ACTUAL.finish();
                     Toast.makeText(getApplicationContext(), R.string.dibujoGuardadoCorrectamente, Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                     finish();
